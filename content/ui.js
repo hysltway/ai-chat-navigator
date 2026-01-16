@@ -234,6 +234,7 @@
       root,
       panel,
       body,
+      title,
       subtitle,
       toggle,
       fab
@@ -280,9 +281,14 @@
     ui.root.dataset.collapsed = collapsed ? '1' : '0';
   }
 
+  function setTitle(ui, text) {
+    ui.title.textContent = text;
+  }
+
   ns.ui = {
     createUI,
     renderList,
-    setCollapsed
+    setCollapsed,
+    setTitle
   };
 })();

@@ -45,6 +45,7 @@
       return;
     }
     state.ui = ns.ui.createUI();
+    ns.ui.setTitle(state.ui, getNavigatorTitle());
     attachUiHandlers();
     initFabDrag();
     scheduleRebuild('init');
@@ -313,6 +314,13 @@
       node.style.outline = prevOutline;
       node.style.outlineOffset = prevOffset;
     }, 1200);
+  }
+
+  function getNavigatorTitle() {
+    if (state.adapter && state.adapter.id === 'gemini') {
+      return 'Gemini Navigator';
+    }
+    return 'ChatGPT Navigator';
   }
 
   ns.core = {

@@ -8,7 +8,8 @@
       "matches": [
         "https://chatgpt.com/*",
         "https://chat.openai.com/*",
-        "https://cc01.plusai.io/*"
+        "https://cc01.plusai.io/*",
+        "https://gemini.google.com/*"
       ],
       "js": [
         "content/namespace.js",
@@ -24,6 +25,7 @@
   "host_permissions": [
     "https://chatgpt.com/*",
     "https://chat.openai.com/*",
-    "https://cc01.plusai.io/*"
+    "https://cc01.plusai.io/*",
+    "https://gemini.google.com/*"
   ]
 }
