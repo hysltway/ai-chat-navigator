@@ -46,6 +46,7 @@
     }
     state.ui = ns.ui.createUI();
     attachUiHandlers();
+    initFabDrag();
     scheduleRebuild('init');
     startUrlPolling();
   }
@@ -56,6 +57,10 @@
     });
 
     state.ui.fab.addEventListener('click', () => {
+      if (state.ui.fab.dataset.suppressClick === '1') {
+        state.ui.fab.dataset.suppressClick = '0';
+        return;
+      }
       ns.ui.setCollapsed(state.ui, false);
     });
 
@@ -71,6 +76,111 @@
       }
       scrollToMessage(message.node);
     });
+  }
+
+  function initFabDrag() {
+    const fab = state.ui.fab;
+    const storageKey = 'chatgpt-nav-fab-position';
+    let dragging = false;
+    let moved = false;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+
+    const saved = loadFabPosition(storageKey);
+    if (saved) {
+      applyFabPosition(fab, saved.left, saved.top);
+    }
+
+    fab.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) {
+        return;
+      }
+      const rect = fab.getBoundingClientRect();
+      dragging = true;
+      moved = false;
+      startX = event.clientX;
+      startY = event.clientY;
+      startLeft = rect.left;
+      startTop = rect.top;
+      fab.classList.add('dragging');
+      fab.setPointerCapture(event.pointerId);
+    });
+
+    fab.addEventListener('pointermove', (event) => {
+      if (!dragging) {
+        return;
+      }
+      const dx = event.clientX - startX;
+      const dy = event.clientY - startY;
+      if (!moved && Math.hypot(dx, dy) > 3) {
+        moved = true;
+      }
+      const rect = fab.getBoundingClientRect();
+      const nextLeft = clamp(startLeft + dx, 0, window.innerWidth - rect.width);
+      const nextTop = clamp(startTop + dy, 0, window.innerHeight - rect.height);
+      applyFabPosition(fab, nextLeft, nextTop);
+    });
+
+    fab.addEventListener('pointerup', (event) => {
+      if (!dragging) {
+        return;
+      }
+      dragging = false;
+      fab.classList.remove('dragging');
+      fab.releasePointerCapture(event.pointerId);
+      if (moved) {
+        fab.dataset.suppressClick = '1';
+        saveFabPosition(storageKey, fab);
+      }
+    });
+
+    fab.addEventListener('pointercancel', (event) => {
+      if (!dragging) {
+        return;
+      }
+      dragging = false;
+      fab.classList.remove('dragging');
+      fab.releasePointerCapture(event.pointerId);
+    });
+  }
+
+  function applyFabPosition(fab, left, top) {
+    fab.style.left = `${left}px`;
+    fab.style.top = `${top}px`;
+    fab.style.right = 'auto';
+    fab.style.bottom = 'auto';
+  }
+
+  function saveFabPosition(key, fab) {
+    const rect = fab.getBoundingClientRect();
+    const payload = { left: rect.left, top: rect.top };
+    try {
+      window.localStorage.setItem(key, JSON.stringify(payload));
+    } catch (error) {
+      // Ignore storage failures.
+    }
+  }
+
+  function loadFabPosition(key) {
+    try {
+      const raw = window.localStorage.getItem(key);
+      if (!raw) {
+        return null;
+      }
+      const parsed = JSON.parse(raw);
+      if (typeof parsed.left === 'number' && typeof parsed.top === 'number') {
+        return parsed;
+      }
+    } catch (error) {
+      return null;
+    }
+    return null;
+  }
+
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
   }
 
   function startUrlPolling() {

@@ -165,11 +165,16 @@
         pointer-events: auto;
         font-size: 12px;
         letter-spacing: 0.4px;
+        cursor: grab;
       }
 
       .fab:hover {
         border-color: var(--nav-accent);
         color: var(--nav-accent);
+      }
+
+      .fab.dragging {
+        cursor: grabbing;
       }
     `;
 
