@@ -52,7 +52,7 @@
         border: 1px solid var(--nav-border);
         border-radius: 16px;
         box-shadow: var(--nav-shadow);
-        overflow: visible;
+        overflow: hidden;
       }
 
       .panel-header {
@@ -264,9 +264,9 @@
       }
 
       .nav-preview {
-        position: absolute;
+        position: fixed;
         top: 0;
-        right: calc(100% + 12px);
+        left: 0;
         width: 0;
         max-width: 360px;
         opacity: 0;
@@ -274,7 +274,7 @@
         pointer-events: none;
         transition: width 180ms ease, opacity 160ms ease, transform 180ms ease;
         will-change: width, opacity, transform;
-        z-index: 2;
+        z-index: 3;
         overflow: hidden;
       }
 
@@ -294,6 +294,10 @@
         display: flex;
         flex-direction: column;
         gap: 6px;
+      }
+
+      .nav-root[data-minimal="1"] .nav-preview-inner {
+        box-shadow: none;
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -365,14 +369,13 @@
     previewInner.className = 'nav-preview-inner';
     preview.appendChild(previewInner);
 
-    panel.appendChild(preview);
-
     const fab = document.createElement('button');
     fab.type = 'button';
     fab.className = 'fab';
     fab.textContent = 'Nav';
 
     root.appendChild(panel);
+    root.appendChild(preview);
     root.appendChild(fab);
 
     shadow.appendChild(style);
@@ -499,12 +502,17 @@
       width = Math.min(width, panelRect.width - 24);
     }
     ui.preview.style.setProperty('--preview-width', `${width}px`);
-    ui.preview.style.right = overlay ? '12px' : `calc(100% + ${gap}px)`;
-    ui.preview.style.left = 'auto';
 
-    const offsetTop = itemRect.top - panelRect.top;
-    const maxTop = Math.max(8, panelRect.height - 8);
-    const top = Math.min(Math.max(8, offsetTop), maxTop);
+    const maxLeft = Math.max(8, window.innerWidth - width - 8);
+    let left = overlay
+      ? panelRect.right - width - gap
+      : panelRect.left - gap - width;
+    left = Math.min(Math.max(8, left), maxLeft);
+    ui.preview.style.left = `${left}px`;
+    ui.preview.style.right = 'auto';
+
+    const maxTop = Math.max(8, window.innerHeight - 8);
+    const top = Math.min(Math.max(8, itemRect.top), maxTop);
     ui.preview.style.top = `${top}px`;
 
     ui.preview.dataset.active = '1';
