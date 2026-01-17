@@ -180,6 +180,21 @@
         margin-top: 24px;
       }
 
+      .nav-root[data-minimal="1"] .nav-empty {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+        margin-top: 12px;
+      }
+
+      .nav-root[data-minimal="1"] .nav-empty span {
+        display: block;
+        line-height: 1.2;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+      }
+
       .nav-root[data-collapsed="1"] .panel {
         display: none;
       }
@@ -406,7 +421,16 @@
     if (!messages.length) {
       const empty = document.createElement('div');
       empty.className = 'nav-empty';
-      empty.textContent = 'No prompts found yet.';
+      if (minimalMode) {
+        const words = ['No', 'prompts', 'found', 'yet.'];
+        words.forEach((word) => {
+          const span = document.createElement('span');
+          span.textContent = word;
+          empty.appendChild(span);
+        });
+      } else {
+        empty.textContent = 'No prompts found yet.';
+      }
       ui.body.appendChild(empty);
       return;
     }
