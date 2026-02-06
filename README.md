@@ -4,6 +4,12 @@
 
 **语言:** **简体中文** | [English](README_EN.md)
 
+## 🚀 Chrome Web Store（推荐）
+
+已上架，优先推荐从 Chrome Web Store 安装，自动更新更省心。
+
+[ChatGPT & Gemini Quick Navi](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
+
 ## ✨ 核心特性
 
 ### 🎯 智能导航系统
@@ -43,11 +49,14 @@
 ## �🚀 快速开始
 
 ### 安装步骤
-1. 在 Chrome 地址栏输入 `chrome://extensions` 进入扩展管理页面
-2. 启用右上角的**开发者模式**
-3. 点击左上角**加载已解压的扩展程序**按钮
-4. 选择本仓库的目录文件夹，确认加载
-5. 打开任意支持站点的 AI 对话页面，右侧浮动面板会自动出现 ✅
+1. **Chrome Web Store 安装（推荐）**  
+   [ChatGPT & Gemini Quick Navi](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
+2. **本地加载（开发者模式）**  
+   在 Chrome 地址栏输入 `chrome://extensions` 进入扩展管理页面  
+   启用右上角的**开发者模式**  
+   点击左上角**加载已解压的扩展程序**按钮  
+   选择本仓库的目录文件夹，确认加载  
+   打开任意支持站点的 AI 对话页面，右侧浮动面板会自动出现 ✅
 
 ### 开发工作流
 ```bash

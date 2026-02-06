@@ -4,6 +4,12 @@ A lightweight yet powerful browser extension that brings intelligent navigation 
 
 **Language:** [简体中文](README.md) | **English**
 
+## 🚀 Chrome Web Store (Recommended)
+
+Now live on the Chrome Web Store. Install there for automatic updates and the smoothest experience.
+
+[ChatGPT & Gemini Quick Navi](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
+
 ## ✨ Core Features
 
 ### 🎯 Intelligent Navigation System
@@ -40,11 +46,14 @@ A lightweight yet powerful browser extension that brings intelligent navigation 
 ## 🚀 Quick Start
 
 ### Installation Steps
-1. Type `chrome://extensions` in Chrome address bar to open Extensions page
-2. Enable **Developer mode** toggle in the top right corner
-3. Click **Load unpacked** button in the top left corner
-4. Select this repository's directory folder and confirm loading
-5. Open any AI chat page on a supported platform; the floating panel will appear automatically on the right ✅
+1. **Chrome Web Store install (Recommended)**  
+   [ChatGPT & Gemini Quick Navi](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
+2. **Local load (Developer mode)**  
+   Type `chrome://extensions` in Chrome address bar to open Extensions page  
+   Enable **Developer mode** toggle in the top right corner  
+   Click **Load unpacked** button in the top left corner  
+   Select this repository's directory folder and confirm loading  
+   Open any AI chat page on a supported platform; the floating panel will appear automatically on the right ✅
 
 ### Development Workflow
 ```bash
@@ -311,4 +320,3 @@ See full license: [CC BY-NC-SA 4.0 License](https://creativecommons.org/licenses
 ## 📞 Contact
 
 Have questions or suggestions? Feel free to submit an Issue for feedback 😊
-
