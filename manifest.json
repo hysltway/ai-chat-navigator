@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ChatGPT & Gemini Quick Navigator",
   "description": "Right-side floating navigator for ChatGPT and Gemini chats, listing user prompts with reply previews and quick jump navigation.",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "content_scripts": [
     {
       "matches": [

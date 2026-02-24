@@ -33,6 +33,13 @@
   const MESSAGE_INNER_SELECTORS =
     '.min-h-8.text-message, .text-message, [class*="text-message"], .query-text, .markdown, .prose';
   const THEME_ATTRIBUTE_FILTER = ['class', 'style'];
+  const SCROLL_HIGHLIGHT_WAIT_MS = 2600;
+  const SCROLL_HIGHLIGHT_DURATION_MS = 820;
+  const HIGHLIGHT_DARKEN_DELTA = 24;
+  const CHATGPT_USER_BUBBLE_SELECTOR = '[class*="user-message-bubble-color"]';
+  const GEMINI_USER_BUBBLE_SELECTOR = '.user-query-bubble-with-background';
+  const CHATGPT_USER_BUBBLE_BG = 'rgba(233, 233, 233, 0.5)';
+  const GEMINI_USER_BUBBLE_BG = 'rgb(233, 238, 246)';
 
   const state = {
     started: false,
@@ -57,7 +64,10 @@
     themeObserver: null,
     themeRaf: null,
     themeMql: null,
-    themeMqlHandler: null
+    themeMqlHandler: null,
+    highlightRaf: null,
+    highlightRestoreTimer: null,
+    highlightToken: 0
   };
 
   function start() {
@@ -411,6 +421,7 @@
     state.url = location.href;
     refreshThemeTrackingTargets();
     syncColorScheme();
+    cancelPendingBubbleHighlight();
     state.signature = '';
     state.messages = [];
     state.activeIndex = null;
@@ -455,7 +466,7 @@
       if (entry.role !== 'user') {
         return;
       }
-      const text = ns.utils.normalizeText(entry.node.textContent || '');
+      const text = getUserMessageText(entry.node);
       const title = text || `Prompt ${messages.length + 1}`;
       let assistantText = '';
       let lastAssistantNode = null;
@@ -487,6 +498,19 @@
     syncAdaptiveMode();
   }
 
+  function getUserMessageText(node) {
+    if (!node) {
+      return '';
+    }
+    if (state.adapter && state.adapter.id === 'gemini' && ns.utils.getTextWithoutHidden) {
+      const visibleText = ns.utils.getTextWithoutHidden(node);
+      if (visibleText) {
+        return visibleText;
+      }
+    }
+    return ns.utils.normalizeText(node.textContent || '');
+  }
+
   function attachObserver(root) {
     if (state.observer) {
       state.observer.disconnect();
@@ -514,26 +538,187 @@
   }
 
   function flashTarget(node) {
+    const bubble = getUserBubbleNode(node);
+    if (!bubble) {
+      return;
+    }
+    scheduleBubbleHighlightWhenVisible(bubble);
+  }
+
+  function getUserBubbleNode(node) {
+    if (!node) {
+      return null;
+    }
+    const selector = getUserBubbleSelector();
+    if (!selector) {
+      return null;
+    }
+    if (typeof node.matches === 'function' && node.matches(selector)) {
+      return node;
+    }
+    if (typeof node.querySelector === 'function') {
+      return node.querySelector(selector);
+    }
+    return null;
+  }
+
+  function getUserBubbleSelector() {
+    const adapterId = state.adapter ? state.adapter.id : '';
+    if (adapterId === 'chatgpt') {
+      return CHATGPT_USER_BUBBLE_SELECTOR;
+    }
+    if (adapterId === 'gemini') {
+      return GEMINI_USER_BUBBLE_SELECTOR;
+    }
+    return '';
+  }
+
+  function scheduleBubbleHighlightWhenVisible(bubble) {
+    cancelPendingBubbleHighlight();
+    const token = state.highlightToken + 1;
+    state.highlightToken = token;
+    const startAt = Date.now();
+
+    const poll = () => {
+      if (state.highlightToken !== token) {
+        return;
+      }
+      if (!bubble || !bubble.isConnected) {
+        return;
+      }
+      if (isElementVisibleInViewport(bubble)) {
+        runBubbleHighlight(bubble);
+        return;
+      }
+      if (Date.now() - startAt > SCROLL_HIGHLIGHT_WAIT_MS) {
+        return;
+      }
+      state.highlightRaf = window.requestAnimationFrame(poll);
+    };
+
+    state.highlightRaf = window.requestAnimationFrame(poll);
+  }
+
+  function cancelPendingBubbleHighlight() {
+    if (state.highlightRaf) {
+      window.cancelAnimationFrame(state.highlightRaf);
+      state.highlightRaf = null;
+    }
+    if (state.highlightRestoreTimer) {
+      window.clearTimeout(state.highlightRestoreTimer);
+      state.highlightRestoreTimer = null;
+    }
+  }
+
+  function isElementVisibleInViewport(node) {
+    if (!node || typeof node.getBoundingClientRect !== 'function') {
+      return false;
+    }
+    const rect = node.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) {
+      return false;
+    }
+    const viewportWidth = window.innerWidth || 0;
+    const viewportHeight = window.innerHeight || 0;
+    return rect.bottom > 8 && rect.top < viewportHeight - 8 && rect.right > 8 && rect.left < viewportWidth - 8;
+  }
+
+  function runBubbleHighlight(node) {
+    if (!node) {
+      return;
+    }
+    cancelPendingBubbleHighlight();
+    const baseColor = getBubbleBaseColor(node);
+    const activeColor = getDarkenedColor(baseColor);
     if (typeof node.animate === 'function') {
       node.animate(
         [
-          { boxShadow: '0 0 0 0 rgba(240, 163, 75, 0.0)' },
-          { boxShadow: '0 0 0 4px rgba(240, 163, 75, 0.55)' },
-          { boxShadow: '0 0 0 0 rgba(240, 163, 75, 0.0)' }
+          { backgroundColor: baseColor },
+          { backgroundColor: activeColor, offset: 0.42 },
+          { backgroundColor: baseColor }
         ],
-        { duration: 1200, easing: 'ease-out' }
+        { duration: SCROLL_HIGHLIGHT_DURATION_MS, easing: 'ease-out' }
       );
       return;
     }
 
-    const prevOutline = node.style.outline;
-    const prevOffset = node.style.outlineOffset;
-    node.style.outline = '2px solid rgba(240, 163, 75, 0.7)';
-    node.style.outlineOffset = '4px';
-    setTimeout(() => {
-      node.style.outline = prevOutline;
-      node.style.outlineOffset = prevOffset;
-    }, 1200);
+    const prevBackground = node.style.backgroundColor;
+    node.style.backgroundColor = activeColor;
+    state.highlightRestoreTimer = window.setTimeout(() => {
+      node.style.backgroundColor = prevBackground;
+      state.highlightRestoreTimer = null;
+    }, SCROLL_HIGHLIGHT_DURATION_MS);
+  }
+
+  function getBubbleBaseColor(node) {
+    const fallback = getBubbleFallbackColor();
+    if (!node || typeof window.getComputedStyle !== 'function') {
+      return fallback;
+    }
+    try {
+      const background = window.getComputedStyle(node).backgroundColor;
+      const parsed = parseRgbaColor(background);
+      if (!parsed || parsed.a <= 0.02) {
+        return fallback;
+      }
+      return background;
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function getBubbleFallbackColor() {
+    const adapterId = state.adapter ? state.adapter.id : '';
+    if (adapterId === 'gemini') {
+      return GEMINI_USER_BUBBLE_BG;
+    }
+    return CHATGPT_USER_BUBBLE_BG;
+  }
+
+  function getDarkenedColor(color) {
+    const parsed = parseRgbaColor(color);
+    if (!parsed) {
+      return color;
+    }
+    const r = clampColorChannel(parsed.r - HIGHLIGHT_DARKEN_DELTA);
+    const g = clampColorChannel(parsed.g - HIGHLIGHT_DARKEN_DELTA);
+    const b = clampColorChannel(parsed.b - HIGHLIGHT_DARKEN_DELTA);
+    const alpha = parsed.a < 1 ? Math.min(1, parsed.a + 0.2) : 1;
+    if (alpha < 1) {
+      return `rgba(${r}, ${g}, ${b}, ${Number(alpha.toFixed(3))})`;
+    }
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  function parseRgbaColor(color) {
+    if (typeof color !== 'string') {
+      return null;
+    }
+    const match = color.trim().match(/^rgba?\(([^)]+)\)$/i);
+    if (!match) {
+      return null;
+    }
+    const parts = match[1].split(',').map((part) => part.trim());
+    if (parts.length < 3) {
+      return null;
+    }
+    const r = Number(parts[0]);
+    const g = Number(parts[1]);
+    const b = Number(parts[2]);
+    const a = parts.length >= 4 ? Number(parts[3]) : 1;
+    if (![r, g, b, a].every((value) => Number.isFinite(value))) {
+      return null;
+    }
+    return {
+      r: clampColorChannel(r),
+      g: clampColorChannel(g),
+      b: clampColorChannel(b),
+      a: Math.min(Math.max(a, 0), 1)
+    };
+  }
+
+  function clampColorChannel(value) {
+    return Math.min(Math.max(Math.round(value), 0), 255);
   }
 
   function getNavigatorTitle() {
@@ -855,8 +1040,10 @@
     if (!message) {
       return;
     }
+    const trackedRight = getTrackedMessagesRightBoundary();
+    const contentRight = Number.isFinite(trackedRight) ? trackedRight : getConversationRightBoundary();
     state.previewIndex = index;
-    ns.ui.showPreview(state.ui, message, item);
+    ns.ui.showPreview(state.ui, message, item, { contentRight });
   }
 
   function initActiveTracking() {

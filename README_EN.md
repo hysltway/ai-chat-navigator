@@ -4,7 +4,7 @@ A lightweight yet powerful browser extension that brings intelligent navigation 
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v0.5.0**
+> Current Version: **v0.5.2**
 
 ## 🚀 Chrome Web Store (Recommended)
 
@@ -14,7 +14,17 @@ Now live on the Chrome Web Store. Install there for automatic updates and the sm
 
 ## 📝 Version Changelog
 
-### v0.5.0 (2026-02-24)
+### v0.5.2
+- In minimal mode, hover previews now expand in a way that avoids covering the main chat content whenever possible
+- Added a minimum preview width so details stay readable on smaller windows
+- Click feedback now briefly deepens the user prompt bubble background, then smoothly restores it
+
+### v0.5.1 
+- Fixed Gemini normal-mode titles showing hidden speaker prefixes (localized “You said” labels)
+- Navigator now shows only the user’s actual prompt text in normal mode
+- Kept display behavior consistent across different language settings
+
+### v0.5.0 
 - Added automatic light/dark adaptation so the navigator follows the page appearance
 - Theme auto-follow now works smoothly on both ChatGPT and Gemini
 - Improved dark mode visuals for more comfortable night reading
@@ -29,7 +39,7 @@ Now live on the Chrome Web Store. Install there for automatic updates and the sm
 
 ### 🎯 Intelligent Navigation System
 - **Auto-detect User Prompts**: Analyzes conversation flow in real-time, extracts all user messages, and generates navigable entries in order
-- **Smooth Jump Experience**: Click any entry and the page automatically scrolls to the corresponding position with a brief highlight indicator for easy locating
+- **Smooth Jump Experience**: Click any entry and the page automatically scrolls to the target, then briefly deepens the prompt bubble background for easier locating
 - **Real-time Content Sync**: Supports SPA route changes and dynamic content loading; navigation list updates automatically without manual refresh
 
 ### 📱 Flexible Display Modes
@@ -142,7 +152,7 @@ Handles extension lifecycle and real-time interaction (490 lines of core logic):
 - **Message Detection**: Traverse DOM, collect user messages and auto-pair with AI reply previews
 - **Dynamic Updates**: Monitor conversation changes via MutationObserver; auto-rebuild list
 - **Route Detection**: Poll URL changes periodically; clear list on SPA route switches
-- **Interaction Handling**: Click nav item → Smooth scroll to message → Show highlight indicator
+- **Interaction Handling**: Click nav item → Smooth scroll to message → Prompt bubble briefly deepens and restores
 - **FAB Dragging**: Complete pointer event handling supporting mobile touch and desktop mouse
 
 ## 💾 Data Storage Mechanism

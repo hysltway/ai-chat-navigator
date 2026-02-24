@@ -32,6 +32,13 @@
         --nav-accent-strong: #8f6b24;
         --nav-hover: #f4edd6;
         --nav-accent-shadow: rgba(143, 107, 36, 0.18);
+        --nav-item-active-color: #8f6b24;
+        --nav-item-active-shadow: rgba(143, 107, 36, 0.18);
+        --nav-control-hover-border: #8f6b24;
+        --nav-control-hover-text: #8f6b24;
+        --nav-control-active-border: #8f6b24;
+        --nav-control-active-bg: #d3b05b;
+        --nav-control-active-text: #3b2a0b;
         --nav-shadow: 0 18px 42px rgba(23, 21, 16, 0.16);
         --nav-button-bg: #fff;
         --nav-item-bg: rgba(255, 255, 255, 0.8);
@@ -51,6 +58,13 @@
         --nav-accent-strong: #f1c874;
         --nav-hover: #212a36;
         --nav-accent-shadow: rgba(241, 200, 116, 0.18);
+        --nav-item-active-color: #6fc8ff;
+        --nav-item-active-shadow: rgba(111, 200, 255, 0.28);
+        --nav-control-hover-border: #6fc8ff;
+        --nav-control-hover-text: #6fc8ff;
+        --nav-control-active-border: #6fc8ff;
+        --nav-control-active-bg: rgba(111, 200, 255, 0.2);
+        --nav-control-active-text: #e8f5ff;
         --nav-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
         --nav-button-bg: #1d242d;
         --nav-item-bg: rgba(31, 40, 51, 0.9);
@@ -119,15 +133,15 @@
       }
 
       .panel-toggle:hover {
-        border-color: var(--nav-accent-strong);
-        color: var(--nav-accent-strong);
+        border-color: var(--nav-control-hover-border);
+        color: var(--nav-control-hover-text);
         background: var(--nav-hover);
       }
 
       .panel-toggle.is-active {
-        border-color: var(--nav-accent-strong);
-        background: var(--nav-accent);
-        color: var(--nav-active-text);
+        border-color: var(--nav-control-active-border);
+        background: var(--nav-control-active-bg);
+        color: var(--nav-control-active-text);
       }
 
       .panel-body {
@@ -154,25 +168,26 @@
       }
 
       .nav-item:hover {
-        border-color: var(--nav-accent-strong);
-        box-shadow: 0 8px 20px var(--nav-accent-shadow);
+        border-color: var(--nav-item-active-color);
+        box-shadow: 0 8px 20px var(--nav-item-active-shadow);
       }
 
       .nav-item.is-active {
-        border-color: var(--nav-accent-strong);
+        border-color: var(--nav-item-active-color);
         background: var(--nav-hover);
-        box-shadow: 0 8px 20px var(--nav-accent-shadow);
+        box-shadow: 0 8px 20px var(--nav-item-active-shadow);
       }
 
-      .nav-item.is-active::before {
+      .nav-item.is-active::after {
         content: '';
         position: absolute;
-        left: -6px;
-        top: 8px;
-        bottom: 8px;
-        width: 4px;
-        border-radius: 999px;
-        background: var(--nav-accent-strong);
+        right: -2px;
+        top: -2px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--nav-item-active-color);
+        box-shadow: 0 0 0 2px var(--nav-surface);
       }
 
       .nav-root[data-minimal="1"] .nav-item {
@@ -288,23 +303,14 @@
       }
 
       .nav-root[data-minimal="1"] .nav-item.is-active {
-        box-shadow: 0 0 0 2px var(--nav-accent-strong);
+        border-color: var(--nav-item-active-color);
+        background: var(--nav-hover);
+        box-shadow: 0 0 0 1px var(--nav-item-active-color);
       }
 
-      .nav-root[data-minimal="1"] .nav-item.is-active::before {
-        display: none;
-      }
-
-      .nav-root[data-minimal="1"] .nav-item.is-active::after {
-        content: '';
-        position: absolute;
-        right: -2px;
-        top: -2px;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--nav-accent-strong);
-        box-shadow: 0 0 0 2px var(--nav-surface);
+      .nav-root[data-minimal="1"] .nav-item.is-active .nav-item-minimal {
+        color: var(--nav-item-active-color);
+        font-weight: 700;
       }
 
       .fab {
@@ -572,7 +578,7 @@
     });
   }
 
-  function showPreview(ui, message, item) {
+  function showPreview(ui, message, item, options = {}) {
     if (!message || !item) {
       return;
     }
@@ -596,29 +602,40 @@
     const panelRect = ui.panel.getBoundingClientRect();
     const itemRect = item.getBoundingClientRect();
     const gap = 12;
-    const maxWidth = Math.min(360, Math.floor(window.innerWidth * 0.6));
+    const viewportPadding = 8;
     const minWidth = 180;
-    const available = panelRect.left - gap;
-    let width = Math.min(maxWidth, available);
-    let overlay = false;
+    const maxWidth = Math.min(360, Math.floor(window.innerWidth * 0.56));
+    const protectedRight = Number.isFinite(options.contentRight)
+      ? Math.max(0, Math.floor(options.contentRight))
+      : null;
+    const minLeft = Number.isFinite(protectedRight)
+      ? Math.max(viewportPadding, protectedRight + gap)
+      : viewportPadding;
 
-    if (width < minWidth) {
-      overlay = true;
-      width = Math.min(maxWidth, panelRect.width - 24);
+    const safeAvailable = panelRect.left - gap - minLeft;
+    let width = Number.isFinite(safeAvailable)
+      ? Math.max(minWidth, Math.min(maxWidth, Math.floor(safeAvailable)))
+      : minWidth;
+    if (!Number.isFinite(width) || width <= 0) {
+      width = minWidth;
     }
 
-    ui.preview.dataset.overlay = overlay ? '1' : '0';
-    width = Math.max(120, Math.floor(width));
-    if (overlay && panelRect.width > 24) {
-      width = Math.min(width, panelRect.width - 24);
+    let left = panelRect.left - gap - width;
+    if (left < minLeft) {
+      left = minLeft;
     }
-    ui.preview.style.setProperty('--preview-width', `${width}px`);
+    if (left < viewportPadding) {
+      left = viewportPadding;
+    }
 
-    const maxLeft = Math.max(8, window.innerWidth - width - 8);
-    let left = overlay
-      ? panelRect.right - width - gap
-      : panelRect.left - gap - width;
-    left = Math.min(Math.max(8, left), maxLeft);
+    const viewportRight = window.innerWidth - viewportPadding;
+    const visibleWidth = Math.floor(viewportRight - left);
+    if (visibleWidth >= minWidth) {
+      width = Math.min(width, visibleWidth);
+    }
+
+    ui.preview.dataset.overlay = left + width > viewportRight ? '1' : '0';
+    ui.preview.style.setProperty('--preview-width', `${Math.max(minWidth, width)}px`);
     ui.preview.style.left = `${left}px`;
     ui.preview.style.right = 'auto';
 
