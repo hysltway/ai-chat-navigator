@@ -33,9 +33,28 @@
         --nav-hover: #f4edd6;
         --nav-accent-shadow: rgba(143, 107, 36, 0.18);
         --nav-shadow: 0 18px 42px rgba(23, 21, 16, 0.16);
+        --nav-button-bg: #fff;
+        --nav-item-bg: rgba(255, 255, 255, 0.8);
+        --nav-active-text: #3b2a0b;
         --nav-panel-offset: 88px;
         --nav-panel-max-height: calc(100vh - 176px);
         font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+      }
+
+      .nav-root[data-color-scheme="dark"] {
+        --nav-bg: #121417;
+        --nav-surface: #161a1f;
+        --nav-border: #2b3440;
+        --nav-text: #e6ecf3;
+        --nav-muted: #9ca8b8;
+        --nav-accent: #d3b05b;
+        --nav-accent-strong: #f1c874;
+        --nav-hover: #212a36;
+        --nav-accent-shadow: rgba(241, 200, 116, 0.18);
+        --nav-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+        --nav-button-bg: #1d242d;
+        --nav-item-bg: rgba(31, 40, 51, 0.9);
+        --nav-active-text: #241605;
       }
 
       .panel {
@@ -90,7 +109,7 @@
 
       .panel-toggle {
         border: 1px solid var(--nav-border);
-        background: #fff;
+        background: var(--nav-button-bg);
         color: var(--nav-text);
         font-size: 12px;
         border-radius: 999px;
@@ -108,7 +127,7 @@
       .panel-toggle.is-active {
         border-color: var(--nav-accent-strong);
         background: var(--nav-accent);
-        color: #3b2a0b;
+        color: var(--nav-active-text);
       }
 
       .panel-body {
@@ -126,7 +145,7 @@
         padding: 10px 12px;
         border-radius: 12px;
         border: 1px solid transparent;
-        background: rgba(255, 255, 255, 0.8);
+        background: var(--nav-item-bg);
         cursor: pointer;
         display: flex;
         flex-direction: column;
@@ -364,6 +383,7 @@
     root.className = 'nav-root';
     root.dataset.collapsed = '0';
     root.dataset.adaptiveMinimal = '0';
+    root.dataset.colorScheme = 'light';
 
     const panel = document.createElement('div');
     panel.className = 'panel';
@@ -533,6 +553,10 @@
     }
   }
 
+  function setColorScheme(ui, colorScheme) {
+    ui.root.dataset.colorScheme = colorScheme === 'dark' ? 'dark' : 'light';
+  }
+
   function setActiveIndex(ui, index) {
     const activeIndex = Number.isFinite(index) ? index : null;
     const items = ui.body.querySelectorAll('.nav-item');
@@ -623,6 +647,7 @@
     setCollapsed,
     setMinimalMode,
     setAdaptiveMinimal,
+    setColorScheme,
     setActiveIndex,
     showPreview,
     hidePreview,
