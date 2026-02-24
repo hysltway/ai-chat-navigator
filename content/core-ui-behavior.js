@@ -23,6 +23,8 @@
   let CHATGPT_USER_BUBBLE_BG;
   let GEMINI_USER_BUBBLE_BG;
   let scrollToMessage;
+  let cachedConversationScrollContainer = null;
+  let cachedConversationScrollRoot = null;
 
   function initBehaviorApi(ctx) {
     ({
@@ -644,6 +646,7 @@
   function refreshActiveIndex(force = false) {
     const nextIndex = getActiveIndex();
     setActiveIndex(nextIndex, force);
+    syncNavScrollWithViewportEdge(nextIndex);
   }
 
   function setActiveIndex(nextIndex, force = false) {
@@ -666,13 +669,21 @@
     if (!item) {
       return;
     }
-    const containerRect = state.ui.body.getBoundingClientRect();
+    const scroller = state.ui.body;
+    const containerRect = scroller.getBoundingClientRect();
     const itemRect = item.getBoundingClientRect();
-    const edgePadding = 8;
-    const itemAbove = itemRect.top < containerRect.top + edgePadding;
-    const itemBelow = itemRect.bottom > containerRect.bottom - edgePadding;
-    if (itemAbove || itemBelow) {
-      item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    const edgePadding = Math.min(56, Math.max(20, Math.floor(containerRect.height * 0.16)));
+    const safeTop = containerRect.top + edgePadding;
+    const safeBottom = containerRect.bottom - edgePadding;
+    const itemAbove = itemRect.top < safeTop;
+    const itemBelow = itemRect.bottom > safeBottom;
+    if (itemAbove) {
+      scroller.scrollTop -= safeTop - itemRect.top;
+      scheduleMinimalScrollHintUpdate();
+      return;
+    }
+    if (itemBelow) {
+      scroller.scrollTop += itemRect.bottom - safeBottom;
       scheduleMinimalScrollHintUpdate();
     }
   }
@@ -699,6 +710,9 @@
   function getActiveIndex() {
     if (!state.messages.length) {
       return null;
+    }
+    if (isViewportNearConversationEnd()) {
+      return state.messages.length - 1;
     }
     const targetY = window.innerHeight / 2;
     const viewportBottom = window.innerHeight;
@@ -751,6 +765,101 @@
       return nearestVisibleIndex;
     }
     return nearestIndex !== null ? nearestIndex : state.activeIndex;
+  }
+
+  function syncNavScrollWithViewportEdge(activeIndex) {
+    if (!state.ui || !state.ui.body || !state.messages.length || !Number.isFinite(activeIndex)) {
+      return;
+    }
+    const lastIndex = state.messages.length - 1;
+    if (activeIndex !== lastIndex || !isViewportNearConversationEnd()) {
+      return;
+    }
+    state.ui.body.scrollTop = state.ui.body.scrollHeight;
+    scheduleMinimalScrollHintUpdate();
+  }
+
+  function isViewportNearConversationEnd() {
+    if (!state.messages.length) {
+      return false;
+    }
+    const lastMessage = state.messages[state.messages.length - 1];
+    const targetNode = lastMessage && (lastMessage.endNode || lastMessage.node);
+    if (!targetNode || typeof targetNode.getBoundingClientRect !== 'function') {
+      return false;
+    }
+    const rect = targetNode.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) {
+      return false;
+    }
+    const scrollContainer = resolveConversationScrollContainer(targetNode);
+    if (!isScrollContainerNearBottom(scrollContainer)) {
+      return false;
+    }
+    const viewportBottom = window.innerHeight || 0;
+    const bottomTolerance = 16;
+    return rect.bottom <= viewportBottom + bottomTolerance;
+  }
+
+  function resolveConversationScrollContainer(anchorNode) {
+    const root = state.root || anchorNode || null;
+    if (
+      cachedConversationScrollContainer &&
+      cachedConversationScrollRoot === root &&
+      cachedConversationScrollContainer.isConnected
+    ) {
+      return cachedConversationScrollContainer;
+    }
+
+    const fallback = document.scrollingElement || document.documentElement;
+    const container = findScrollableAncestor(anchorNode) || findScrollableAncestor(root) || fallback;
+    cachedConversationScrollContainer = container;
+    cachedConversationScrollRoot = root;
+    return container;
+  }
+
+  function findScrollableAncestor(startNode) {
+    if (!startNode || typeof startNode !== 'object') {
+      return null;
+    }
+    let node = startNode.nodeType === 1 ? startNode : startNode.parentElement;
+    while (node && node !== document.documentElement) {
+      if (isElementScrollable(node)) {
+        return node;
+      }
+      node = node.parentElement;
+    }
+    return null;
+  }
+
+  function isElementScrollable(node) {
+    if (!node || typeof node.scrollHeight !== 'number' || typeof node.clientHeight !== 'number') {
+      return false;
+    }
+    if (node.scrollHeight <= node.clientHeight + 1) {
+      return false;
+    }
+    if (typeof window.getComputedStyle !== 'function') {
+      return false;
+    }
+    const overflowY = window.getComputedStyle(node).overflowY;
+    return overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay';
+  }
+
+  function isScrollContainerNearBottom(container) {
+    const target = container || document.scrollingElement || document.documentElement;
+    if (!target) {
+      return false;
+    }
+    const scrollHeight = target.scrollHeight || 0;
+    const clientHeight = target.clientHeight || 0;
+    if (scrollHeight <= clientHeight + 1) {
+      return true;
+    }
+    const scrollTop = target.scrollTop || 0;
+    const remaining = scrollHeight - clientHeight - scrollTop;
+    const tolerance = 6;
+    return remaining <= tolerance;
   }
 
   function schedulePreviewHide() {
