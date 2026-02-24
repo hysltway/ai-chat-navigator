@@ -1,6 +1,6 @@
-# 🧭 AI Chat Navigator Extension
+# 🧭 JumpNav
 
-A lightweight yet powerful browser extension that brings intelligent navigation functionality to AI chat platforms like ChatGPT and Gemini. Quickly locate user prompts in long conversations and jump to them—say goodbye to inefficient scrolling.
+JumpNav is a floating side navigator for ChatGPT and Gemini that turns long AI conversations into clickable outlines, so you can find prompts and answers in seconds.
 
 **Language:** [简体中文](README.md) | **English**
 
@@ -10,7 +10,7 @@ A lightweight yet powerful browser extension that brings intelligent navigation 
 
 Now live on the Chrome Web Store. Install there for automatic updates and the smoothest experience.
 
-[ChatGPT & Gemini Quick Navi](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
+[JumpNav: The most elegant AI chat navigator you’ve ever seen.](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
 
 ## 📸 Interface Preview
 
@@ -64,6 +64,12 @@ Now live on the Chrome Web Store. Install there for automatic updates and the sm
 - Panel can return to normal mode automatically after window size recovers
 - Fixed flickering while continuously resizing the browser window
 
+## 💡 Core Value
+
+- **Less scrolling, more thinking**: Turn long threads into a structured outline and reduce search friction
+- **Jump to context instantly**: Click any entry to smoothly return to the exact spot in the conversation
+- **Low-interruption workflow**: Right-side floating UI with hide/restore and position memory
+
 ## ✨ Core Features
 
 ### 🎯 Intelligent Navigation System
@@ -95,6 +101,10 @@ Now live on the Chrome Web Store. Install there for automatic updates and the sm
 - **Keyboard Friendly**: Complete keyboard navigation support with proper focus management
 - **Accessibility Support**: Respects `prefers-reduced-motion` system setting, providing non-transition experience for sensitive users
 - **Automatic Theme Adaptation**: Navigator colors follow site light/dark theme automatically (ChatGPT/Gemini)
+
+## 🙏 Acknowledgements
+
+- The light/dark radial transition animation is inspired by [urzeye/ophel](https://github.com/urzeye/ophel). Thanks for the open-source reference.
 
 ## 📄 License
 

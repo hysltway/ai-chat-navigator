@@ -6,6 +6,10 @@
   const MINIMAL_LABEL_SHORT = 'M';
   const HIDE_LABEL = 'Hide';
   const HIDE_LABEL_SHORT = 'H';
+  const THEME_TOGGLE_ICONS = {
+    dark: '🌙',
+    light: '☀'
+  };
 
   function createUI() {
     const container = document.createElement('div');
@@ -23,116 +27,118 @@
         inset: 0;
         z-index: 2147483000;
         pointer-events: none;
-        --nav-bg: #f9f9f9;
-        --nav-surface: #f9f9f9;
-        --nav-border: #efefef;
-        --nav-text: #1f1f1f;
-        --nav-muted: #666666;
-        --nav-accent: #efefef;
-        --nav-accent-strong: #1f1f1f;
-        --nav-hover: #efefef;
-        --nav-accent-shadow: rgba(0, 0, 0, 0.06);
-        --nav-item-bg: #f4f4f4;
-        --nav-item-hover-bg: #efefef;
-        --nav-item-active-bg: #eaeaea;
-        --nav-item-hover-border: #efefef;
-        --nav-item-active-border: #eaeaea;
-        --nav-item-active-text: #1f1f1f;
-        --nav-item-indicator-color: #1f1f1f;
-        --nav-item-active-color: #1f1f1f;
-        --nav-item-active-shadow: rgba(0, 0, 0, 0.06);
-        --nav-control-hover-border: #efefef;
-        --nav-control-hover-text: #1f1f1f;
-        --nav-control-active-border: #eaeaea;
-        --nav-control-active-bg: #eaeaea;
-        --nav-control-active-text: #1f1f1f;
-        --nav-shadow: 0 18px 42px rgba(23, 21, 16, 0.16);
-        --nav-button-bg: #f9f9f9;
-        --nav-active-text: #1f1f1f;
+        --nav-bg: #f4f7fc;
+        --nav-surface: #ffffff;
+        --nav-border: #dbe3ef;
+        --nav-text: #162033;
+        --nav-muted: #64748b;
+        --nav-accent: #dfe9f8;
+        --nav-accent-strong: #2f5f9a;
+        --nav-hover: #eef4ff;
+        --nav-accent-shadow: rgba(43, 90, 153, 0.14);
+        --nav-item-bg: #f8fbff;
+        --nav-item-hover-bg: #f0f6ff;
+        --nav-item-active-bg: #e8f1ff;
+        --nav-item-hover-border: #cfdcf1;
+        --nav-item-active-border: #b8cceb;
+        --nav-item-active-text: #203a66;
+        --nav-item-indicator-color: #3f6fb1;
+        --nav-item-active-color: #2d4f84;
+        --nav-item-active-shadow: rgba(34, 76, 132, 0.14);
+        --nav-control-hover-border: #c9d8ef;
+        --nav-control-hover-text: #244772;
+        --nav-control-active-border: #a9c4e8;
+        --nav-control-active-bg: #e5effd;
+        --nav-control-active-text: #1e3d66;
+        --nav-shadow: 0 14px 34px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.05);
+        --nav-button-bg: #ffffff;
+        --nav-active-text: #203a66;
         --nav-panel-offset: 88px;
         --nav-panel-max-height: calc(100vh - 176px);
         font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
       }
 
       .nav-root[data-color-scheme="light"][data-site="chatgpt"] {
-        --nav-bg: #f9f9f9;
-        --nav-surface: #f9f9f9;
-        --nav-border: #efefef;
-        --nav-text: #1f1f1f;
-        --nav-muted: #666666;
-        --nav-accent: #efefef;
-        --nav-accent-strong: #1f1f1f;
-        --nav-hover: #efefef;
-        --nav-item-bg: #f4f4f4;
-        --nav-item-hover-bg: #efefef;
-        --nav-item-active-bg: #eaeaea;
-        --nav-item-hover-border: #efefef;
-        --nav-item-active-border: #eaeaea;
-        --nav-item-active-text: #1f1f1f;
-        --nav-item-indicator-color: #1f1f1f;
-        --nav-item-active-color: #1f1f1f;
-        --nav-item-active-shadow: rgba(0, 0, 0, 0.06);
-        --nav-control-hover-border: #efefef;
-        --nav-control-hover-text: #1f1f1f;
-        --nav-control-active-border: #eaeaea;
-        --nav-control-active-bg: #eaeaea;
-        --nav-control-active-text: #1f1f1f;
-        --nav-button-bg: #f9f9f9;
+        --nav-bg: #f7f8fa;
+        --nav-surface: #fcfdff;
+        --nav-border: #dfe4eb;
+        --nav-text: #1f2937;
+        --nav-muted: #687385;
+        --nav-accent: #e6ebf2;
+        --nav-accent-strong: #334155;
+        --nav-hover: #f1f4f8;
+        --nav-item-bg: #f7f9fc;
+        --nav-item-hover-bg: #eef3f9;
+        --nav-item-active-bg: #e7edf7;
+        --nav-item-hover-border: #d7dfeb;
+        --nav-item-active-border: #c5d2e6;
+        --nav-item-active-text: #253449;
+        --nav-item-indicator-color: #3f5b82;
+        --nav-item-active-color: #2f4766;
+        --nav-item-active-shadow: rgba(47, 71, 102, 0.14);
+        --nav-control-hover-border: #ccd7e6;
+        --nav-control-hover-text: #334a68;
+        --nav-control-active-border: #b7c8df;
+        --nav-control-active-bg: #e2eaf7;
+        --nav-control-active-text: #2f4766;
+        --nav-shadow: 0 14px 34px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.05);
+        --nav-button-bg: #fcfdff;
       }
 
       .nav-root[data-color-scheme="light"][data-site="gemini"] {
-        --nav-bg: #f3f6fc;
-        --nav-surface: #f3f6fc;
-        --nav-border: #dce1e9;
-        --nav-text: #1f2a3d;
-        --nav-muted: #546377;
-        --nav-accent: #dce1e9;
-        --nav-accent-strong: #0842a0;
-        --nav-hover: #dce1e9;
-        --nav-item-bg: #e9eef6;
-        --nav-item-hover-bg: #dce1e9;
-        --nav-item-active-bg: #d3e3fd;
-        --nav-item-hover-border: #dce1e9;
-        --nav-item-active-border: #d3e3fd;
-        --nav-item-active-text: #0842a0;
-        --nav-item-indicator-color: #0842a0;
-        --nav-item-active-color: #0842a0;
-        --nav-item-active-shadow: rgba(8, 66, 160, 0.16);
-        --nav-control-hover-border: #dce1e9;
-        --nav-control-hover-text: #0842a0;
-        --nav-control-active-border: #d3e3fd;
-        --nav-control-active-bg: #d3e3fd;
-        --nav-control-active-text: #0842a0;
-        --nav-button-bg: #f3f6fc;
+        --nav-bg: #f2f6fd;
+        --nav-surface: #f9fbff;
+        --nav-border: #d2ddec;
+        --nav-text: #1d2b3f;
+        --nav-muted: #5a6e88;
+        --nav-accent: #dbe8fb;
+        --nav-accent-strong: #1f57a6;
+        --nav-hover: #e8f0fd;
+        --nav-item-bg: #eef4fd;
+        --nav-item-hover-bg: #e2ecfb;
+        --nav-item-active-bg: #d7e6fb;
+        --nav-item-hover-border: #c5d8f4;
+        --nav-item-active-border: #aac7ef;
+        --nav-item-active-text: #17478f;
+        --nav-item-indicator-color: #2b67be;
+        --nav-item-active-color: #1d57ab;
+        --nav-item-active-shadow: rgba(28, 88, 171, 0.18);
+        --nav-control-hover-border: #bcd3f3;
+        --nav-control-hover-text: #225aa8;
+        --nav-control-active-border: #9fc0ea;
+        --nav-control-active-bg: #d9e8fb;
+        --nav-control-active-text: #174b95;
+        --nav-shadow: 0 14px 36px rgba(31, 71, 129, 0.17), 0 2px 8px rgba(31, 71, 129, 0.08);
+        --nav-button-bg: #f8fbff;
       }
 
       .nav-root[data-color-scheme="dark"] {
-        --nav-bg: #121417;
-        --nav-surface: #161a1f;
-        --nav-border: #2b3440;
-        --nav-text: #e6ecf3;
-        --nav-muted: #9ca8b8;
-        --nav-accent: #d3b05b;
-        --nav-accent-strong: #f1c874;
-        --nav-hover: #212a36;
-        --nav-accent-shadow: rgba(241, 200, 116, 0.18);
-        --nav-item-hover-bg: #212a36;
-        --nav-item-active-bg: #212a36;
-        --nav-item-hover-border: #6fc8ff;
-        --nav-item-active-border: #6fc8ff;
-        --nav-item-active-text: #e8f5ff;
-        --nav-item-indicator-color: #6fc8ff;
-        --nav-item-active-color: #6fc8ff;
-        --nav-item-active-shadow: rgba(111, 200, 255, 0.28);
-        --nav-control-hover-border: #6fc8ff;
-        --nav-control-hover-text: #6fc8ff;
-        --nav-control-active-border: #6fc8ff;
-        --nav-control-active-bg: rgba(111, 200, 255, 0.2);
-        --nav-control-active-text: #e8f5ff;
-        --nav-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
-        --nav-button-bg: #1d242d;
-        --nav-item-bg: rgba(31, 40, 51, 0.9);
-        --nav-active-text: #241605;
+        --nav-bg: #0f1620;
+        --nav-surface: #141e2a;
+        --nav-border: #253447;
+        --nav-text: #e5edf7;
+        --nav-muted: #9db0c6;
+        --nav-accent: #223448;
+        --nav-accent-strong: #7bb8ff;
+        --nav-hover: #1b2838;
+        --nav-accent-shadow: rgba(104, 170, 244, 0.2);
+        --nav-item-bg: #192636;
+        --nav-item-hover-bg: #223247;
+        --nav-item-active-bg: #263a52;
+        --nav-item-hover-border: #355271;
+        --nav-item-active-border: #4f79a8;
+        --nav-item-active-text: #eff6ff;
+        --nav-item-indicator-color: #7fb8f5;
+        --nav-item-active-color: #9dcbff;
+        --nav-item-active-shadow: rgba(77, 121, 168, 0.28);
+        --nav-control-hover-border: #4b6f97;
+        --nav-control-hover-text: #b6d8ff;
+        --nav-control-active-border: #6a95c7;
+        --nav-control-active-bg: rgba(106, 149, 199, 0.24);
+        --nav-control-active-text: #edf5ff;
+        --nav-shadow: 0 20px 48px rgba(3, 8, 17, 0.58), 0 2px 10px rgba(3, 8, 17, 0.35);
+        --nav-button-bg: #182434;
+        --nav-active-text: #e7f2ff;
       }
 
       .panel {
@@ -154,9 +160,10 @@
 
       .panel-header {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 14px 8px 14px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px 14px 10px 14px;
         border-bottom: 1px solid var(--nav-border);
         background: var(--nav-surface);
       }
@@ -182,7 +189,9 @@
         display: flex;
         gap: 6px;
         align-items: center;
+        justify-content: flex-start;
         flex-wrap: nowrap;
+        width: 100%;
       }
 
       .panel-toggle {
@@ -208,6 +217,20 @@
         color: var(--nav-control-active-text);
       }
 
+      .panel-toggle-theme {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        padding: 0;
+        border-radius: 999px;
+        text-align: center;
+        font-size: 15px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       .panel-body {
         flex: 1 1 auto;
         min-height: 0;
@@ -229,18 +252,22 @@
         flex-direction: column;
         gap: 4px;
         position: relative;
+        transition: border-color 160ms ease, background-color 160ms ease, box-shadow 220ms ease,
+          transform 160ms ease;
       }
 
       .nav-item:hover {
         border-color: var(--nav-item-hover-border);
         background: var(--nav-item-hover-bg);
-        box-shadow: 0 8px 20px var(--nav-item-active-shadow);
+        box-shadow: 0 6px 16px var(--nav-item-active-shadow);
+        transform: translateY(-1px);
       }
 
       .nav-item.is-active {
         border-color: var(--nav-item-active-border);
         background: var(--nav-item-active-bg);
-        box-shadow: 0 8px 20px var(--nav-item-active-shadow);
+        box-shadow: 0 6px 16px var(--nav-item-active-shadow);
+        transform: none;
       }
 
       .nav-item.is-active::after {
@@ -336,7 +363,6 @@
       .nav-root[data-minimal="1"] .panel-header {
         padding: 8px;
         align-items: center;
-        justify-content: center;
       }
 
       .nav-root[data-minimal="1"] .panel-title {
@@ -353,6 +379,14 @@
         padding: 4px 6px;
         font-size: 11px;
         letter-spacing: 0.6px;
+      }
+
+      .nav-root[data-minimal="1"] .panel-toggle-theme {
+        min-width: 0;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        font-size: 13px;
       }
 
       .nav-root[data-minimal="1"] .panel-body {
@@ -481,6 +515,12 @@
     const actions = document.createElement('div');
     actions.className = 'panel-actions';
 
+    const themeToggle = document.createElement('button');
+    themeToggle.type = 'button';
+    themeToggle.className = 'panel-toggle panel-toggle-theme';
+    themeToggle.textContent = THEME_TOGGLE_ICONS.dark;
+    themeToggle.setAttribute('aria-label', 'Switch to Dark mode');
+
     const minimalToggle = document.createElement('button');
     minimalToggle.type = 'button';
     minimalToggle.className = 'panel-toggle panel-toggle-minimal';
@@ -494,6 +534,7 @@
     toggle.textContent = HIDE_LABEL;
     toggle.setAttribute('aria-label', HIDE_LABEL);
 
+    actions.appendChild(themeToggle);
     actions.appendChild(minimalToggle);
     actions.appendChild(toggle);
 
@@ -543,6 +584,7 @@
       subtitle,
       toggle,
       minimalToggle,
+      themeToggle,
       preview,
       previewInner,
       fab
@@ -620,6 +662,7 @@
     ui.toggle.textContent = enabled ? HIDE_LABEL_SHORT : HIDE_LABEL;
     ui.minimalToggle.setAttribute('aria-label', MINIMAL_LABEL);
     ui.toggle.setAttribute('aria-label', HIDE_LABEL);
+    setThemeToggle(ui, ui.root.dataset.colorScheme || 'light');
   }
 
   function setAdaptiveMinimal(ui, enabled) {
@@ -631,8 +674,24 @@
     }
   }
 
+  function setThemeToggle(ui, colorScheme) {
+    if (!ui || !ui.themeToggle) {
+      return;
+    }
+    const normalized = colorScheme === 'dark' ? 'dark' : 'light';
+    const nextScheme = normalized === 'dark' ? 'light' : 'dark';
+    const nextModeLabel = nextScheme === 'dark' ? 'Dark' : 'Light';
+    const nextIcon = THEME_TOGGLE_ICONS[nextScheme];
+    ui.themeToggle.dataset.nextScheme = nextScheme;
+    ui.themeToggle.textContent = nextIcon;
+    ui.themeToggle.setAttribute('aria-label', `Switch to ${nextModeLabel} mode`);
+    ui.themeToggle.title = `Switch to ${nextModeLabel} mode`;
+  }
+
   function setColorScheme(ui, colorScheme) {
-    ui.root.dataset.colorScheme = colorScheme === 'dark' ? 'dark' : 'light';
+    const normalized = colorScheme === 'dark' ? 'dark' : 'light';
+    ui.root.dataset.colorScheme = normalized;
+    setThemeToggle(ui, normalized);
   }
 
   function setActiveIndex(ui, index) {
@@ -738,6 +797,7 @@
     setCollapsed,
     setMinimalMode,
     setAdaptiveMinimal,
+    setThemeToggle,
     setColorScheme,
     setActiveIndex,
     showPreview,

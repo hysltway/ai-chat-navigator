@@ -1,6 +1,6 @@
-# 🧭 AI Chat Navigator Extension
+# 🧭 JumpNav
 
-一款轻量而强大的浏览器扩展，为 ChatGPT、Gemini 等 AI 对话平台注入智能导航功能。在长对话中快速定位用户提问、跳转查看，告别频繁滚动的低效时代。
+JumpNav 是一款为 ChatGPT 与 Gemini 打造的悬浮侧边导航器，可将长对话自动整理为可点击目录，帮助你快速定位提问与回答。
 
 **语言:** **简体中文** | [English](README_EN.md)
 
@@ -10,7 +10,7 @@
 
 已上架，优先推荐从 Chrome Web Store 安装，自动更新更省心。
 
-[ChatGPT & Gemini Quick Navi](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
+[JumpNav: The most elegant AI chat navigator you’ve ever seen.](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
 
 ## 📸 界面预览
 
@@ -65,6 +65,12 @@
 - 修复窗口拖动时模式频繁闪烁的问题
 - 补充中英文文档与常见问题说明
 
+## 💡 核心价值
+
+- **少滚动，多思考**：把超长聊天变成结构化导航，减少来回翻找成本
+- **即点即达**：点击条目即可平滑跳转，快速回到关键上下文
+- **稳定低打扰**：右侧悬浮、可隐藏、自动记忆位置，不干扰主阅读区域
+
 ## ✨ 核心特性
 
 ### 🎯 智能导航系统
@@ -99,6 +105,10 @@
 - **键盘友好**：完整的键盘导航支持，焦点管理规范
 - **无障碍支持**：尊重 `prefers-reduced-motion` 系统设置，为敏感用户提供无过渡方案
 - **自动主题适配**：跟随站点深浅主题自动切换导航面板配色（ChatGPT/Gemini）
+
+## 🙏 致谢
+
+- 主题切换的扩散动画参考了 [urzeye/ophel](https://github.com/urzeye/ophel) 的实现思路，感谢开源分享。
 
 ## 📄 许可证
 
