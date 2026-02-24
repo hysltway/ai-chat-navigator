@@ -35,6 +35,7 @@
   const THEME_ATTRIBUTE_FILTER = ['class', 'style'];
   const SCROLL_HIGHLIGHT_WAIT_MS = 2600;
   const SCROLL_HIGHLIGHT_DURATION_MS = 820;
+  const SCROLL_SETTLE_IDLE_MS = 180;
   const HIGHLIGHT_DARKEN_DELTA = 24;
   const CHATGPT_USER_BUBBLE_SELECTOR = '[class*="user-message-bubble-color"]';
   const GEMINI_USER_BUBBLE_SELECTOR = '.user-query-bubble-with-background';
@@ -67,7 +68,8 @@
     themeMqlHandler: null,
     highlightRaf: null,
     highlightRestoreTimer: null,
-    highlightToken: 0
+    highlightToken: 0,
+    lastScrollAt: 0
   };
 
   function start() {
@@ -533,6 +535,7 @@
   }
 
   function scrollToMessage(node) {
+    state.lastScrollAt = Date.now();
     node.scrollIntoView({ behavior: 'smooth', block: 'center' });
     flashTarget(node);
   }
@@ -555,6 +558,12 @@
     }
     if (typeof node.matches === 'function' && node.matches(selector)) {
       return node;
+    }
+    if (typeof node.closest === 'function') {
+      const ancestor = node.closest(selector);
+      if (ancestor) {
+        return ancestor;
+      }
     }
     if (typeof node.querySelector === 'function') {
       return node.querySelector(selector);
@@ -586,7 +595,7 @@
       if (!bubble || !bubble.isConnected) {
         return;
       }
-      if (isElementVisibleInViewport(bubble)) {
+      if (isElementVisibleInViewport(bubble) && hasScrollSettled()) {
         runBubbleHighlight(bubble);
         return;
       }
@@ -608,6 +617,13 @@
       window.clearTimeout(state.highlightRestoreTimer);
       state.highlightRestoreTimer = null;
     }
+  }
+
+  function hasScrollSettled() {
+    if (!state.lastScrollAt) {
+      return true;
+    }
+    return Date.now() - state.lastScrollAt >= SCROLL_SETTLE_IDLE_MS;
   }
 
   function isElementVisibleInViewport(node) {
@@ -1048,6 +1064,7 @@
 
   function initActiveTracking() {
     const scheduleActiveUpdate = () => {
+      state.lastScrollAt = Date.now();
       if (state.activeRaf) {
         return;
       }

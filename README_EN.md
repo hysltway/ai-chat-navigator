@@ -4,7 +4,7 @@ A lightweight yet powerful browser extension that brings intelligent navigation 
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v0.5.2**
+> Current Version: **v0.5.3**
 
 ## 🚀 Chrome Web Store (Recommended)
 
@@ -13,6 +13,11 @@ Now live on the Chrome Web Store. Install there for automatic updates and the sm
 [ChatGPT & Gemini Quick Navi](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
 
 ## 📝 Version Changelog
+
+### v0.5.3
+- Fixed an issue where Gemini prompt bubble highlighting could fail after jump navigation
+- Highlight feedback now appears after scrolling settles for a smoother locating experience
+- In minimal mode, when space is too tight, the preview can temporarily overlap chat content to keep details readable
 
 ### v0.5.2
 - In minimal mode, hover previews now expand in a way that avoids covering the main chat content whenever possible

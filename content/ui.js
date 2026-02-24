@@ -613,28 +613,22 @@
       : viewportPadding;
 
     const safeAvailable = panelRect.left - gap - minLeft;
-    let width = Number.isFinite(safeAvailable)
-      ? Math.max(minWidth, Math.min(maxWidth, Math.floor(safeAvailable)))
-      : minWidth;
+    const canAvoidContent = Number.isFinite(safeAvailable) && safeAvailable >= minWidth;
+    let width = canAvoidContent ? Math.min(maxWidth, Math.floor(safeAvailable)) : minWidth;
     if (!Number.isFinite(width) || width <= 0) {
       width = minWidth;
     }
 
     let left = panelRect.left - gap - width;
-    if (left < minLeft) {
+    if (canAvoidContent && left < minLeft) {
       left = minLeft;
     }
-    if (left < viewportPadding) {
-      left = viewportPadding;
-    }
-
     const viewportRight = window.innerWidth - viewportPadding;
-    const visibleWidth = Math.floor(viewportRight - left);
-    if (visibleWidth >= minWidth) {
-      width = Math.min(width, visibleWidth);
-    }
+    const maxLeft = Math.max(viewportPadding, viewportRight - width);
+    left = Math.min(Math.max(viewportPadding, left), maxLeft);
 
-    ui.preview.dataset.overlay = left + width > viewportRight ? '1' : '0';
+    const overlapsContent = !canAvoidContent && Number.isFinite(protectedRight) && left < minLeft;
+    ui.preview.dataset.overlay = overlapsContent ? '1' : '0';
     ui.preview.style.setProperty('--preview-width', `${Math.max(minWidth, width)}px`);
     ui.preview.style.left = `${left}px`;
     ui.preview.style.right = 'auto';

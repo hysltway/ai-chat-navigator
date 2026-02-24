@@ -4,7 +4,7 @@
 
 **语言:** **简体中文** | [English](README_EN.md)
 
-> 当前版本：**v0.5.2**
+> 当前版本：**v0.5.3**
 
 ## 🚀 Chrome Web Store（推荐）
 
@@ -13,6 +13,11 @@
 [ChatGPT & Gemini Quick Navi](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
 
 ## 📝 版本更新日志
+
+### v0.5.3
+- 修复 Gemini 跳转后提问气泡有时不高亮的问题
+- 高亮提示改为在页面滚动稳定后再出现，定位更自然
+- 简约模式在空间不足且达到最小宽度时，可临时覆盖正文保证可读性
 
 ### v0.5.2
 - 简约模式下，悬停详情会优先在不遮挡聊天正文的区域展开
