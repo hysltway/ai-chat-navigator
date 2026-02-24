@@ -4,6 +4,7 @@
   const ns = window.ChatGptNav;
   const { CONFIG } = ns;
   const PREVIEW_HIDE_DELAY = 140;
+  const MANUAL_NAV_SCROLL_LOCK_MS = 1800;
   const MINIMAL_MODE_KEY = 'chatgpt-nav-minimal-mode';
   const DEFAULT_NORMAL_PANEL_WIDTH = 280;
   const PANEL_CONTENT_MIN_GAP = 14;
@@ -75,7 +76,9 @@
     highlightRaf: null,
     highlightRestoreTimer: null,
     highlightToken: 0,
-    lastScrollAt: 0
+    lastScrollAt: 0,
+    minimalScrollRaf: null,
+    suppressEnsureVisibleUntil: 0
   };
 
   function start() {
@@ -155,7 +158,9 @@
       if (!message || !message.node) {
         return;
       }
+      state.suppressEnsureVisibleUntil = Date.now() + MANUAL_NAV_SCROLL_LOCK_MS;
       setActiveIndex(index, true);
+      snapNavListToEdge(index);
       scrollToMessage(message.node);
     });
 
@@ -163,10 +168,29 @@
     state.ui.body.addEventListener('pointerout', handleItemPointerOut);
     state.ui.body.addEventListener('focusin', handleItemFocusIn);
     state.ui.body.addEventListener('focusout', handleItemFocusOut);
+    state.ui.body.addEventListener('scroll', scheduleMinimalScrollHintUpdate, { passive: true });
+    state.ui.panel.addEventListener('wheel', handlePanelWheel, { passive: false });
 
     state.ui.preview.addEventListener('pointerenter', handlePreviewPointerEnter);
     state.ui.preview.addEventListener('pointerleave', handlePreviewPointerLeave);
     state.ui.preview.addEventListener('click', handlePreviewClick);
+  }
+
+  function handlePanelWheel(event) {
+    if (!state.ui || !state.ui.body) {
+      return;
+    }
+    const scroller = state.ui.body;
+    const maxScroll = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+    if (maxScroll <= 1) {
+      return;
+    }
+    const before = scroller.scrollTop;
+    scroller.scrollTop += event.deltaY;
+    if (scroller.scrollTop !== before) {
+      event.preventDefault();
+      scheduleMinimalScrollHintUpdate();
+    }
   }
 
   function initFabDrag() {
@@ -960,6 +984,48 @@
     ns.ui.hidePreview(state.ui);
     ns.ui.renderList(state.ui, state.messages, { minimalMode: state.effectiveMinimalMode });
     refreshActiveIndex(true);
+    scheduleMinimalScrollHintUpdate();
+  }
+
+  function scheduleMinimalScrollHintUpdate() {
+    if (state.minimalScrollRaf) {
+      return;
+    }
+    state.minimalScrollRaf = window.requestAnimationFrame(() => {
+      state.minimalScrollRaf = null;
+      syncMinimalScrollHintState();
+    });
+  }
+
+  function syncMinimalScrollHintState() {
+    if (!state.ui || !state.ui.body || !state.ui.bodyWrap) {
+      return;
+    }
+    if (!state.effectiveMinimalMode) {
+      setMinimalScrollHintState(false, false, false);
+      return;
+    }
+
+    const scroller = state.ui.body;
+    const maxScroll = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+    if (maxScroll <= 1) {
+      setMinimalScrollHintState(false, false, false);
+      return;
+    }
+
+    const top = scroller.scrollTop;
+    const showTopHint = top > 1;
+    const showBottomHint = top < maxScroll - 1;
+    setMinimalScrollHintState(true, showTopHint, showBottomHint);
+  }
+
+  function setMinimalScrollHintState(scrollable, showTopHint, showBottomHint) {
+    if (!state.ui || !state.ui.bodyWrap) {
+      return;
+    }
+    state.ui.bodyWrap.dataset.scrollable = scrollable ? '1' : '0';
+    state.ui.bodyWrap.dataset.scrollTop = showTopHint ? '1' : '0';
+    state.ui.bodyWrap.dataset.scrollBottom = showBottomHint ? '1' : '0';
   }
 
   function setMinimalMode(enabled) {
@@ -1145,6 +1211,7 @@
     state.effectiveMinimalMode = nextMode;
     ns.ui.setMinimalMode(state.ui, nextMode);
     renderMessages();
+    scheduleMinimalScrollHintUpdate();
   }
 
   function refreshPreviewPosition() {
@@ -1292,6 +1359,7 @@
         syncAdaptiveMode();
         refreshActiveIndex();
         refreshPreviewPosition();
+        scheduleMinimalScrollHintUpdate();
       });
     };
     document.addEventListener('scroll', scheduleActiveUpdate, true);
@@ -1309,6 +1377,48 @@
     }
     state.activeIndex = nextIndex;
     ns.ui.setActiveIndex(state.ui, nextIndex);
+    ensureActiveItemVisible(nextIndex);
+  }
+
+  function ensureActiveItemVisible(index) {
+    if (!state.ui || !state.ui.body || !Number.isFinite(index)) {
+      return;
+    }
+    if (Date.now() < state.suppressEnsureVisibleUntil) {
+      return;
+    }
+    const item = state.ui.body.querySelector(`.nav-item[data-index="${index}"]`);
+    if (!item) {
+      return;
+    }
+    const containerRect = state.ui.body.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    const edgePadding = 8;
+    const itemAbove = itemRect.top < containerRect.top + edgePadding;
+    const itemBelow = itemRect.bottom > containerRect.bottom - edgePadding;
+    if (itemAbove || itemBelow) {
+      item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      scheduleMinimalScrollHintUpdate();
+    }
+  }
+
+  function snapNavListToEdge(index) {
+    if (!state.ui || !state.ui.body || !Number.isFinite(index)) {
+      return;
+    }
+    const lastIndex = state.messages.length - 1;
+    if (lastIndex < 0) {
+      return;
+    }
+    if (index === 0) {
+      state.ui.body.scrollTop = 0;
+      scheduleMinimalScrollHintUpdate();
+      return;
+    }
+    if (index === lastIndex) {
+      state.ui.body.scrollTop = state.ui.body.scrollHeight;
+      scheduleMinimalScrollHintUpdate();
+    }
   }
 
   function getActiveIndex() {
