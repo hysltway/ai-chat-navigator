@@ -15,6 +15,11 @@
     user: ['user-query .query-text', 'user-query'],
     assistant: ['model-response message-content', 'model-response']
   };
+  const CLAUDE_SELECTORS = {
+    root: ['#main-content .overflow-y-scroll', '#main-content', 'main', 'body'],
+    user: ["[data-testid='user-message']"],
+    assistant: ['.font-claude-response']
+  };
 
   function createChatLikeAdapter(id) {
     const combinedSelector = ROLE_ATTRIBUTES.map((attr) => `[${attr}]`).join(',');
@@ -48,6 +53,30 @@
           return collectGeminiTurns(turns);
         }
         const byNode = collectGeminiNodes(root);
+        if (byNode.length) {
+          return byNode;
+        }
+        return getMessagesFromRoleAttributes(root);
+      }
+    };
+  }
+
+  function createClaudeAdapter() {
+    return {
+      id: 'claude',
+      getConversationRoot() {
+        return findFirst(document, CLAUDE_SELECTORS.root) || document.body;
+      },
+      getConversationMessages(root) {
+        if (!root) {
+          return [];
+        }
+        const byNode = collectNodesBySelectors(
+          root,
+          CLAUDE_SELECTORS.user,
+          CLAUDE_SELECTORS.assistant,
+          getRoleFromClaudeNode
+        );
         if (byNode.length) {
           return byNode;
         }
@@ -106,16 +135,7 @@
   }
 
   function collectGeminiNodes(root) {
-    const selector = GEMINI_SELECTORS.user.concat(GEMINI_SELECTORS.assistant).join(',');
-    const nodes = root.querySelectorAll(selector);
-    const messages = [];
-    nodes.forEach((node) => {
-      const role = getRoleFromGeminiNode(node);
-      if (role) {
-        messages.push({ node, role });
-      }
-    });
-    return messages;
+    return collectNodesBySelectors(root, GEMINI_SELECTORS.user, GEMINI_SELECTORS.assistant, getRoleFromGeminiNode);
   }
 
   function getRoleFromGeminiNode(node) {
@@ -126,6 +146,35 @@
       return 'assistant';
     }
     return getRoleFromNode(node);
+  }
+
+  function getRoleFromClaudeNode(node) {
+    if (matchesAny(node, CLAUDE_SELECTORS.user)) {
+      return 'user';
+    }
+    if (matchesAny(node, CLAUDE_SELECTORS.assistant)) {
+      return 'assistant';
+    }
+    return getRoleFromNode(node);
+  }
+
+  function collectNodesBySelectors(root, userSelectors, assistantSelectors, roleResolver) {
+    if (!root || typeof root.querySelectorAll !== 'function') {
+      return [];
+    }
+    const selector = userSelectors.concat(assistantSelectors).join(',');
+    if (!selector) {
+      return [];
+    }
+    const nodes = root.querySelectorAll(selector);
+    const messages = [];
+    nodes.forEach((node) => {
+      const role = roleResolver(node);
+      if (role) {
+        messages.push({ node, role });
+      }
+    });
+    return messages;
   }
 
   function matchesAny(node, selectors) {
@@ -154,6 +203,9 @@
     }
     if (host === 'gemini.google.com') {
       return createGeminiAdapter();
+    }
+    if (host === 'claude.ai') {
+      return createClaudeAdapter();
     }
     return null;
   }

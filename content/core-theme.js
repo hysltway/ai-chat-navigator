@@ -211,6 +211,10 @@
       applyGeminiTheme(mode);
       return;
     }
+    if (adapterId === 'claude') {
+      applyClaudeTheme(mode);
+      return;
+    }
     applyChatGptTheme(mode);
   }
 
@@ -253,6 +257,24 @@
     dispatchStorageChange('Bard-Color-Theme', themeValue);
   }
 
+  function applyClaudeTheme(mode) {
+    try {
+      window.localStorage.setItem('theme', mode);
+    } catch (error) {
+      // Ignore storage failures.
+    }
+
+    if (document.documentElement) {
+      document.documentElement.setAttribute('data-mode', mode);
+      document.documentElement.style.colorScheme = mode;
+    }
+    if (document.body) {
+      document.body.style.colorScheme = mode;
+    }
+
+    dispatchStorageChange('theme', mode);
+  }
+
   function dispatchStorageChange(key, newValue) {
     try {
       window.dispatchEvent(
@@ -274,6 +296,9 @@
     }
     if (adapterId === 'gemini') {
       return detectGeminiColorScheme() || 'light';
+    }
+    if (adapterId === 'claude') {
+      return detectClaudeColorScheme() || 'light';
     }
     return 'light';
   }
@@ -328,6 +353,54 @@
     } catch (error) {
       return null;
     }
+  }
+
+  function detectClaudeColorScheme() {
+    const root = document.documentElement;
+    if (root && typeof root.getAttribute === 'function') {
+      const dataMode = root.getAttribute('data-mode');
+      if (dataMode === 'dark' || dataMode === 'light') {
+        return dataMode;
+      }
+    }
+
+    if (root && root.classList) {
+      if (root.classList.contains('dark')) {
+        return 'dark';
+      }
+      if (root.classList.contains('light')) {
+        return 'light';
+      }
+    }
+
+    try {
+      const saved = window.localStorage.getItem('theme');
+      if (saved === 'dark' || saved === 'light') {
+        return saved;
+      }
+    } catch (error) {
+      // Ignore storage failures.
+    }
+
+    if (typeof window.getComputedStyle === 'function' && root) {
+      try {
+        const style = window.getComputedStyle(root);
+        const colorScheme = style.colorScheme || style.getPropertyValue('color-scheme');
+        if (typeof colorScheme === 'string') {
+          const value = colorScheme.trim().toLowerCase();
+          if (value.includes('dark')) {
+            return 'dark';
+          }
+          if (value.includes('light')) {
+            return 'light';
+          }
+        }
+      } catch (error) {
+        return null;
+      }
+    }
+
+    return null;
   }
 
   function addThemeMediaListener(mql, handler) {

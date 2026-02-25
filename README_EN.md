@@ -1,10 +1,10 @@
 # 🧭 JumpNav
 
-JumpNav is a floating side navigator for ChatGPT and Gemini that turns long AI conversations into clickable outlines, so you can find prompts and answers in seconds.
+JumpNav is a floating side navigator for ChatGPT, Gemini, and Claude that turns long AI conversations into clickable outlines, so you can find prompts and answers in seconds.
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v1.3.2**
+> Current Version: **v2.0.0**
 
 ## 🚀 Chrome Web Store (Recommended)
 
@@ -56,7 +56,7 @@ Now live on the Chrome Web Store. Install there for automatic updates and the sm
 
 #### Adaptive Mode Switching (Automatic)
 - Switches mode based on geometric overlap between panel left edge and conversation content right edge
-- Automatically returns to normal mode when enough layout space is available again (including Gemini pages)
+- Automatically returns to normal mode when enough layout space is available again (including Gemini/Claude pages)
 - Uses a stable baseline + hysteresis during continuous window resizing to prevent flicker
 - Mode button remains clickable in adaptive minimal state, but normal mode is blocked if it would overlap content
 
@@ -65,7 +65,7 @@ Now live on the Chrome Web Store. Install there for automatic updates and the sm
 - **Position Memory**: Automatically saves button position and restores it on next visit
 - **Keyboard Friendly**: Complete keyboard navigation support with proper focus management
 - **Accessibility Support**: Respects `prefers-reduced-motion` system setting, providing non-transition experience for sensitive users
-- **Automatic Theme Adaptation**: Navigator colors follow site light/dark theme automatically (ChatGPT/Gemini)
+- **Automatic Theme Adaptation**: Navigator colors follow site light/dark theme automatically (ChatGPT/Gemini/Claude)
 
 ## 🙏 Acknowledgements
 

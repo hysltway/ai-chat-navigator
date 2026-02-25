@@ -23,6 +23,8 @@
     '[data-author-role="assistant"] [class*="text-message"]',
     '[data-author-role="user"] .min-h-8.text-message',
     '[data-author-role="user"] [class*="text-message"]',
+    "[data-testid='user-message']",
+    '.font-claude-response',
     'user-query.ng-star-inserted',
     '.user-query.ng-star-inserted'
   ].join(',');
@@ -31,20 +33,24 @@
     '[data-message-author-role="user"]',
     '[data-author-role="assistant"]',
     '[data-author-role="user"]',
+    "[data-testid='user-message']",
+    '.font-claude-response',
     'user-query.ng-star-inserted',
     '.user-query.ng-star-inserted'
   ].join(',');
   const MESSAGE_INNER_SELECTORS =
-    '.min-h-8.text-message, .text-message, [class*="text-message"], .query-text, .markdown, .prose';
-  const THEME_ATTRIBUTE_FILTER = ['class', 'style'];
+    '.min-h-8.text-message, .text-message, [class*="text-message"], .query-text, .markdown, .prose, .whitespace-pre-wrap, .font-claude-response-body';
+  const THEME_ATTRIBUTE_FILTER = ['class', 'style', 'data-mode'];
   const SCROLL_HIGHLIGHT_WAIT_MS = 2600;
   const SCROLL_HIGHLIGHT_DURATION_MS = 820;
   const SCROLL_SETTLE_IDLE_MS = 180;
   const HIGHLIGHT_DARKEN_DELTA = 24;
   const CHATGPT_USER_BUBBLE_SELECTOR = '[class*="user-message-bubble-color"]';
   const GEMINI_USER_BUBBLE_SELECTOR = '.user-query-bubble-with-background';
+  const CLAUDE_USER_BUBBLE_SELECTOR = '.group.relative.inline-flex.bg-bg-300.rounded-xl';
   const CHATGPT_USER_BUBBLE_BG = 'rgba(233, 233, 233, 0.5)';
   const GEMINI_USER_BUBBLE_BG = 'rgb(233, 238, 246)';
+  const CLAUDE_USER_BUBBLE_BG = 'rgb(228, 232, 240)';
   const THEME_TRANSITION_STYLE_ID = 'chatgpt-nav-theme-transition-style';
   const THEME_TRANSITION_DURATION_MS = 520;
   const THEME_TRANSITION_EASING = 'cubic-bezier(0.22, 1, 0.36, 1)';
@@ -108,8 +114,10 @@
     HIGHLIGHT_DARKEN_DELTA,
     CHATGPT_USER_BUBBLE_SELECTOR,
     GEMINI_USER_BUBBLE_SELECTOR,
+    CLAUDE_USER_BUBBLE_SELECTOR,
     CHATGPT_USER_BUBBLE_BG,
     GEMINI_USER_BUBBLE_BG,
+    CLAUDE_USER_BUBBLE_BG,
     scrollToMessage
   });
 

@@ -367,6 +367,9 @@
     if (host === 'gemini.google.com') {
       return 'gemini';
     }
+    if (host === 'claude.ai') {
+      return 'claude';
+    }
     return 'chatgpt';
   }
 

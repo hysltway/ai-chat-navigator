@@ -20,8 +20,10 @@
   let HIGHLIGHT_DARKEN_DELTA;
   let CHATGPT_USER_BUBBLE_SELECTOR;
   let GEMINI_USER_BUBBLE_SELECTOR;
+  let CLAUDE_USER_BUBBLE_SELECTOR;
   let CHATGPT_USER_BUBBLE_BG;
   let GEMINI_USER_BUBBLE_BG;
+  let CLAUDE_USER_BUBBLE_BG;
   let scrollToMessage;
   let cachedConversationScrollContainer = null;
   let cachedConversationScrollRoot = null;
@@ -46,8 +48,10 @@
       HIGHLIGHT_DARKEN_DELTA,
       CHATGPT_USER_BUBBLE_SELECTOR,
       GEMINI_USER_BUBBLE_SELECTOR,
+      CLAUDE_USER_BUBBLE_SELECTOR,
       CHATGPT_USER_BUBBLE_BG,
       GEMINI_USER_BUBBLE_BG,
+      CLAUDE_USER_BUBBLE_BG,
       scrollToMessage
     } = ctx);
   }
@@ -90,6 +94,9 @@
     }
     if (adapterId === 'gemini') {
       return GEMINI_USER_BUBBLE_SELECTOR;
+    }
+    if (adapterId === 'claude') {
+      return CLAUDE_USER_BUBBLE_SELECTOR;
     }
     return '';
   }
@@ -200,6 +207,9 @@
     if (adapterId === 'gemini') {
       return GEMINI_USER_BUBBLE_BG;
     }
+    if (adapterId === 'claude') {
+      return CLAUDE_USER_BUBBLE_BG;
+    }
     return CHATGPT_USER_BUBBLE_BG;
   }
 
@@ -252,6 +262,9 @@
   function getNavigatorTitle() {
     if (state.adapter && state.adapter.id === 'gemini') {
       return 'Gemini Navigator';
+    }
+    if (state.adapter && state.adapter.id === 'claude') {
+      return 'Claude Navigator';
     }
     return 'ChatGPT Navigator';
   }

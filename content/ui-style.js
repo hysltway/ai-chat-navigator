@@ -101,6 +101,33 @@
         --nav-button-bg: #f3f6fc;
       }
 
+      .nav-root[data-color-scheme="light"][data-site="claude"] {
+        --nav-bg: #faf9f5;
+        --nav-surface: #faf9f5;
+        --nav-border: #e7e1d5;
+        --nav-text: #2f2923;
+        --nav-muted: #756c60;
+        --nav-accent: #f0eee6;
+        --nav-accent-strong: #d97757;
+        --nav-hover: #f0eee6;
+        --nav-accent-shadow: rgba(217, 119, 87, 0.2);
+        --nav-item-bg: #f7f4ec;
+        --nav-item-hover-bg: #f0eee6;
+        --nav-item-active-bg: #eae4d8;
+        --nav-item-hover-border: #e7e1d5;
+        --nav-item-active-border: #d97757;
+        --nav-item-active-text: #c6613f;
+        --nav-item-indicator-color: #c6613f;
+        --nav-item-active-color: #c6613f;
+        --nav-item-active-shadow: rgba(198, 97, 63, 0.18);
+        --nav-control-hover-border: #d97757;
+        --nav-control-hover-text: #d97757;
+        --nav-control-active-border: #c6613f;
+        --nav-control-active-bg: #f0eee6;
+        --nav-control-active-text: #c6613f;
+        --nav-button-bg: #faf9f5;
+      }
+
       .nav-root[data-color-scheme="dark"] {
         --nav-bg: #121417;
         --nav-surface: #181b1f;
@@ -367,6 +394,19 @@
         color: var(--nav-item-active-text);
       }
 
+      .nav-root[data-site="claude"] .nav-item.is-active .nav-item-title {
+        color: var(--nav-text);
+      }
+
+      .nav-root[data-site="claude"] .nav-item.is-active .nav-item-preview,
+      .nav-root[data-site="claude"] .nav-item.is-active .nav-item-minimal {
+        color: var(--nav-muted);
+      }
+
+      .nav-root[data-site="claude"] .nav-item.is-active {
+        border-color: transparent;
+      }
+
       .nav-root[data-minimal="1"] .nav-item {
         flex-direction: row;
         align-items: center;
@@ -511,6 +551,15 @@
       .nav-root[data-minimal="1"] .nav-item.is-active .nav-item-minimal {
         color: var(--nav-item-active-text);
         font-weight: 700;
+      }
+
+      .nav-root[data-site="claude"][data-minimal="1"] .nav-item.is-active .nav-item-minimal {
+        color: var(--nav-muted);
+      }
+
+      .nav-root[data-site="claude"][data-minimal="1"] .nav-item.is-active {
+        border-color: transparent;
+        box-shadow: none;
       }
 
       .fab {

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "JumpNav: The most elegant AI chat navigator you’ve ever seen.",
-  "description": "A floating side-guide for ChatGPT & Gemini. Instantly organize long threads into clickable outlines with reply previews.",
-  "version": "1.3.2",
+  "description": "A floating side-guide for ChatGPT, Gemini, and Claude. Instantly organize long threads into clickable outlines with reply previews.",
+  "version": "2.0.0",
   "permissions": [
     "storage"
   ],
@@ -11,7 +11,8 @@
       "matches": [
         "https://chatgpt.com/*",
         "https://chat.openai.com/*",
-        "https://gemini.google.com/*"
+        "https://gemini.google.com/*",
+        "https://claude.ai/*"
       ],
       "js": [
         "content/namespace.js",

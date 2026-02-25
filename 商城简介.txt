@@ -1,0 +1,76 @@
+Turn long AI chats into a clean, clickable outline in seconds.
+把超长 AI 对话在几秒内变成清晰可点的目录。
+
+Find any prompt fast, revisit any answer instantly.
+快速找回任意提问，立即定位任意回答。
+
+━━━━━━━━━━━━━━━━━━━━
+Core Value
+核心价值
+
+Less scrolling, more thinking.
+少滚动，多思考。
+
+Stay focused while your conversation keeps growing.
+对话再长，也能保持阅读与思考节奏。
+
+━━━━━━━━━━━━━━━━━━━━
+Key Features
+核心功能
+
+Floating right-side navigator with prompt titles and reply previews.
+右侧悬浮导航，自动整理提问标题与回复预览。
+
+One-click smooth jump to the exact context.
+一键平滑跳转到对应上下文。
+
+Full mode and Minimal mode for different screen sizes.
+正常模式与简约模式，适配不同窗口与屏幕空间。
+
+Adaptive layout that reduces overlap with chat content.
+自适应布局，减少导航与正文区域重叠。
+
+Active position tracking so you always know where you are.
+自动标记当前位置，随时知道读到哪里。
+
+Keyboard-friendly and accessibility-ready (reduced-motion supported).
+键盘友好且无障碍友好（支持减少动画）。
+
+Hide/restore controls with a right-edge vertical draggable dock button.
+支持隐藏/恢复，右侧停靠按钮可上下拖动。
+
+Remembers button position and display preferences automatically.
+自动记忆按钮位置与显示偏好。
+
+━━━━━━━━━━━━━━━━━━━━
+Supported Platforms
+支持平台
+
+ChatGPT, Gemini, and Claude.
+支持 ChatGPT、Gemini 与 Claude。
+
+chatgpt.com / chat.openai.com / gemini.google.com / claude.ai
+chatgpt.com / chat.openai.com / gemini.google.com / claude.ai
+
+━━━━━━━━━━━━━━━━━━━━
+Who Is It For
+适合人群
+
+Writers, developers, researchers, translators, and power users.
+适合写作者、开发者、研究者、译者及高频 AI 用户。
+
+Perfect for long-session review, comparison, and structured recall.
+特别适合长会话复盘、对照与结构化回看。
+
+━━━━━━━━━━━━━━━━━━━━
+Lightweight & Privacy-Friendly
+轻量且注重隐私
+
+Runs only on supported sites and keeps your reading area clean.
+仅在支持站点运行，不打扰主要阅读区域。
+
+Processes conversation content locally in page DOM without external upload.
+仅在页面本地 DOM 处理内容，不上传对话数据。
+
+If you encounter any bugs or have suggestions, please contact me by email.
+如果遇到 bug，或者有好的建议，请通过邮箱联系我。
