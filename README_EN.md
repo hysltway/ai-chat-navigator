@@ -1,23 +1,66 @@
-# 🧭 JumpNav
+<p align="center">
+  <img src="Poster.png" alt="JumpNav Poster" width="100%" />
+</p>
 
-JumpNav is a floating side navigator for ChatGPT, Gemini, and Claude that turns long AI conversations into clickable outlines, so you can find prompts and answers in seconds.
+# JumpNav
+
+JumpNav is a floating side navigator for **ChatGPT, Gemini, and Claude**.
+It turns long conversations into clickable outlines with prompt and reply previews, so you can jump back to key context in seconds.
 
 **Language:** [简体中文](README.md) | **English**
 
 > Current Version: **v2.0.0**
 
-## 🚀 Chrome Web Store (Recommended)
+## Chrome Web Store (Recommended)
 
-Now live on the Chrome Web Store. Install there for automatic updates and the smoothest experience.
+Now live on the Chrome Web Store. Install from the store for automatic updates.
 
 [JumpNav: The most elegant AI chat navigator you’ve ever seen.](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
 
-## 📸 Interface Preview
+## Core Value
 
-**Normal Mode** (Complete information display)
+- **Less scrolling, more thinking**: Convert long chats into structured navigation.
+- **One-click jump**: Click an entry to smoothly return to the exact prompt location.
+- **Low-distraction workflow**: Draggable floating panel with hide/show and position memory.
+
+## Core Features
+
+### 1. Intelligent Navigation
+
+- Automatically detects user prompts and builds ordered navigation entries.
+- Shows reply previews for quick context scanning.
+- Highlights current reading position based on viewport.
+- Keeps list synced during SPA route changes and dynamic message loading.
+
+### 2. Two Display Modes
+
+**Normal Mode (Default)**
+- Shows prompt text (2-line clamp) and reply preview (1-line clamp).
+- Better for rich browsing and review.
+
+**Minimal Mode**
+- Shows compact numbered dots only.
+- Expands preview on hover or keyboard focus.
+
+**Adaptive Switching (Automatic)**
+- Prevents overlap by switching mode based on panel/content geometry.
+- Returns to normal mode automatically when enough space is available.
+- Uses stability thresholds during resize to avoid flicker.
+
+### 3. Interaction & Accessibility
+
+- Right-side floating FAB with vertical drag.
+- Saves and restores panel position automatically.
+- Keyboard-friendly focus behavior.
+- Respects `prefers-reduced-motion` for reduced animation users.
+- Auto theme adaptation for ChatGPT, Gemini, and Claude.
+
+## Interface Preview
+
+**Normal Mode**
 ![Normal Mode](image1.png)
 
-**Minimal Mode** (Minimalist view)
+**Minimal Mode**
 ![Minimal Mode](image2.png)
 
 **Interface Preview 3**
@@ -29,55 +72,23 @@ Now live on the Chrome Web Store. Install there for automatic updates and the sm
 **Interface Preview 5**
 ![Interface Preview 5](image5.png)
 
-## 💡 Core Value
+## Supported Sites
 
-- **Less scrolling, more thinking**: Turn long threads into a structured outline and reduce search friction
-- **Jump to context instantly**: Click any entry to smoothly return to the exact spot in the conversation
-- **Low-interruption workflow**: Right-side floating UI with hide/restore and position memory
+- `chatgpt.com`
+- `gemini.google.com`
+- `claude.ai`
 
-## ✨ Core Features
+## Acknowledgements
 
-### 🎯 Intelligent Navigation System
-- **Auto-detect User Prompts**: Analyzes conversation flow in real-time, extracts all user messages, and generates navigable entries in order
-- **Smooth Jump Experience**: Click any entry and the page automatically scrolls to the target, then briefly deepens the prompt bubble background for easier locating
-- **Real-time Content Sync**: Supports SPA route changes and dynamic content loading; navigation list updates automatically without manual refresh
+- The theme transition effect is inspired by [urzeye/ophel](https://github.com/urzeye/ophel).
 
-### 📱 Flexible Display Modes
-
-#### Normal Mode (Default)
-- Complete display of user prompt content (truncated to two lines, ellipsis for overflow)
-- Simultaneous display of AI reply preview (single line with ellipsis)
-- Card-style design for entries, visually friendly and information-rich
-
-#### Minimal Mode (Ultra-minimalist)
-- Panel displays only numbered dot buttons for extreme space efficiency
-- Preview expands on hover or keyboard focus, maintaining visual simplicity
-- Same jump and locating capabilities with zero feature loss
-
-#### Adaptive Mode Switching (Automatic)
-- Switches mode based on geometric overlap between panel left edge and conversation content right edge
-- Automatically returns to normal mode when enough layout space is available again (including Gemini/Claude pages)
-- Uses a stable baseline + hysteresis during continuous window resizing to prevent flicker
-- Mode button remains clickable in adaptive minimal state, but normal mode is blocked if it would overlap content
-
-### 🎮 Interaction Design
-- **Draggable Floating Button**: Right-side circular FAB button stays fixed to the right edge and supports vertical drag only
-- **Position Memory**: Automatically saves button position and restores it on next visit
-- **Keyboard Friendly**: Complete keyboard navigation support with proper focus management
-- **Accessibility Support**: Respects `prefers-reduced-motion` system setting, providing non-transition experience for sensitive users
-- **Automatic Theme Adaptation**: Navigator colors follow site light/dark theme automatically (ChatGPT/Gemini/Claude)
-
-## 🙏 Acknowledgements
-
-- The light/dark radial transition animation is inspired by [urzeye/ophel](https://github.com/urzeye/ophel). Thanks for the open-source reference.
-
-## 📄 License
+## License
 
 CC BY-NC-SA 4.0 (Creative Commons Attribution-NonCommercial-ShareAlike 4.0)
 
 - ✅ Free to use, copy, modify, and distribute
-- ✅ Must provide attribution to original author
-- ❌ Cannot be used for commercial purposes
-- ✅ Derivative works must use the same license
+- ✅ Must provide attribution
+- ❌ Not for commercial use
+- ✅ Derivatives must use the same license
 
-See full license: [CC BY-NC-SA 4.0 License](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+Read more: [CC BY-NC-SA 4.0 License](https://creativecommons.org/licenses/by-nc-sa/4.0/)
