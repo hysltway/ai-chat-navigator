@@ -23,37 +23,6 @@ Now live on the Chrome Web Store. Install from the store for automatic updates.
 - **One-click jump**: Click an entry to smoothly return to the exact prompt location.
 - **Low-distraction workflow**: Draggable floating panel with hide/show and position memory.
 
-## Core Features
-
-### 1. Intelligent Navigation
-
-- Automatically detects user prompts and builds ordered navigation entries.
-- Shows reply previews for quick context scanning.
-- Highlights current reading position based on viewport.
-- Keeps list synced during SPA route changes and dynamic message loading.
-
-### 2. Two Display Modes
-
-**Normal Mode (Default)**
-- Shows prompt text (2-line clamp) and reply preview (1-line clamp).
-- Better for rich browsing and review.
-
-**Minimal Mode**
-- Shows compact numbered dots only.
-- Expands preview on hover or keyboard focus.
-
-**Adaptive Switching (Automatic)**
-- Prevents overlap by switching mode based on panel/content geometry.
-- Returns to normal mode automatically when enough space is available.
-- Uses stability thresholds during resize to avoid flicker.
-
-### 3. Interaction & Accessibility
-
-- Right-side floating FAB with vertical drag.
-- Saves and restores panel position automatically.
-- Keyboard-friendly focus behavior.
-- Respects `prefers-reduced-motion` for reduced animation users.
-- Auto theme adaptation for ChatGPT, Gemini, and Claude.
 
 ## Interface Preview
 
