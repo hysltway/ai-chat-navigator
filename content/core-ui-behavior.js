@@ -480,6 +480,18 @@
   }
 
   function syncAdaptiveMode(force = false) {
+    if (state.manualModeOverride) {
+      const changed = state.adaptiveMinimalMode;
+      if (!force && !changed) {
+        return;
+      }
+      state.adaptiveMinimalMode = false;
+      if (ns.ui.setAdaptiveMinimal) {
+        ns.ui.setAdaptiveMinimal(state.ui, false);
+      }
+      syncDisplayMode(force || changed);
+      return;
+    }
     const nextValue = shouldEnableAdaptiveMinimal();
     const changed = nextValue !== state.adaptiveMinimalMode;
     if (!force && !changed) {

@@ -84,7 +84,8 @@
     highlightToken: 0,
     lastScrollAt: 0,
     minimalScrollRaf: null,
-    suppressEnsureVisibleUntil: 0
+    suppressEnsureVisibleUntil: 0,
+    manualModeOverride: false
   };
 
   ns.coreTheme.initThemeApi({
@@ -174,11 +175,13 @@
     });
 
     state.ui.minimalToggle.addEventListener('click', () => {
-      syncAdaptiveMode(true);
-      const nextMinimal = !state.minimalMode;
-      if (!nextMinimal && state.adaptiveMinimalMode) {
-        syncDisplayMode(true);
-        return;
+      const nextMinimal = !state.effectiveMinimalMode;
+      if (state.adaptiveMinimalMode) {
+        state.manualModeOverride = true;
+        state.adaptiveMinimalMode = false;
+        if (ns.ui.setAdaptiveMinimal) {
+          ns.ui.setAdaptiveMinimal(state.ui, false);
+        }
       }
       setMinimalMode(nextMinimal);
     });

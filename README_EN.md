@@ -9,7 +9,11 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.0.0**
+> Current Version: **v2.1.1**
+
+## Updates in v2.1.1
+
+- Fixed an issue where Normal/Minimal mode switching could get locked under adaptive mode. Manual toggle now takes priority.
 
 ## Chrome Web Store (Recommended)
 
