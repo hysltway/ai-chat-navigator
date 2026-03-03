@@ -9,9 +9,9 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.2.1**
+> Current Version: **v2.2.2**
 
-## Updates in v2.2.1
+## Updates in v2.2.2
 
 - Unified the UI theme source so navigator panel and formula-copy UI share one site theme config.
 - Simplified formula copy highlight style by removing border/halo effects and keeping subtle background feedback only.

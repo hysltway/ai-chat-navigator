@@ -3,9 +3,11 @@
 
   const ns = window.ChatGptNav;
   const { CONFIG } = ns;
+
   const PREVIEW_HIDE_DELAY = 140;
   const MANUAL_NAV_SCROLL_LOCK_MS = 1800;
   const MINIMAL_MODE_KEY = 'chatgpt-nav-minimal-mode';
+  const COLLAPSED_MODE_KEY = 'chatgpt-nav-collapsed';
   const DEFAULT_NORMAL_PANEL_WIDTH = 280;
   const PANEL_CONTENT_MIN_GAP = 14;
   const ADAPTIVE_INTERSECT_ENTER_GAP = 0;
@@ -124,6 +126,85 @@
 
   const themeApi = ns.coreTheme;
   const behaviorApi = ns.coreUiBehavior;
+  const conversationIndexer = createConversationIndexer();
+  const navigationApi = createNavigationApi();
+
+  function createConversationIndexer() {
+    if (ns.coreConversationIndexer && typeof ns.coreConversationIndexer.createConversationIndexer === 'function') {
+      return ns.coreConversationIndexer.createConversationIndexer({
+        utils: ns.utils,
+        previewMax: CONFIG.previewMax
+      });
+    }
+    return {
+      getConversationSequence() {
+        return [];
+      },
+      buildUserMessages() {
+        return [];
+      },
+      buildMessagesSignature() {
+        return '';
+      }
+    };
+  }
+
+  function createNavigationApi() {
+    const api =
+      ns.coreNavigationController && typeof ns.coreNavigationController.initNavigationApi === 'function'
+        ? ns.coreNavigationController
+        : null;
+
+    if (!api) {
+      return {
+        attachUiHandlers() {},
+        initFabDrag() {},
+        startUrlPolling() {},
+        handleRouteChange() {},
+        scheduleRebuild() {},
+        handlePotentialRouteChange() {},
+        hydrateMinimalModePreference() {}
+      };
+    }
+
+    api.initNavigationApi({
+      state,
+      config: {
+        pollMs: CONFIG.pollMs,
+        debounceMs: CONFIG.debounceMs
+      },
+      callbacks: {
+        handleThemeToggle,
+        setCollapsed,
+        setMinimalMode,
+        syncAdaptiveMode,
+        setActiveIndex,
+        snapNavListToEdge,
+        scrollToMessage,
+        scheduleMinimalScrollHintUpdate,
+        handleItemPointerOver,
+        handleItemPointerOut,
+        handleItemFocusIn,
+        handleItemFocusOut,
+        handlePreviewPointerEnter,
+        handlePreviewPointerLeave,
+        handlePreviewClick,
+        refreshThemeTrackingTargets,
+        syncColorScheme,
+        cancelPendingBubbleHighlight,
+        renderMessages,
+        rebuild,
+        loadMinimalMode
+      },
+      MANUAL_NAV_SCROLL_LOCK_MS,
+      FAB_RIGHT_OFFSET,
+      FAB_VERTICAL_PADDING,
+      windowRef: window,
+      documentRef: document,
+      locationRef: location
+    });
+    return api;
+  }
 
   function start() {
     if (state.started) {
@@ -152,267 +233,20 @@
     if (state.ui) {
       return;
     }
+
     state.ui = ns.ui.createUI();
     initThemeTracking();
     ns.ui.setTitle(state.ui, getNavigatorTitle());
     state.minimalMode = false;
+    applyInitialCollapsedMode();
     syncAdaptiveMode(true);
     hydrateMinimalModePreference();
+    hydrateCollapsedPreference();
     attachUiHandlers();
     initActiveTracking();
     initFabDrag();
     scheduleRebuild('init');
     startUrlPolling();
-  }
-
-  function attachUiHandlers() {
-    state.ui.toggle.addEventListener('click', () => {
-      ns.ui.setCollapsed(state.ui, true);
-    });
-
-    state.ui.themeToggle.addEventListener('click', (event) => {
-      handleThemeToggle(event);
-    });
-
-    state.ui.minimalToggle.addEventListener('click', () => {
-      const nextMinimal = !state.effectiveMinimalMode;
-      if (state.adaptiveMinimalMode) {
-        state.manualModeOverride = true;
-        state.adaptiveMinimalMode = false;
-        if (ns.ui.setAdaptiveMinimal) {
-          ns.ui.setAdaptiveMinimal(state.ui, false);
-        }
-      }
-      setMinimalMode(nextMinimal);
-    });
-
-    state.ui.fab.addEventListener('click', () => {
-      if (state.ui.fab.dataset.suppressClick === '1') {
-        state.ui.fab.dataset.suppressClick = '0';
-        return;
-      }
-      ns.ui.setCollapsed(state.ui, false);
-      syncAdaptiveMode(true);
-    });
-
-    state.ui.body.addEventListener('click', (event) => {
-      const item = event.target.closest('.nav-item');
-      if (!item) {
-        return;
-      }
-      activateNavItem(item);
-    });
-    state.ui.body.addEventListener('keydown', handleItemKeydown);
-
-    state.ui.body.addEventListener('pointerover', handleItemPointerOver);
-    state.ui.body.addEventListener('pointerout', handleItemPointerOut);
-    state.ui.body.addEventListener('focusin', handleItemFocusIn);
-    state.ui.body.addEventListener('focusout', handleItemFocusOut);
-    state.ui.body.addEventListener('scroll', scheduleMinimalScrollHintUpdate, { passive: true });
-    state.ui.panel.addEventListener('wheel', handlePanelWheel, { passive: false });
-
-    state.ui.preview.addEventListener('pointerenter', handlePreviewPointerEnter);
-    state.ui.preview.addEventListener('pointerleave', handlePreviewPointerLeave);
-    state.ui.preview.addEventListener('click', handlePreviewClick);
-  }
-
-  function handleItemKeydown(event) {
-    if (!event) {
-      return;
-    }
-    if (event.key !== 'Enter' && event.key !== ' ') {
-      return;
-    }
-    const item = event.target && event.target.closest ? event.target.closest('.nav-item') : null;
-    if (!item || !state.ui.body.contains(item)) {
-      return;
-    }
-    event.preventDefault();
-    activateNavItem(item);
-  }
-
-  function activateNavItem(item) {
-    if (!item) {
-      return;
-    }
-    const index = Number(item.dataset.index);
-    const message = state.messages[index];
-    if (!message || !message.node) {
-      return;
-    }
-    state.suppressEnsureVisibleUntil = Date.now() + MANUAL_NAV_SCROLL_LOCK_MS;
-    setActiveIndex(index, true);
-    snapNavListToEdge(index);
-    scrollToMessage(message.node);
-  }
-
-  function handlePanelWheel(event) {
-    if (!state.ui || !state.ui.body) {
-      return;
-    }
-    const scroller = state.ui.body;
-    const maxScroll = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
-    if (maxScroll <= 1) {
-      return;
-    }
-    const before = scroller.scrollTop;
-    scroller.scrollTop += event.deltaY;
-    if (scroller.scrollTop !== before) {
-      event.preventDefault();
-      scheduleMinimalScrollHintUpdate();
-    }
-  }
-
-  function initFabDrag() {
-    const fab = state.ui.fab;
-    const storageKey = 'chatgpt-nav-fab-position';
-    let dragging = false;
-    let moved = false;
-    let startY = 0;
-    let startTop = 0;
-
-    const initialTop = fab.getBoundingClientRect().top;
-    applyFabPosition(fab, initialTop);
-    loadFabPosition(storageKey).then((saved) => {
-      if (!saved || typeof saved.top !== 'number') {
-        return;
-      }
-      applyFabPosition(fab, saved.top);
-    });
-
-    window.addEventListener('resize', () => {
-      const rect = fab.getBoundingClientRect();
-      applyFabPosition(fab, rect.top);
-    });
-
-    fab.addEventListener('pointerdown', (event) => {
-      if (event.button !== 0) {
-        return;
-      }
-      const rect = fab.getBoundingClientRect();
-      dragging = true;
-      moved = false;
-      startY = event.clientY;
-      startTop = rect.top;
-      fab.classList.add('dragging');
-      fab.setPointerCapture(event.pointerId);
-    });
-
-    fab.addEventListener('pointermove', (event) => {
-      if (!dragging) {
-        return;
-      }
-      const dy = event.clientY - startY;
-      if (!moved && Math.abs(dy) > 3) {
-        moved = true;
-      }
-      applyFabPosition(fab, startTop + dy);
-    });
-
-    fab.addEventListener('pointerup', (event) => {
-      if (!dragging) {
-        return;
-      }
-      dragging = false;
-      fab.classList.remove('dragging');
-      fab.releasePointerCapture(event.pointerId);
-      if (moved) {
-        fab.dataset.suppressClick = '1';
-        saveFabPosition(storageKey, fab);
-      }
-    });
-
-    fab.addEventListener('pointercancel', (event) => {
-      if (!dragging) {
-        return;
-      }
-      dragging = false;
-      fab.classList.remove('dragging');
-      fab.releasePointerCapture(event.pointerId);
-    });
-  }
-
-  function applyFabPosition(fab, top) {
-    const clampedTop = getClampedFabTop(fab, top);
-    fab.style.left = 'auto';
-    fab.style.top = `${clampedTop}px`;
-    fab.style.right = `${FAB_RIGHT_OFFSET}px`;
-    fab.style.bottom = 'auto';
-  }
-
-  function getClampedFabTop(fab, top) {
-    const rect = fab.getBoundingClientRect();
-    const height = rect.height > 0 ? rect.height : 48;
-    const minTop = FAB_VERTICAL_PADDING;
-    const maxTop = Math.max(minTop, window.innerHeight - height - FAB_VERTICAL_PADDING);
-    return clamp(top, minTop, maxTop);
-  }
-
-  function saveFabPosition(key, fab) {
-    const rect = fab.getBoundingClientRect();
-    const payload = { top: rect.top };
-    if (ns.storage && typeof ns.storage.setJson === 'function') {
-      ns.storage.setJson(key, payload);
-    }
-    try {
-      window.localStorage.setItem(key, JSON.stringify(payload));
-    } catch (error) {
-      // Ignore storage failures.
-    }
-  }
-
-  function loadFabPosition(key) {
-    const legacyValue = loadLegacyFabPosition(key);
-    if (!ns.storage || typeof ns.storage.getJson !== 'function') {
-      return Promise.resolve(legacyValue);
-    }
-    return ns.storage
-      .getJson(key)
-      .then((storedValue) => {
-        const normalized = normalizeFabPosition(storedValue);
-        if (normalized) {
-          return normalized;
-        }
-        if (legacyValue) {
-          ns.storage.setJson(key, legacyValue);
-        }
-        return legacyValue;
-      })
-      .catch(() => legacyValue);
-  }
-
-  function loadLegacyFabPosition(key) {
-    try {
-      const raw = window.localStorage.getItem(key);
-      if (!raw) {
-        return null;
-      }
-      return normalizeFabPosition(raw);
-    } catch (error) {
-      return null;
-    }
-  }
-
-  function normalizeFabPosition(value) {
-    let parsed = value;
-    if (typeof parsed === 'string') {
-      try {
-        parsed = JSON.parse(parsed);
-      } catch (error) {
-        return null;
-      }
-    }
-    if (!parsed || typeof parsed !== 'object') {
-      return null;
-    }
-    if (typeof parsed.top !== 'number') {
-      return null;
-    }
-    return { top: parsed.top };
-  }
-
-  function clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
   }
 
   function initThemeTracking() {
@@ -423,10 +257,6 @@
     themeApi.refreshThemeTrackingTargets();
   }
 
-  function scheduleThemeSync() {
-    themeApi.scheduleThemeSync();
-  }
-
   function syncColorScheme(force = false) {
     themeApi.syncColorScheme(force);
   }
@@ -435,42 +265,32 @@
     themeApi.handleThemeToggle(event);
   }
 
+  function attachUiHandlers() {
+    navigationApi.attachUiHandlers();
+  }
+
+  function initFabDrag() {
+    navigationApi.initFabDrag();
+  }
+
   function startUrlPolling() {
-    if (state.pollTimer) {
-      return;
-    }
-    state.pollTimer = window.setInterval(() => {
-      if (location.href !== state.url) {
-        handleRouteChange('poll');
-      }
-    }, CONFIG.pollMs);
+    navigationApi.startUrlPolling();
   }
 
   function handleRouteChange(source) {
-    state.url = location.href;
-    refreshThemeTrackingTargets();
-    syncColorScheme();
-    cancelPendingBubbleHighlight();
-    state.signature = '';
-    state.messages = [];
-    state.activeIndex = null;
-    renderMessages();
-    if (state.observer) {
-      state.observer.disconnect();
-      state.observer = null;
-    }
-    state.root = null;
-    scheduleRebuild(source);
+    navigationApi.handleRouteChange(source);
   }
 
   function scheduleRebuild(reason) {
-    if (state.rebuildTimer) {
-      clearTimeout(state.rebuildTimer);
-    }
-    state.rebuildTimer = setTimeout(() => {
-      state.rebuildTimer = null;
-      rebuild(reason);
-    }, CONFIG.debounceMs);
+    navigationApi.scheduleRebuild(reason);
+  }
+
+  function handlePotentialRouteChange(source) {
+    navigationApi.handlePotentialRouteChange(source);
+  }
+
+  function hydrateMinimalModePreference() {
+    navigationApi.hydrateMinimalModePreference();
   }
 
   function rebuild(reason) {
@@ -481,9 +301,9 @@
       return;
     }
 
-    const sequence = getConversationSequence(root);
-    const messages = buildUserMessages(sequence);
-    const signature = buildMessagesSignature(messages);
+    const sequence = conversationIndexer.getConversationSequence(state.adapter, root);
+    const messages = conversationIndexer.buildUserMessages(sequence, state.adapter);
+    const signature = conversationIndexer.buildMessagesSignature(messages);
     if (signature === state.signature) {
       return;
     }
@@ -506,79 +326,6 @@
     return root;
   }
 
-  function getConversationSequence(root) {
-    if (!state.adapter.getConversationMessages) {
-      return [];
-    }
-    return state.adapter.getConversationMessages(root);
-  }
-
-  function buildUserMessages(sequence) {
-    const messages = [];
-    sequence.forEach((entry, index) => {
-      if (entry.role !== 'user') {
-        return;
-      }
-      messages.push(buildUserMessage(sequence, entry, index, messages.length));
-    });
-    return messages;
-  }
-
-  function buildUserMessage(sequence, entry, index, promptIndex) {
-    const text = getUserMessageText(entry.node);
-    const title = text || `Prompt ${promptIndex + 1}`;
-    const assistantSummary = getAssistantSummary(sequence, index + 1);
-    const preview = assistantSummary.text
-      ? ns.utils.truncate(assistantSummary.text, CONFIG.previewMax)
-      : '';
-    return {
-      node: entry.node,
-      title,
-      preview,
-      text,
-      endNode: assistantSummary.lastAssistantNode
-    };
-  }
-
-  function getAssistantSummary(sequence, startIndex) {
-    let assistantText = '';
-    let lastAssistantNode = null;
-    for (let i = startIndex; i < sequence.length; i += 1) {
-      const item = sequence[i];
-      if (item.role === 'assistant') {
-        if (!assistantText) {
-          assistantText = ns.utils.normalizeText(item.node.textContent || '');
-        }
-        lastAssistantNode = item.node;
-        continue;
-      }
-      if (item.role === 'user') {
-        break;
-      }
-    }
-    return { text: assistantText, lastAssistantNode };
-  }
-
-  function buildMessagesSignature(messages) {
-    const lastMessage = messages[messages.length - 1];
-    const lastText = lastMessage ? lastMessage.text : '';
-    const lastPreview = lastMessage ? lastMessage.preview : '';
-    return `${messages.length}:${lastText}:${lastPreview}`;
-  }
-
-  function getUserMessageText(node) {
-    if (!node) {
-      return '';
-    }
-    if (state.adapter && state.adapter.id === 'gemini' && ns.utils.getTextWithoutHidden) {
-      const visibleText = ns.utils.getTextWithoutHidden(node);
-      if (visibleText) {
-        return visibleText;
-      }
-    }
-    return ns.utils.normalizeText(node.textContent || '');
-  }
-
   function attachObserver(root) {
     if (state.observer) {
       state.observer.disconnect();
@@ -592,12 +339,6 @@
       subtree: true,
       characterData: true
     });
-  }
-
-  function handlePotentialRouteChange(source) {
-    if (location.href !== state.url) {
-      handleRouteChange(source);
-    }
   }
 
   function scrollToMessage(node) {
@@ -626,8 +367,17 @@
     behaviorApi.scheduleMinimalScrollHintUpdate();
   }
 
-  function syncDisplayMode(forceRender = false) {
-    behaviorApi.syncDisplayMode(forceRender);
+  function setCollapsed(collapsed, persist = true) {
+    if (!state.ui) {
+      return;
+    }
+    ns.ui.setCollapsed(state.ui, Boolean(collapsed));
+    if (persist) {
+      saveCollapsedMode(Boolean(collapsed));
+    }
+    if (!collapsed) {
+      syncAdaptiveMode(true);
+    }
   }
 
   function setMinimalMode(enabled) {
@@ -642,16 +392,58 @@
     return behaviorApi.loadMinimalMode();
   }
 
-  function hydrateMinimalModePreference() {
-    Promise.resolve(loadMinimalMode()).then((storedValue) => {
-      if (typeof storedValue !== 'boolean') {
+  function loadCollapsedMode() {
+    const legacyValue = loadLegacyCollapsedMode();
+    if (!ns.storage || typeof ns.storage.getBoolean !== 'function') {
+      return Promise.resolve(legacyValue);
+    }
+    return ns.storage
+      .getBoolean(COLLAPSED_MODE_KEY)
+      .then((storedValue) => {
+        if (typeof storedValue === 'boolean') {
+          return storedValue;
+        }
+        ns.storage.setBoolean(COLLAPSED_MODE_KEY, legacyValue);
+        return legacyValue;
+      })
+      .catch(() => legacyValue);
+  }
+
+  function loadLegacyCollapsedMode() {
+    try {
+      return window.localStorage.getItem(COLLAPSED_MODE_KEY) === '1';
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function saveCollapsedMode(value) {
+    if (ns.storage && typeof ns.storage.setBoolean === 'function') {
+      ns.storage.setBoolean(COLLAPSED_MODE_KEY, value);
+    }
+    try {
+      window.localStorage.setItem(COLLAPSED_MODE_KEY, value ? '1' : '0');
+    } catch (error) {
+      // Ignore storage failures.
+    }
+  }
+
+  function applyInitialCollapsedMode() {
+    if (loadLegacyCollapsedMode()) {
+      setCollapsed(true, false);
+    }
+  }
+
+  function hydrateCollapsedPreference() {
+    Promise.resolve(loadCollapsedMode()).then((storedValue) => {
+      if (typeof storedValue !== 'boolean' || !state.ui) {
         return;
       }
-      if (storedValue === state.minimalMode) {
+      const currentCollapsed = state.ui.root && state.ui.root.dataset.collapsed === '1';
+      if (storedValue === currentCollapsed) {
         return;
       }
-      state.minimalMode = storedValue;
-      syncAdaptiveMode(true);
+      setCollapsed(storedValue, false);
     });
   }
 

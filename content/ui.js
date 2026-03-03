@@ -388,7 +388,11 @@
   }
 
   function getSiteKey() {
-    const host = location.hostname;
+    if (ns.site && typeof ns.site.getCurrentSiteId === 'function') {
+      const siteId = ns.site.getCurrentSiteId();
+      return siteId === 'generic' ? 'chatgpt' : siteId;
+    }
+    const host = typeof location !== 'undefined' ? location.hostname : '';
     if (host === 'gemini.google.com') {
       return 'gemini';
     }

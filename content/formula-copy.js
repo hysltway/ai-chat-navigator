@@ -6,20 +6,14 @@
     return;
   }
 
-  const STORAGE_KEY = 'formula_copy_settings';
-  const DEFAULT_SETTINGS = {
-    enableFormulaCopy: true,
-    formulaFormat: 'mathml',
-    formulaEngine: 'mathjax'
-  };
+  const formulaSettingsApi = getFormulaSettingsApi();
+  const SETTINGS_KEY = formulaSettingsApi.KEY;
   const STYLE_ID = 'chatgpt-nav-formula-copy-style';
   const TOAST_ID = 'chatgpt-nav-formula-toast';
   const PROCESSED_FLAG = 'chatgptNavFormulaMarked';
   const DISPLAY_FLAG_CLASS = 'chatgpt-nav-formula-display';
   const COPYABLE_CLASS = 'chatgpt-nav-formula-copyable';
   const COPY_HINT_TITLE = 'Click to copy formula for MathML (Shift+Click for LaTeX)';
-  const SUPPORTED_FORMATS = new Set(['mathml', 'latex']);
-  const SUPPORTED_ENGINES = new Set(['mathjax', 'katex', 'auto']);
   const FALLBACK_FORMULA_THEME = {
     presets: {
       generic: {
@@ -49,12 +43,74 @@
   };
 
   let started = false;
-  let settings = { ...DEFAULT_SETTINGS };
+  let settings = formulaSettingsApi.normalize(formulaSettingsApi.DEFAULTS);
   let observer = null;
   let decorateRaf = null;
 
+  function getFormulaSettingsApi() {
+    if (ns.formulaSettings && typeof ns.formulaSettings.createFormulaSettingsApi === 'function') {
+      return ns.formulaSettings.createFormulaSettingsApi({
+        storageApi: ns.storage,
+        chromeRef: typeof chrome !== 'undefined' ? chrome : null
+      });
+    }
+    return createFallbackFormulaSettingsApi();
+  }
+
+  function createFallbackFormulaSettingsApi() {
+    const fallbackDefaults = {
+      enableFormulaCopy: true,
+      formulaFormat: 'mathml',
+      formulaEngine: 'mathjax'
+    };
+    const supportedFormats = new Set(['mathml', 'latex']);
+    const supportedEngines = new Set(['mathjax', 'katex', 'auto']);
+    const normalize = (raw) => {
+      const normalized = { ...fallbackDefaults };
+      if (!raw || typeof raw !== 'object') {
+        return normalized;
+      }
+      normalized.enableFormulaCopy = raw.enableFormulaCopy !== false;
+      if (supportedFormats.has(raw.formulaFormat)) {
+        normalized.formulaFormat = raw.formulaFormat;
+      }
+      if (supportedEngines.has(raw.formulaEngine)) {
+        normalized.formulaEngine = raw.formulaEngine;
+      }
+      return normalized;
+    };
+    const readRaw = () => {
+      if (!ns.storage || typeof ns.storage.getJson !== 'function') {
+        return Promise.resolve(null);
+      }
+      return Promise.resolve(ns.storage.getJson('formula_copy_settings')).catch(() => null);
+    };
+    const write = (rawValue) => {
+      if (!ns.storage || typeof ns.storage.setJson !== 'function') {
+        return Promise.resolve(false);
+      }
+      const normalized = normalize(rawValue);
+      return Promise.resolve(ns.storage.setJson('formula_copy_settings', normalized))
+        .then((saved) => Boolean(saved))
+        .catch(() => false);
+    };
+    return {
+      KEY: 'formula_copy_settings',
+      DEFAULTS: { ...fallbackDefaults },
+      normalize,
+      readRaw,
+      read() {
+        return readRaw().then((raw) => normalize(raw));
+      },
+      write
+    };
+  }
+
   function getPlatform() {
-    const host = location.hostname;
+    if (ns.site && typeof ns.site.getCurrentSiteId === 'function') {
+      return ns.site.getCurrentSiteId();
+    }
+    const host = typeof location !== 'undefined' ? location.hostname : '';
     if (host === 'gemini.google.com') {
       return 'gemini';
     }
@@ -67,31 +123,12 @@
     return 'generic';
   }
 
-  function normalizeSettings(raw) {
-    if (!raw || typeof raw !== 'object') {
-      return { ...DEFAULT_SETTINGS };
-    }
-
-    const normalized = { ...DEFAULT_SETTINGS };
-    normalized.enableFormulaCopy = raw.enableFormulaCopy !== false;
-
-    if (SUPPORTED_FORMATS.has(raw.formulaFormat)) {
-      normalized.formulaFormat = raw.formulaFormat;
-    }
-
-    if (SUPPORTED_ENGINES.has(raw.formulaEngine)) {
-      normalized.formulaEngine = raw.formulaEngine;
-    }
-
-    return normalized;
-  }
-
   async function loadSettings() {
-    const saved = await ns.storage.getJson(STORAGE_KEY);
-    settings = normalizeSettings(saved);
+    const saved = await formulaSettingsApi.readRaw();
+    settings = formulaSettingsApi.normalize(saved);
 
     if (!saved) {
-      await ns.storage.setJson(STORAGE_KEY, settings);
+      await formulaSettingsApi.write(settings);
     }
   }
 
@@ -438,10 +475,10 @@
       return;
     }
     chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName !== 'local' || !changes[STORAGE_KEY]) {
+      if (areaName !== 'local' || !changes[SETTINGS_KEY]) {
         return;
       }
-      settings = normalizeSettings(changes[STORAGE_KEY].newValue);
+      settings = formulaSettingsApi.normalize(changes[SETTINGS_KEY].newValue);
       scheduleDecorate();
     });
   }

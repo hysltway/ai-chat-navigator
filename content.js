@@ -1,15 +1,29 @@
 (() => {
   'use strict';
 
-  if (!window.ChatGptNav) {
-    return;
+  function createBootstrapper(globalRef = window) {
+    function startIfAvailable(moduleName, methodName = 'start') {
+      if (!globalRef.ChatGptNav || !globalRef.ChatGptNav[moduleName]) {
+        return;
+      }
+      const targetMethod = globalRef.ChatGptNav[moduleName][methodName];
+      if (typeof targetMethod === 'function') {
+        targetMethod();
+      }
+    }
+
+    function start() {
+      if (!globalRef.ChatGptNav) {
+        return;
+      }
+      startIfAvailable('formulaCopy');
+      startIfAvailable('core');
+    }
+
+    return {
+      start
+    };
   }
 
-  if (window.ChatGptNav.formulaCopy && typeof window.ChatGptNav.formulaCopy.start === 'function') {
-    window.ChatGptNav.formulaCopy.start();
-  }
-
-  if (window.ChatGptNav.core && typeof window.ChatGptNav.core.start === 'function') {
-    window.ChatGptNav.core.start();
-  }
+  createBootstrapper().start();
 })();
