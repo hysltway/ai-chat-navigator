@@ -16,8 +16,35 @@
             <span>AI Chat Navigator</span>
           </div>
         </div>
-        <span id="version-pill" class="version-pill" aria-label="Version">v2.1.1</span>
+        <span id="version-pill" class="version-pill" aria-label="Version">v2.2.0</span>
       </header>
+
+      <section class="panel panel-settings" id="formula-settings">
+        <h1>Formula Copy</h1>
+        <p>Click formulas on ChatGPT, Gemini, and Claude to copy for Word or LaTeX editors.</p>
+
+        <label class="toggle-row" for="formula-enabled">
+          <input id="formula-enabled" type="checkbox" />
+          <span>Enable formula click-to-copy</span>
+        </label>
+
+        <div class="field-row">
+          <label for="formula-format">Copy Format</label>
+          <select id="formula-format">
+            <option value="mathml">MathML (Word recommended)</option>
+            <option value="latex">LaTeX</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <label for="formula-engine">MathML Engine</label>
+          <select id="formula-engine">
+            <option value="mathjax">MathJax (better compatibility)</option>
+            <option value="katex">KaTeX (faster)</option>
+            <option value="auto">Auto fallback</option>
+          </select>
+        </div>
+      </section>
 
       <section class="panel panel-support" id="support-section">
         <h1>Let's Improve</h1>

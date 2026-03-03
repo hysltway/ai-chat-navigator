@@ -9,11 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.1.1**
+> Current Version: **v2.2.0**
 
-## Updates in v2.1.1
+## Updates in v2.2.0
 
-- Fixed an issue where Normal/Minimal mode switching could get locked under adaptive mode. Manual toggle now takes priority.
+- Added click-to-copy formula support for ChatGPT, Gemini, and Claude.
+- Added copy format selection (`MathML / LaTeX`) and `Shift + Click` to force LaTeX copy.
+- Fixed Gemini nested formula highlight issue by keeping only the innermost interactive formula node.
+- Switched formula conversion dependencies to vendored internal files to avoid load failures from `examplecode` paths.
 
 ## Chrome Web Store (Recommended)
 
