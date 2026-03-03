@@ -17,6 +17,29 @@
     return style;
   }
 
+  function applyThemeVars(root, colorScheme) {
+    if (!root || !root.style || typeof ns.getUiThemePreset !== 'function') {
+      return;
+    }
+
+    const site = root.dataset.site || getSiteKey();
+    const scheme = colorScheme === 'dark' ? 'dark' : 'light';
+    const preset = ns.getUiThemePreset(site, scheme);
+    const navVars = preset && preset.nav && typeof preset.nav === 'object' ? preset.nav : null;
+    if (!navVars) {
+      return;
+    }
+
+    const knownKeys = Array.isArray(ns.UI_NAV_THEME_VAR_KEYS) ? ns.UI_NAV_THEME_VAR_KEYS : Object.keys(navVars);
+    knownKeys.forEach((key) => {
+      root.style.removeProperty(key);
+    });
+
+    Object.keys(navVars).forEach((key) => {
+      root.style.setProperty(key, navVars[key]);
+    });
+  }
+
   function createUI() {
     const container = document.createElement('div');
     container.id = 'chatgpt-nav-root';
@@ -59,6 +82,7 @@
     root.dataset.adaptiveMinimal = '0';
     root.dataset.colorScheme = 'light';
     root.dataset.site = getSiteKey();
+    applyThemeVars(root, 'light');
     return root;
   }
 
@@ -258,6 +282,7 @@
   function setColorScheme(ui, colorScheme) {
     const normalized = colorScheme === 'dark' ? 'dark' : 'light';
     ui.root.dataset.colorScheme = normalized;
+    applyThemeVars(ui.root, normalized);
     setThemeToggle(ui, normalized);
   }
 

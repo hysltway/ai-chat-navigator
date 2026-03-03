@@ -15,9 +15,38 @@
   const STYLE_ID = 'chatgpt-nav-formula-copy-style';
   const TOAST_ID = 'chatgpt-nav-formula-toast';
   const PROCESSED_FLAG = 'chatgptNavFormulaMarked';
-
+  const DISPLAY_FLAG_CLASS = 'chatgpt-nav-formula-display';
+  const COPYABLE_CLASS = 'chatgpt-nav-formula-copyable';
+  const COPY_HINT_TITLE = 'Click to copy formula for MathML (Shift+Click for LaTeX)';
   const SUPPORTED_FORMATS = new Set(['mathml', 'latex']);
   const SUPPORTED_ENGINES = new Set(['mathjax', 'katex', 'auto']);
+  const FALLBACK_FORMULA_THEME = {
+    presets: {
+      generic: {
+        light: {
+          outline: 'rgba(37, 99, 235, 0.5)',
+          ring: 'rgba(37, 99, 235, 0.18)',
+          hoverBg: 'rgba(191, 219, 254, 0.46)',
+          activeBg: 'rgba(147, 197, 253, 0.52)',
+          toastBg: 'rgba(248, 250, 252, 0.97)',
+          toastText: '#1e293b',
+          toastBorder: 'rgba(37, 99, 235, 0.28)',
+          toastShadow: 'rgba(30, 41, 59, 0.18)'
+        },
+        dark: {
+          outline: 'rgba(147, 197, 253, 0.68)',
+          ring: 'rgba(147, 197, 253, 0.24)',
+          hoverBg: 'rgba(147, 197, 253, 0.16)',
+          activeBg: 'rgba(147, 197, 253, 0.24)',
+          toastBg: 'rgba(15, 23, 42, 0.95)',
+          toastText: '#e2e8f0',
+          toastBorder: 'rgba(147, 197, 253, 0.42)',
+          toastShadow: 'rgba(2, 6, 23, 0.46)'
+        }
+      }
+    },
+    darkSelectors: {}
+  };
 
   let started = false;
   let settings = { ...DEFAULT_SETTINGS };
@@ -66,7 +95,73 @@
     }
   }
 
-  function ensureStyle() {
+  function getFormulaThemeConfig() {
+    const shared = ns.UI_FORMULA_THEME;
+    if (!shared || typeof shared !== 'object') {
+      return FALLBACK_FORMULA_THEME;
+    }
+
+    const presets = shared.presets && typeof shared.presets === 'object' ? shared.presets : null;
+    const darkSelectors =
+      shared.darkSelectors && typeof shared.darkSelectors === 'object' ? shared.darkSelectors : null;
+
+    return {
+      presets: presets || FALLBACK_FORMULA_THEME.presets,
+      darkSelectors: darkSelectors || FALLBACK_FORMULA_THEME.darkSelectors
+    };
+  }
+
+  function toThemeVars(theme) {
+    return `
+      --chatgpt-nav-formula-outline: ${theme.outline};
+      --chatgpt-nav-formula-ring: ${theme.ring};
+      --chatgpt-nav-formula-hover-bg: ${theme.hoverBg};
+      --chatgpt-nav-formula-active-bg: ${theme.activeBg};
+      --chatgpt-nav-formula-toast-bg: ${theme.toastBg};
+      --chatgpt-nav-formula-toast-text: ${theme.toastText};
+      --chatgpt-nav-formula-toast-border: ${theme.toastBorder};
+      --chatgpt-nav-formula-toast-shadow: ${theme.toastShadow};
+    `;
+  }
+
+  function buildThemeCss(platform) {
+    const themeConfig = getFormulaThemeConfig();
+    const presets = themeConfig.presets || FALLBACK_FORMULA_THEME.presets;
+    const darkSelectors = themeConfig.darkSelectors || FALLBACK_FORMULA_THEME.darkSelectors;
+    const defaultPreset = FALLBACK_FORMULA_THEME.presets.generic;
+    const presetCandidate = presets[platform] || presets.generic || defaultPreset;
+    const preset = {
+      light: presetCandidate.light || defaultPreset.light,
+      dark: presetCandidate.dark || defaultPreset.dark
+    };
+    const darkSelector = darkSelectors[platform];
+    const lightVars = toThemeVars(preset.light);
+    const darkVars = toThemeVars(preset.dark);
+
+    if (darkSelector) {
+      return `
+        :root {
+          ${lightVars}
+        }
+        ${darkSelector} {
+          ${darkVars}
+        }
+      `;
+    }
+
+    return `
+      :root {
+        ${lightVars}
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          ${darkVars}
+        }
+      }
+    `;
+  }
+
+  function ensureStyle(platform) {
     if (document.getElementById(STYLE_ID)) {
       return;
     }
@@ -74,35 +169,61 @@
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-      .chatgpt-nav-formula-copyable {
+      ${buildThemeCss(platform)}
+      .${COPYABLE_CLASS} {
+        border-radius: 10px;
         cursor: pointer !important;
+        transition: background-color 120ms ease;
       }
-      .chatgpt-nav-formula-copyable:hover {
-        outline: 1px dashed rgba(59, 130, 246, 0.45);
-        outline-offset: 2px;
+      .${COPYABLE_CLASS}:hover {
+        background: var(--chatgpt-nav-formula-hover-bg);
+      }
+      .${COPYABLE_CLASS}:active {
+        background: var(--chatgpt-nav-formula-active-bg);
+      }
+      .${COPYABLE_CLASS}:focus-visible {
+        outline: none;
+        background: var(--chatgpt-nav-formula-hover-bg);
+      }
+      .${COPYABLE_CLASS} .katex,
+      .${COPYABLE_CLASS} .MathJax,
+      .${COPYABLE_CLASS} .MathJax_SVG {
+        border-radius: inherit;
       }
       #${TOAST_ID} {
         position: fixed;
         top: 20px;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translate(-50%, -6px);
         z-index: 2147483647;
-        padding: 8px 12px;
-        border-radius: 8px;
-        font-size: 12px;
+        min-width: 160px;
+        max-width: min(90vw, 420px);
+        padding: 9px 13px;
+        border-radius: 10px;
+        font-size: 12.5px;
+        font-weight: 500;
         line-height: 1.4;
-        background: rgba(15, 23, 42, 0.92);
-        color: #f8fafc;
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: var(--chatgpt-nav-formula-toast-bg);
+        color: var(--chatgpt-nav-formula-toast-text);
+        border: 1px solid var(--chatgpt-nav-formula-toast-border);
+        box-shadow: 0 10px 28px var(--chatgpt-nav-formula-toast-shadow);
+        backdrop-filter: blur(8px);
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         pointer-events: none;
         opacity: 0;
-        transition: opacity 160ms ease;
+        transition: opacity 160ms ease, transform 180ms ease;
       }
       #${TOAST_ID}.visible {
         opacity: 1;
+        transform: translate(-50%, 0);
       }
       #${TOAST_ID}.error {
-        background: rgba(153, 27, 27, 0.94);
+        background: rgba(146, 24, 37, 0.95);
+        color: #fff7f9;
+        border-color: rgba(254, 202, 202, 0.42);
       }
     `;
 
@@ -133,25 +254,37 @@
     }, 1400);
   }
 
+  function shouldDecorateNode(node, platform, formulaSelector) {
+    if (!node || !platform || platform !== 'gemini') {
+      return true;
+    }
+    if (typeof node.querySelector !== 'function') {
+      return true;
+    }
+    return !node.querySelector(formulaSelector);
+  }
+
   function decorateFormulaElements() {
-    const formulaSelector = ns.formulaExtractor.getFormulaSelector(getPlatform());
+    const platform = getPlatform();
+    const formulaSelector = ns.formulaExtractor.getFormulaSelector(platform);
     const formulaNodes = document.querySelectorAll(formulaSelector);
     formulaNodes.forEach((node) => {
-      if (node.dataset[PROCESSED_FLAG]) {
-        node.classList.toggle('chatgpt-nav-formula-copyable', settings.enableFormulaCopy);
-        if (!settings.enableFormulaCopy && node.title === 'Click to copy formula (Shift+Click for LaTeX)') {
-          node.title = '';
-        } else if (settings.enableFormulaCopy && !node.title) {
-          node.title = 'Click to copy formula (Shift+Click for LaTeX)';
-        }
-        return;
-      }
+      const canDecorate = shouldDecorateNode(node, platform, formulaSelector);
+      const shouldEnable = settings.enableFormulaCopy && canDecorate;
+
       node.dataset[PROCESSED_FLAG] = '1';
-      if (settings.enableFormulaCopy) {
-        node.classList.add('chatgpt-nav-formula-copyable');
-        if (!node.title) {
-          node.title = 'Click to copy formula (Shift+Click for LaTeX)';
-        }
+      node.classList.toggle(COPYABLE_CLASS, shouldEnable);
+
+      if (shouldEnable) {
+        node.classList.toggle(DISPLAY_FLAG_CLASS, ns.formulaExtractor.isDisplayFormula(node));
+      } else {
+        node.classList.remove(DISPLAY_FLAG_CLASS);
+      }
+
+      if (!shouldEnable && node.title === COPY_HINT_TITLE) {
+        node.title = '';
+      } else if (shouldEnable && !node.title) {
+        node.title = COPY_HINT_TITLE;
       }
     });
   }
@@ -319,7 +452,8 @@
     }
     started = true;
 
-    ensureStyle();
+    const platform = getPlatform();
+    ensureStyle(platform);
     await loadSettings();
     attachStorageListener();
 
