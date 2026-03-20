@@ -56,7 +56,10 @@
 
     shadow.appendChild(style);
     shadow.appendChild(root);
-    document.body.appendChild(container);
+    const mountRoot = getMountRoot();
+    if (mountRoot) {
+      mountRoot.appendChild(container);
+    }
 
     return {
       container,
@@ -73,6 +76,24 @@
       previewInner: previewElements.previewInner,
       fab
     };
+  }
+
+  function getMountRoot() {
+    return document.documentElement || document.body || null;
+  }
+
+  function ensureMounted(ui) {
+    if (!ui || !ui.container) {
+      return false;
+    }
+    const mountRoot = getMountRoot();
+    if (!mountRoot) {
+      return false;
+    }
+    if (ui.container.parentElement !== mountRoot || !ui.container.isConnected) {
+      mountRoot.appendChild(ui.container);
+    }
+    return ui.container.isConnected;
   }
 
   function createRootElement() {
@@ -404,6 +425,7 @@
 
   ns.ui = {
     createUI,
+    ensureMounted,
     renderList,
     setCollapsed,
     setMinimalMode,

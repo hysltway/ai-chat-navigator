@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.2.2**
+> Current Version: **v2.3.0**
 
-## Updates in v2.2.2
+## Updates in v2.3.0
 
-- Added persistent collapsed state: after clicking `Hide`, the panel stays hidden after refresh; click `Fab` to reopen and persist state.
-- Refactored the navigation core: split `core` into orchestration, navigation controller, and conversation indexer for lower coupling and better stability.
-- Extracted shared site detection and formula-settings services so popup and content scripts use one configuration path.
-- Unified formula extraction, conversion, and storage modules under consistent APIs to improve testability and future extensions.
+- Added Prompt Library: save reusable prompts, search them quickly, copy them, delete them, and inject them into the current site's composer in one click.
+- Adapted Prompt Library mounting and theme behavior for ChatGPT, Gemini, and Claude, with panel placement that follows each site's layout.
+- Hardened conversation indexing and UI remount timing so both the navigator and prompt panel recover more reliably after SPA route changes and DOM refreshes.
+- Updated release docs and version references for `v2.3.0`.
 
 ## Chrome Web Store (Recommended)
 
@@ -33,6 +33,8 @@ Now live on the Chrome Web Store. Install from the store for automatic updates.
 ## Feature Checklist
 
 - Automatically extracts user prompts and builds a clickable navigator for ChatGPT, Gemini, and Claude.
+- Built-in Prompt Library for saving reusable prompts with search, copy, delete, and reuse flows.
+- Supports one-click prompt injection into the current site's input box, with copy as the fallback when direct insertion is unavailable.
 - Supports both mouse click and keyboard `Enter` / `Space` on navigator items.
 - Tracks reading position in real time, highlights the active item, and keeps it visible in the list.
 - Includes Minimal mode and Adaptive Minimal mode (auto-switch when panel overlaps conversation content).

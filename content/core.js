@@ -65,6 +65,8 @@
     observer: null,
     messages: [],
     signature: '',
+    conversationIndexReady: false,
+    conversationIndexUrl: '',
     rebuildTimer: null,
     pollTimer: null,
     ui: null,
@@ -178,6 +180,7 @@
         setCollapsed,
         setMinimalMode,
         syncAdaptiveMode,
+        ensureUiMounted,
         setActiveIndex,
         snapNavListToEdge,
         scrollToMessage,
@@ -235,6 +238,7 @@
     }
 
     state.ui = ns.ui.createUI();
+    ensureUiMounted();
     initThemeTracking();
     ns.ui.setTitle(state.ui, getNavigatorTitle());
     state.minimalMode = false;
@@ -294,6 +298,7 @@
   }
 
   function rebuild(reason) {
+    ensureUiMounted();
     handlePotentialRouteChange(reason);
 
     const root = getConversationRootForRebuild();
@@ -304,6 +309,8 @@
     const sequence = conversationIndexer.getConversationSequence(state.adapter, root);
     const messages = conversationIndexer.buildUserMessages(sequence, state.adapter);
     const signature = conversationIndexer.buildMessagesSignature(messages);
+    state.conversationIndexReady = true;
+    state.conversationIndexUrl = state.url;
     if (signature === state.signature) {
       return;
     }
@@ -360,6 +367,7 @@
   }
 
   function renderMessages() {
+    ensureUiMounted();
     behaviorApi.renderMessages();
   }
 
@@ -371,6 +379,7 @@
     if (!state.ui) {
       return;
     }
+    ensureUiMounted();
     ns.ui.setCollapsed(state.ui, Boolean(collapsed));
     if (persist) {
       saveCollapsedMode(Boolean(collapsed));
@@ -382,6 +391,13 @@
 
   function setMinimalMode(enabled) {
     behaviorApi.setMinimalMode(enabled);
+  }
+
+  function ensureUiMounted() {
+    if (!state.ui || !ns.ui || typeof ns.ui.ensureMounted !== 'function') {
+      return false;
+    }
+    return ns.ui.ensureMounted(state.ui);
   }
 
   function syncAdaptiveMode(force = false) {
@@ -487,7 +503,21 @@
     behaviorApi.snapNavListToEdge(index);
   }
 
+  function hasIndexedConversation() {
+    return Boolean(Array.isArray(state.messages) && state.messages.length > 0 && state.signature);
+  }
+
+  function getConversationIndexState() {
+    const ready = Boolean(state.conversationIndexReady && state.conversationIndexUrl === state.url);
+    return {
+      ready,
+      hasConversation: ready && hasIndexedConversation()
+    };
+  }
+
   ns.core = {
-    start
+    start,
+    hasIndexedConversation,
+    getConversationIndexState
   };
 })();

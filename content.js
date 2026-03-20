@@ -17,6 +17,7 @@
         return;
       }
       startIfAvailable('formulaCopy');
+      startIfAvailable('promptLibrary');
       startIfAvailable('core');
     }
 

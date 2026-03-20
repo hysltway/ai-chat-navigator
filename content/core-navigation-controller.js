@@ -282,6 +282,9 @@
       return;
     }
     state.pollTimer = windowRef.setInterval(() => {
+      if (callbacks.ensureUiMounted) {
+        callbacks.ensureUiMounted();
+      }
       if (locationRef.href !== state.url) {
         handleRouteChange('poll');
       }
@@ -295,6 +298,8 @@
     callbacks.cancelPendingBubbleHighlight();
     state.signature = '';
     state.messages = [];
+    state.conversationIndexReady = false;
+    state.conversationIndexUrl = '';
     state.activeIndex = null;
     callbacks.renderMessages();
     if (state.observer) {
