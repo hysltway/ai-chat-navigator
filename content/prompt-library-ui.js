@@ -5,6 +5,8 @@
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const ICON_MARKUP = Object.freeze({
+    prompt:
+      '<path d="M4.75 3.25h6.5a1 1 0 0 1 1 1v7.5a1 1 0 0 1-1 1h-6.5a1 1 0 0 1-1-1v-7.5a1 1 0 0 1 1-1Z" /><path d="M6 6h4.5" /><path d="M6 8.25h4.5" /><path d="M6 10.5h3" />',
     plus: '<path d="M8 3.25v9.5M3.25 8h9.5" />',
     close: '<path d="M4.25 4.25l7.5 7.5M11.75 4.25l-7.5 7.5" />',
     search: '<circle cx="7" cy="7" r="3.75" /><path d="M10.25 10.25l2.5 2.5" />',
@@ -65,6 +67,22 @@
         text-align: center;
       }
 
+      .prompt-entry-icon {
+        display: none;
+        flex: 0 0 auto;
+      }
+
+      .prompt-entry-icon svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+
+      .prompt-entry-label {
+        display: inline-flex;
+        align-items: center;
+      }
+
       .prompt-ui[data-site="gemini"] .prompt-entry {
         min-height: 40px;
       }
@@ -73,148 +91,37 @@
         height: 36px;
         min-height: 36px;
         min-width: 72px;
-        padding: 0 16px;
+        padding: 0 5px;
         border-radius: 18px;
         border-color: transparent;
         background: transparent;
         color: var(--prompt-entry-text);
-        display: inline-grid;
-        place-items: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        font-size: 14px;
+        font-weight: 400;
+      }
+
+      .prompt-ui[data-site="gemini"] .prompt-entry-icon {
+        width: 20px;
+        height: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+      }
+
+      .prompt-ui[data-site="gemini"] .prompt-entry-label {
+        min-height: 20px;
+        line-height: 20px;
+        align-self: center;
       }
 
       .prompt-ui[data-site="gemini"] .prompt-entry-button:hover {
         background: var(--prompt-entry-hover);
         border-color: transparent;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-panel {
-        border-radius: 20px;
-        padding: 8px;
-        gap: 8px;
-        border-color: var(--prompt-gemini-panel-border, var(--prompt-panel-border));
-        box-shadow: var(--prompt-gemini-panel-shadow, var(--prompt-panel-shadow));
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-header {
-        gap: 6px;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-toolbar {
-        min-height: 18px;
-        padding: 0 4px;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-count {
-        font-size: 12px;
-        font-weight: 400;
-        letter-spacing: 0;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-search-shell {
-        min-height: 42px;
-        padding: 0 14px;
-        border-radius: 16px;
-        background: var(--prompt-gemini-search-bg, var(--prompt-input-bg));
-        border-color: var(--prompt-gemini-search-border, var(--prompt-input-border));
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-search-shell:hover,
-      .prompt-ui[data-site="gemini"] .prompt-search-shell:focus-within {
-        border-color: color-mix(in srgb, var(--prompt-accent) 18%, var(--prompt-gemini-search-border, var(--prompt-input-border)));
-        background: var(--prompt-gemini-search-bg, var(--prompt-input-bg));
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-search-shell:focus-within {
-        box-shadow: 0 0 0 3px var(--prompt-focus-ring);
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-search-input {
-        font-size: 14px;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-icon-button {
-        width: 36px;
-        height: 36px;
-        border: none;
-        border-radius: 999px;
-        background: transparent;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-icon-button:hover {
-        background: var(--prompt-gemini-icon-hover, var(--prompt-entry-hover));
-        border-color: transparent;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-action-button {
-        min-height: 36px;
-        padding: 0 14px;
-        border-radius: 999px;
-        border-color: transparent;
-        font-size: 13px;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-action-button:not([data-tone="primary"]) {
-        background: transparent;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-action-button:not([data-tone="primary"]):hover {
-        background: var(--prompt-gemini-icon-hover, var(--prompt-surface-hover));
-        border-color: transparent;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-input,
-      .prompt-ui[data-site="gemini"] .prompt-textarea {
-        border-radius: 16px;
-        background: var(--prompt-gemini-search-bg, var(--prompt-input-bg));
-        border-color: var(--prompt-gemini-search-border, var(--prompt-input-border));
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-form {
-        padding-top: 10px;
-        border-top-color: color-mix(in srgb, var(--prompt-panel-border) 88%, transparent);
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-list {
-        gap: 4px;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-item {
-        padding: 12px 14px;
-        border-radius: 16px;
-        border-color: transparent;
-        background: var(--prompt-gemini-item-bg, var(--prompt-surface));
-        box-shadow: none;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-item:hover {
-        background: var(--prompt-gemini-item-hover, var(--prompt-surface-hover));
-        border-color: transparent;
-        box-shadow: none;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-item-title {
-        font-size: 13.5px;
-        font-weight: 500;
-        letter-spacing: 0;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-item-preview {
-        font-size: 13px;
-        line-height: 1.54;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-item-actions {
-        gap: 4px;
-        align-self: start;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-item-actions .prompt-icon-button {
-        width: 30px;
-        height: 30px;
-      }
-
-      .prompt-ui[data-site="gemini"] .prompt-empty {
-        padding: 4px 6px 0;
       }
 
       .prompt-ui[data-site="claude"] .prompt-entry {
@@ -762,8 +669,15 @@
     button.className = 'prompt-entry-button';
     button.setAttribute('aria-label', 'Open prompt library');
 
+    const icon = document.createElement('span');
+    icon.className = 'prompt-entry-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.appendChild(createSvgIcon('prompt'));
+
     const label = document.createElement('span');
+    label.className = 'prompt-entry-label';
     label.textContent = 'Prompt';
+    button.appendChild(icon);
     button.appendChild(label);
 
     root.appendChild(button);
@@ -784,7 +698,7 @@
     const header = document.createElement('div');
     header.className = 'prompt-header';
 
-    const promptToggleButton = createIconButton('toggle-prompt-form', '新建 Prompt', 'plus');
+    const promptToggleButton = createIconButton('toggle-prompt-form', 'New prompt', 'plus');
 
     const searchShell = document.createElement('label');
     searchShell.className = 'prompt-search-shell';
@@ -795,12 +709,12 @@
     const searchInput = document.createElement('input');
     searchInput.className = 'prompt-search-input';
     searchInput.type = 'search';
-    searchInput.placeholder = '搜索标题或正文';
+    searchInput.placeholder = 'Search title or prompt';
     searchInput.setAttribute('aria-label', 'Search prompts');
     searchShell.appendChild(searchIcon);
     searchShell.appendChild(searchInput);
 
-    const closeButton = createIconButton('close-panel', '关闭', 'close');
+    const closeButton = createIconButton('close-panel', 'Close', 'close');
 
     header.appendChild(promptToggleButton);
     header.appendChild(searchShell);
@@ -811,26 +725,26 @@
 
     const countText = document.createElement('div');
     countText.className = 'prompt-count';
-    countText.textContent = '共 0 条';
+    countText.textContent = '0 prompts';
     toolbar.appendChild(countText);
 
     const promptFormWrap = createExpandableSection();
     const promptForm = document.createElement('form');
     promptForm.className = 'prompt-form';
 
-    const promptTitleField = createField('标题');
+    const promptTitleField = createField('Title');
     const promptTitleInput = document.createElement('input');
     promptTitleInput.className = 'prompt-input';
     promptTitleInput.type = 'text';
     promptTitleInput.name = 'title';
-    promptTitleInput.placeholder = '例如：长文总结';
+    promptTitleInput.placeholder = 'e.g. Weekly summary';
     promptTitleField.field.appendChild(promptTitleInput);
 
     const promptContentField = createField('Prompt');
     const promptContentInput = document.createElement('textarea');
     promptContentInput.className = 'prompt-textarea';
     promptContentInput.name = 'content';
-    promptContentInput.placeholder = '输入完整 Prompt，点击条目后会自动注入当前输入框';
+    promptContentInput.placeholder = 'Write the full prompt. Clicking an item will insert it into the current composer.';
     promptContentField.field.appendChild(promptContentInput);
 
     const promptWarning = document.createElement('div');
@@ -838,8 +752,8 @@
 
     const promptFormActions = document.createElement('div');
     promptFormActions.className = 'prompt-form-actions';
-    const promptCancelButton = createActionButton('取消', 'cancel-prompt-form');
-    const promptSaveButton = createActionButton('保存', 'save-prompt');
+    const promptCancelButton = createActionButton('Cancel', 'cancel-prompt-form');
+    const promptSaveButton = createActionButton('Save', 'save-prompt');
     promptSaveButton.type = 'submit';
     promptSaveButton.dataset.tone = 'primary';
     promptFormActions.appendChild(promptCancelButton);
@@ -1036,7 +950,7 @@
       nav['--nav-shadow'] || (isDark ? '0 20px 48px rgba(3, 8, 17, 0.58)' : '0 18px 42px rgba(23, 21, 16, 0.16)');
     const focusOutline = formula.outline || activeBorder;
     const focusRing = formula.ring || (isDark ? 'rgba(211, 217, 224, 0.18)' : 'rgba(31, 31, 31, 0.08)');
-    const entryText = site === 'claude' ? nav['--nav-muted'] || nav['--nav-text'] || text : nav['--nav-text'] || text;
+    let entryText = site === 'claude' ? nav['--nav-muted'] || nav['--nav-text'] || text : nav['--nav-text'] || text;
     const entryHover =
       site === 'gemini'
         ? '#F0F1F1'
@@ -1044,29 +958,22 @@
     let promptPanelShadow = shadow;
     let promptPanelBorder = border;
     let promptInputBg = nav['--nav-button-bg'] || itemBg;
+    let promptInputBorder = border;
     let promptSurface = itemBg;
     let promptSurfaceBorder = border;
     let promptSurfaceHover = hover;
-    let geminiSearchBg = promptInputBg;
-    let geminiSearchBorder = border;
-    let geminiItemBg = promptSurface;
-    let geminiItemHover = promptSurfaceHover;
-    let geminiIconHover = entryHover;
 
     if (!isDark && site === 'gemini') {
+      entryText = '#444746';
       panelBg = '#E9EEF6';
       itemBg = '#F8FAFD';
       promptPanelBorder = 'rgba(95, 111, 134, 0.16)';
       promptPanelShadow = '0 1px 2px rgba(60, 64, 67, 0.16), 0 2px 6px 2px rgba(60, 64, 67, 0.1)';
       promptInputBg = '#F8FAFD';
+      promptInputBorder = '#D2D9E4';
       promptSurface = '#F8FAFD';
       promptSurfaceBorder = 'rgba(95, 111, 134, 0.14)';
       promptSurfaceHover = '#DDE4EE';
-      geminiSearchBg = '#F8FAFD';
-      geminiSearchBorder = '#D2D9E4';
-      geminiItemBg = '#F8FAFD';
-      geminiItemHover = '#DDE4EE';
-      geminiIconHover = '#F0F1F1';
     }
 
     if (!isDark && site === 'claude') {
@@ -1084,24 +991,17 @@
       '--prompt-panel-bg': panelBg,
       '--prompt-panel-border': promptPanelBorder,
       '--prompt-panel-shadow': promptPanelShadow,
-      '--prompt-gemini-panel-border': promptPanelBorder,
-      '--prompt-gemini-panel-shadow': promptPanelShadow,
       '--prompt-text': text,
       '--prompt-muted': muted,
       '--prompt-accent': activeText,
       '--prompt-accent-soft': hover,
       '--prompt-accent-strong': text,
       '--prompt-input-bg': promptInputBg,
-      '--prompt-input-border': border,
+      '--prompt-input-border': promptInputBorder,
       '--prompt-surface': promptSurface,
       '--prompt-surface-strong': panelBg,
       '--prompt-surface-border': promptSurfaceBorder,
       '--prompt-surface-hover': promptSurfaceHover,
-      '--prompt-gemini-search-bg': geminiSearchBg,
-      '--prompt-gemini-search-border': geminiSearchBorder,
-      '--prompt-gemini-item-bg': geminiItemBg,
-      '--prompt-gemini-item-hover': geminiItemHover,
-      '--prompt-gemini-icon-hover': geminiIconHover,
       '--prompt-primary-bg': activeBg,
       '--prompt-primary-border': activeBorder,
       '--prompt-primary-text': activeText,
@@ -1178,11 +1078,13 @@
 
     const title = document.createElement('div');
     title.className = 'prompt-empty-title';
-    title.textContent = hasQuery ? '没有匹配结果' : '还没有可用 Prompt';
+    title.textContent = hasQuery ? 'No matches found' : 'No prompts yet';
 
     const text = document.createElement('div');
     text.className = 'prompt-empty-text';
-    text.textContent = hasQuery ? '试试更短的关键词，或换一个表述。' : '先新增一个常用 Prompt，之后点击条目就会自动注入当前输入框。';
+    text.textContent = hasQuery
+      ? 'Try a shorter keyword or a different phrase.'
+      : 'Save a reusable prompt here, then click any item to insert it into the current composer.';
 
     empty.appendChild(title);
     empty.appendChild(text);
@@ -1208,10 +1110,10 @@
     const actions = document.createElement('div');
     actions.className = 'prompt-item-actions';
 
-    const copyButton = createIconButton('copy-prompt', '复制 Prompt', 'copy');
+    const copyButton = createIconButton('copy-prompt', 'Copy prompt', 'copy');
     copyButton.dataset.promptId = prompt.id;
 
-    const deleteButton = createIconButton('delete-prompt', '删除 Prompt', 'trash');
+    const deleteButton = createIconButton('delete-prompt', 'Delete prompt', 'trash');
     deleteButton.dataset.promptId = prompt.id;
     deleteButton.dataset.tone = 'danger';
     deleteButton.dataset.armed = prompt.id === armedDeletePromptId ? '1' : '0';

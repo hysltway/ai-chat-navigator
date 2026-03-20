@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.3.0**
+> Current Version: **v2.3.1**
 
-## Updates in v2.3.0
+## Updates in v2.3.1
 
-- Added Prompt Library: save reusable prompts, search them quickly, copy them, delete them, and inject them into the current site's composer in one click.
-- Adapted Prompt Library mounting and theme behavior for ChatGPT, Gemini, and Claude, with panel placement that follows each site's layout.
-- Hardened conversation indexing and UI remount timing so both the navigator and prompt panel recover more reliably after SPA route changes and DOM refreshes.
-- Updated release docs and version references for `v2.3.0`.
+- Unified Prompt Library interaction copy in English to remove mixed-language friction.
+- Refined the Gemini Prompt entry button with improved iconography, spacing, and color alignment around the composer.
+- Clarified empty states, duplicate-title warnings, and copy/delete/insert feedback across the prompt flow.
+- Updated version references and release notes for `v2.3.1`.
 
 ## Chrome Web Store (Recommended)
 

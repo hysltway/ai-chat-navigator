@@ -102,18 +102,18 @@
     function insertPromptContent(content, siteId = getCurrentSiteId()) {
       const normalizedContent = normalizePromptContent(content);
       if (!normalizedContent) {
-        return { ok: false, reason: 'Prompt 正文为空' };
+        return { ok: false, reason: 'Prompt body is empty.' };
       }
 
       const editor = findEditor(siteId);
       if (!editor || !editor.element) {
-        return { ok: false, reason: '未找到当前站点输入框，请改用复制' };
+        return { ok: false, reason: 'Could not find the current composer. Copy it instead.' };
       }
 
       const existingText = getEditorText(editor.element, editor.type);
       const chunk = `${buildAppendSeparator(existingText)}${normalizedContent}`;
       if (!chunk) {
-        return { ok: false, reason: '没有可写入的内容' };
+        return { ok: false, reason: 'Nothing to insert.' };
       }
 
       const inserted =
@@ -122,7 +122,7 @@
           : appendTextToContentEditable(editor.element, chunk, documentRef, windowRef);
 
       if (!inserted) {
-        return { ok: false, reason: '浏览器拒绝写入当前输入框，请改用复制' };
+        return { ok: false, reason: 'Browser blocked writing to the current composer. Copy it instead.' };
       }
 
       return { ok: true, reason: '', editor: editor.element };
@@ -209,7 +209,7 @@
         inlineRow: true,
         hostAlignSelf: 'center',
         hostHeight: '40px',
-        hostMarginInlineStart: '8px'
+        hostMarginInlineStart: '4px'
       };
     }
 
@@ -221,7 +221,7 @@
         inlineRow: true,
         hostAlignSelf: 'center',
         hostHeight: '40px',
-        hostMarginInlineStart: '8px'
+        hostMarginInlineStart: '4px'
       };
     }
 

@@ -310,9 +310,9 @@
   function buildCountText(filteredCount, totalCount) {
     const hasFilter = Boolean((state.filter.query || '').trim());
     if (!hasFilter) {
-      return `共 ${totalCount} 条`;
+      return `${totalCount} ${totalCount === 1 ? 'prompt' : 'prompts'}`;
     }
-    return `${filteredCount} / ${totalCount} 条`;
+    return `${filteredCount} / ${totalCount} prompts`;
   }
 
   function buildPromptViewModel(prompt) {
@@ -411,7 +411,7 @@
     const content = normalizeContent(state.ui.promptContentInput.value);
 
     if (!title || !content) {
-      ns.promptLibraryUi.showToast(state.ui, '标题和正文都不能为空', 'error');
+      ns.promptLibraryUi.showToast(state.ui, 'Title and prompt are required.', 'error');
       return;
     }
 
@@ -419,7 +419,7 @@
     const hasDuplicateTitle = state.store.hasDuplicateTitle(state.library, title);
     if (hasDuplicateTitle && state.duplicateConfirmToken !== duplicateToken) {
       state.duplicateConfirmToken = duplicateToken;
-      state.duplicateWarning = '已有同名 Prompt，再点一次仍会保存。';
+      state.duplicateWarning = 'A prompt with this title already exists. Click save again to keep both.';
       ns.promptLibraryUi.setDuplicateWarning(state.ui, state.duplicateWarning);
       return;
     }
@@ -435,7 +435,7 @@
     render();
     ns.promptLibraryUi.showToast(
       state.ui,
-      hasDuplicateTitle ? '已保存，同名 Prompt 已存在。' : 'Prompt 已保存。'
+      hasDuplicateTitle ? 'Prompt saved. A prompt with the same title already exists.' : 'Prompt saved.'
     );
   }
 
@@ -446,14 +446,14 @@
     }
 
     if (!isPendingDelete('prompt', promptId)) {
-      armDelete('prompt', promptId, `再次点击删除“${prompt.title}”`);
+      armDelete('prompt', promptId, `Click again to delete "${prompt.title}"`);
       return;
     }
 
     clearPendingDelete();
     state.library = await state.store.deletePrompt(promptId);
     render();
-    ns.promptLibraryUi.showToast(state.ui, 'Prompt 已删除。');
+    ns.promptLibraryUi.showToast(state.ui, 'Prompt deleted.');
   }
 
   function handleInjectPrompt(promptId) {
@@ -466,7 +466,7 @@
 
     const result = state.siteApi.insertPromptContent(prompt.content, state.siteId);
     if (!result.ok) {
-      ns.promptLibraryUi.showToast(state.ui, `注入失败：${result.reason}`, 'error');
+      ns.promptLibraryUi.showToast(state.ui, `Insert failed: ${result.reason}`, 'error');
       return;
     }
 
@@ -483,12 +483,12 @@
 
     const copyResult = await writeClipboard(prompt.content);
     if (!copyResult.ok) {
-      ns.promptLibraryUi.showToast(state.ui, `复制失败：${copyResult.reason}`, 'error');
+      ns.promptLibraryUi.showToast(state.ui, `Copy failed: ${copyResult.reason}`, 'error');
       return;
     }
 
     state.library = await state.store.markCopied(promptId);
-    ns.promptLibraryUi.showToast(state.ui, '已复制 Prompt 正文。');
+    ns.promptLibraryUi.showToast(state.ui, 'Prompt copied.');
   }
 
   function findPromptById(promptId) {
@@ -504,7 +504,7 @@
     state.pendingDeleteKind = kind;
     state.pendingDeleteId = id;
     render();
-    ns.promptLibraryUi.showToast(state.ui, message || '再次点击确认删除。', 'error');
+    ns.promptLibraryUi.showToast(state.ui, message || 'Click again to confirm deletion.', 'error');
     state.pendingDeleteTimer = window.setTimeout(() => {
       clearPendingDelete(true);
     }, 2200);
@@ -537,7 +537,7 @@
 
   async function writeClipboard(text) {
     if (!text) {
-      return { ok: false, reason: '没有可复制的内容' };
+      return { ok: false, reason: 'Nothing to copy.' };
     }
 
     try {
@@ -576,11 +576,11 @@
       if (copied) {
         return { ok: true, reason: '' };
       }
-      return { ok: false, reason: '浏览器拒绝写入剪贴板' };
+      return { ok: false, reason: 'Browser blocked clipboard access.' };
     } catch (error) {
       return {
         ok: false,
-        reason: normalizeCopyError(error) || '浏览器拒绝写入剪贴板'
+        reason: normalizeCopyError(error) || 'Browser blocked clipboard access.'
       };
     }
   }
@@ -592,7 +592,7 @@
     if (typeof error.message === 'string' && error.message.trim()) {
       return error.message.trim();
     }
-    return '浏览器拒绝写入剪贴板';
+    return 'Browser blocked clipboard access.';
   }
 
   function attachStorageListener() {
