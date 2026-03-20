@@ -270,9 +270,13 @@
   }
 
   function renderMessages() {
+    const hasMessages = Boolean(Array.isArray(state.messages) && state.messages.length);
     clearPreviewHideTimer();
     state.previewIndex = null;
     ns.ui.hidePreview(state.ui);
+    if (ns.ui && typeof ns.ui.setVisible === 'function') {
+      ns.ui.setVisible(state.ui, hasMessages);
+    }
     ns.ui.renderList(state.ui, state.messages, { minimalMode: state.effectiveMinimalMode });
     refreshActiveIndex(true);
     scheduleMinimalScrollHintUpdate();

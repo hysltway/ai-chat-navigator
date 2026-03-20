@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.3.1**
+> Current Version: **v2.3.2**
 
-## Updates in v2.3.1
+## Updates in v2.3.2
 
-- Unified Prompt Library interaction copy in English to remove mixed-language friction.
-- Refined the Gemini Prompt entry button with improved iconography, spacing, and color alignment around the composer.
-- Clarified empty states, duplicate-title warnings, and copy/delete/insert feedback across the prompt flow.
-- Updated version references and release notes for `v2.3.1`.
+- Auto-hide the navigator when there are no indexed messages, so an empty floating panel no longer distracts from the page.
+- Restore navigator visibility automatically once conversation messages are available again, without requiring a manual refresh.
+- Added an explicit visibility state on the navigation root so rendering logic and styles stay aligned in empty states.
+- Updated version references and release notes for `v2.3.2`.
 
 ## Chrome Web Store (Recommended)
 

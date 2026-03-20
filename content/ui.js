@@ -99,6 +99,7 @@
   function createRootElement() {
     const root = document.createElement('div');
     root.className = 'nav-root';
+    root.dataset.visible = '0';
     root.dataset.collapsed = '0';
     root.dataset.adaptiveMinimal = '0';
     root.dataset.colorScheme = 'light';
@@ -266,6 +267,13 @@
     ui.root.dataset.collapsed = collapsed ? '1' : '0';
   }
 
+  function setVisible(ui, visible) {
+    if (!ui || !ui.root) {
+      return;
+    }
+    ui.root.dataset.visible = visible ? '1' : '0';
+  }
+
   function setMinimalMode(ui, enabled) {
     ui.root.dataset.minimal = enabled ? '1' : '0';
     ui.minimalToggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
@@ -427,6 +435,7 @@
     createUI,
     ensureMounted,
     renderList,
+    setVisible,
     setCollapsed,
     setMinimalMode,
     setAdaptiveMinimal,

@@ -348,6 +348,10 @@
         font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
       }
 
+      .nav-root[data-visible="0"] {
+        display: none;
+      }
+
       .nav-root[data-color-scheme="light"][data-site="chatgpt"] {
         --nav-bg: #f9f9f9;
         --nav-surface: #f9f9f9;
