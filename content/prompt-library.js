@@ -29,6 +29,9 @@
     promptFormVisible: false,
     duplicateWarning: '',
     duplicateConfirmToken: '',
+    savePending: false,
+    busyAction: '',
+    busyPromptId: '',
     pendingDeleteKind: '',
     pendingDeleteId: '',
     pendingDeleteTimer: null,
@@ -89,6 +92,9 @@
 
     state.ui.entryButton.addEventListener('click', (event) => {
       event.stopPropagation();
+      if (state.savePending || state.busyAction) {
+        return;
+      }
       if (!state.open) {
         syncEnvironment();
       }
@@ -96,10 +102,16 @@
     });
 
     state.ui.closeButton.addEventListener('click', () => {
+      if (state.savePending || state.busyAction) {
+        return;
+      }
       setOpen(false);
     });
 
     state.ui.promptToggleButton.addEventListener('click', () => {
+      if (state.savePending || state.busyAction) {
+        return;
+      }
       clearPendingDelete();
       togglePromptForm();
     });
@@ -143,12 +155,15 @@
     });
 
     state.ui.promptCancelButton.addEventListener('click', () => {
+      if (state.savePending || state.busyAction) {
+        return;
+      }
       clearPendingDelete();
       closePromptForm();
     });
 
-    state.ui.promptTitleInput.addEventListener('input', clearDuplicateReminder);
-    state.ui.promptContentInput.addEventListener('input', clearDuplicateReminder);
+    state.ui.promptTitleInput.addEventListener('input', handlePromptDraftInput);
+    state.ui.promptContentInput.addEventListener('input', handlePromptDraftInput);
   }
 
   function bindGlobalEvents() {
@@ -156,6 +171,9 @@
       'pointerdown',
       (event) => {
         if (!state.open) {
+          return;
+        }
+        if (state.savePending || state.busyAction) {
           return;
         }
         if (isEventInsideUi(event)) {
@@ -170,6 +188,13 @@
       'keydown',
       (event) => {
         if (event.key === 'Escape' && state.open) {
+          if (handleScopedEscape(event)) {
+            return;
+          }
+          if (state.savePending || state.busyAction) {
+            event.preventDefault();
+            return;
+          }
           setOpen(false);
         }
       },
@@ -296,23 +321,28 @@
       return;
     }
 
+    const query = getSearchQuery();
     const prompts = state.store.filterPrompts(state.library, state.filter).map(buildPromptViewModel);
 
     ns.promptLibraryUi.renderPrompts(state.ui, prompts, state.pendingDeleteKind === 'prompt' ? state.pendingDeleteId : '', {
-      hasQuery: Boolean((state.filter.query || '').trim())
+      hasQuery: Boolean(query),
+      query,
+      busyAction: state.busyAction,
+      busyPromptId: state.busyPromptId
     });
     ns.promptLibraryUi.setCounts(state.ui, buildCountText(prompts.length, state.library.prompts.length));
     ns.promptLibraryUi.setPromptFormVisible(state.ui, state.promptFormVisible);
     ns.promptLibraryUi.setDuplicateWarning(state.ui, state.duplicateWarning);
+    syncPromptFormState();
     schedulePosition();
   }
 
   function buildCountText(filteredCount, totalCount) {
-    const hasFilter = Boolean((state.filter.query || '').trim());
+    const hasFilter = Boolean(getSearchQuery());
     if (!hasFilter) {
-      return `${totalCount} ${totalCount === 1 ? 'prompt' : 'prompts'}`;
+      return formatPromptCount(totalCount);
     }
-    return `${filteredCount} / ${totalCount} prompts`;
+    return `${filteredCount} of ${formatPromptCount(totalCount)}`;
   }
 
   function buildPromptViewModel(prompt) {
@@ -371,6 +401,9 @@
   }
 
   function togglePromptForm() {
+    if (state.savePending || state.busyAction) {
+      return;
+    }
     if (state.promptFormVisible) {
       closePromptForm();
       return;
@@ -387,6 +420,9 @@
   }
 
   function closePromptForm() {
+    if (state.savePending || state.busyAction) {
+      return;
+    }
     state.promptFormVisible = false;
     clearDuplicateReminder();
     clearPendingDelete();
@@ -401,45 +437,75 @@
   function clearDuplicateReminder() {
     state.duplicateWarning = '';
     state.duplicateConfirmToken = '';
-    ns.promptLibraryUi.setDuplicateWarning(state.ui, '');
+    if (state.ui) {
+      ns.promptLibraryUi.setDuplicateWarning(state.ui, '');
+    }
+  }
+
+  function formatPromptCount(count) {
+    return `${count} ${count === 1 ? 'prompt' : 'prompts'}`;
+  }
+
+  function handlePromptDraftInput() {
+    clearDuplicateReminder();
+    syncPromptFormState();
+    schedulePosition();
   }
 
   async function handleSavePrompt() {
+    if (state.savePending || state.busyAction) {
+      return;
+    }
     clearPendingDelete();
 
-    const title = normalizeTitle(state.ui.promptTitleInput.value);
-    const content = normalizeContent(state.ui.promptContentInput.value);
+    const draft = getPromptDraft();
+    const title = draft.title;
+    const content = draft.content;
 
     if (!title || !content) {
       ns.promptLibraryUi.showToast(state.ui, 'Title and prompt are required.', 'error');
+      syncPromptFormState();
       return;
     }
 
-    const duplicateToken = title.toLowerCase();
-    const hasDuplicateTitle = state.store.hasDuplicateTitle(state.library, title);
-    if (hasDuplicateTitle && state.duplicateConfirmToken !== duplicateToken) {
-      state.duplicateConfirmToken = duplicateToken;
+    if (draft.hasDuplicateTitle && !draft.confirmDuplicate) {
+      state.duplicateConfirmToken = draft.duplicateToken;
       state.duplicateWarning = 'A prompt with this title already exists. Click save again to keep both.';
       ns.promptLibraryUi.setDuplicateWarning(state.ui, state.duplicateWarning);
+      syncPromptFormState();
+      schedulePosition();
       return;
     }
 
-    const result = await state.store.createPrompt({
-      title,
-      content
-    });
+    state.savePending = true;
+    syncPromptFormState();
 
-    state.library = result.library;
-    state.promptFormVisible = false;
-    clearDuplicateReminder();
-    render();
-    ns.promptLibraryUi.showToast(
-      state.ui,
-      hasDuplicateTitle ? 'Prompt saved. A prompt with the same title already exists.' : 'Prompt saved.'
-    );
+    try {
+      const result = await state.store.createPrompt({
+        title,
+        content
+      });
+
+      state.library = result.library;
+      state.promptFormVisible = false;
+      clearDuplicateReminder();
+      render();
+      ns.promptLibraryUi.showToast(
+        state.ui,
+        draft.hasDuplicateTitle ? 'Prompt saved. A prompt with the same title already exists.' : 'Prompt saved.'
+      );
+    } catch (error) {
+      ns.promptLibraryUi.showToast(state.ui, `Save failed: ${describeOperationError(error, 'Please try again.')}`, 'error');
+    } finally {
+      state.savePending = false;
+      syncPromptFormState();
+    }
   }
 
   async function handleDeletePrompt(promptId) {
+    if (state.savePending || state.busyAction) {
+      return;
+    }
     const prompt = findPromptById(promptId);
     if (!prompt) {
       return;
@@ -451,12 +517,29 @@
     }
 
     clearPendingDelete();
-    state.library = await state.store.deletePrompt(promptId);
+    setBusyPrompt('delete', promptId);
     render();
-    ns.promptLibraryUi.showToast(state.ui, 'Prompt deleted.');
+
+    try {
+      state.library = await state.store.deletePrompt(promptId);
+      render();
+      ns.promptLibraryUi.showToast(state.ui, 'Prompt deleted.');
+    } catch (error) {
+      ns.promptLibraryUi.showToast(
+        state.ui,
+        `Delete failed: ${describeOperationError(error, 'Please try again.')}`,
+        'error'
+      );
+    } finally {
+      clearBusyPrompt();
+      render();
+    }
   }
 
   function handleInjectPrompt(promptId) {
+    if (state.savePending || state.busyAction) {
+      return;
+    }
     clearPendingDelete();
 
     const prompt = findPromptById(promptId);
@@ -474,6 +557,9 @@
   }
 
   async function handleCopyPrompt(promptId) {
+    if (state.savePending || state.busyAction) {
+      return;
+    }
     clearPendingDelete();
 
     const prompt = findPromptById(promptId);
@@ -481,14 +567,28 @@
       return;
     }
 
-    const copyResult = await writeClipboard(prompt.content);
-    if (!copyResult.ok) {
-      ns.promptLibraryUi.showToast(state.ui, `Copy failed: ${copyResult.reason}`, 'error');
-      return;
-    }
+    setBusyPrompt('copy', promptId);
+    render();
 
-    state.library = await state.store.markCopied(promptId);
-    ns.promptLibraryUi.showToast(state.ui, 'Prompt copied.');
+    try {
+      const copyResult = await writeClipboard(prompt.content);
+      if (!copyResult.ok) {
+        ns.promptLibraryUi.showToast(state.ui, `Copy failed: ${copyResult.reason}`, 'error');
+        return;
+      }
+
+      state.library = await state.store.markCopied(promptId);
+      ns.promptLibraryUi.showToast(state.ui, 'Prompt copied.');
+    } catch (error) {
+      ns.promptLibraryUi.showToast(
+        state.ui,
+        `Copy failed: ${describeOperationError(error, 'Please try again.')}`,
+        'error'
+      );
+    } finally {
+      clearBusyPrompt();
+      render();
+    }
   }
 
   function findPromptById(promptId) {
@@ -497,6 +597,16 @@
 
   function isPendingDelete(kind, id) {
     return Boolean(kind && id && state.pendingDeleteKind === kind && state.pendingDeleteId === id);
+  }
+
+  function setBusyPrompt(action, promptId) {
+    state.busyAction = action || '';
+    state.busyPromptId = promptId || '';
+  }
+
+  function clearBusyPrompt() {
+    state.busyAction = '';
+    state.busyPromptId = '';
   }
 
   function armDelete(kind, id, message) {
@@ -533,6 +643,96 @@
     if (hadVisibleState || hadPendingDelete) {
       render();
     }
+  }
+
+  function syncPromptFormState() {
+    if (!state.ui || !state.library || !state.store) {
+      return;
+    }
+
+    const draft = getPromptDraft();
+    const interactionsLocked = state.savePending || Boolean(state.busyAction);
+    ns.promptLibraryUi.setPromptFormState(state.ui, {
+      saveLabel: state.savePending ? 'Saving...' : draft.confirmDuplicate ? 'Save anyway' : 'Save',
+      saveDisabled: interactionsLocked || !draft.canSave,
+      saveBusy: state.savePending,
+      cancelDisabled: interactionsLocked,
+      toggleDisabled: interactionsLocked,
+      closeDisabled: interactionsLocked,
+      searchDisabled: interactionsLocked,
+      fieldDisabled: interactionsLocked
+    });
+  }
+
+  function getPromptDraft() {
+    const title = normalizeTitle(state.ui?.promptTitleInput?.value || '');
+    const content = normalizeContent(state.ui?.promptContentInput?.value || '');
+    const duplicateToken = title.toLowerCase();
+    const hasDuplicateTitle = Boolean(
+      title &&
+        state.library &&
+        state.store &&
+        typeof state.store.hasDuplicateTitle === 'function' &&
+        state.store.hasDuplicateTitle(state.library, title)
+    );
+
+    return {
+      title,
+      content,
+      duplicateToken,
+      hasDuplicateTitle,
+      confirmDuplicate: Boolean(hasDuplicateTitle && state.duplicateConfirmToken === duplicateToken),
+      canSave: Boolean(title && content)
+    };
+  }
+
+  function getSearchQuery() {
+    return typeof state.filter.query === 'string' ? state.filter.query.trim() : '';
+  }
+
+  function clearSearchFilter() {
+    state.filter.query = '';
+    if (state.ui && state.ui.searchInput) {
+      state.ui.searchInput.value = '';
+      state.ui.searchInput.focus();
+    }
+    clearPendingDelete();
+    render();
+  }
+
+  function handleScopedEscape(event) {
+    if (!isEventInsideUi(event)) {
+      return false;
+    }
+
+    if (state.savePending || state.busyAction) {
+      event.preventDefault();
+      event.stopPropagation();
+      return true;
+    }
+
+    if (state.pendingDeleteKind || state.pendingDeleteId) {
+      clearPendingDelete(true);
+      event.preventDefault();
+      event.stopPropagation();
+      return true;
+    }
+
+    if (state.promptFormVisible) {
+      closePromptForm();
+      event.preventDefault();
+      event.stopPropagation();
+      return true;
+    }
+
+    if (getSearchQuery()) {
+      clearSearchFilter();
+      event.preventDefault();
+      event.stopPropagation();
+      return true;
+    }
+
+    return false;
   }
 
   async function writeClipboard(text) {
@@ -631,6 +831,13 @@
       return '';
     }
     return value.replace(/\r\n/g, '\n').trim();
+  }
+
+  function describeOperationError(error, fallback) {
+    if (error && typeof error.message === 'string' && error.message.trim()) {
+      return error.message.trim();
+    }
+    return fallback;
   }
 
   ns.promptLibrary = Object.assign({}, ns.promptLibrary, {
