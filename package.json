@@ -1,0 +1,16 @@
+{
+  "name": "jumpnav",
+  "private": true,
+  "version": "3.0.0",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.4.0",
+    "@types/chrome": "^0.1.29",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12"
+  }
+}

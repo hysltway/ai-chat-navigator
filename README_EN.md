@@ -9,20 +9,29 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.3.6**
+> Current Version: **v3.0.0**
 
-## Updates in v2.3.6
+## Updates in v3.0.0
 
-- Added a more complete entrance animation sequence to the Prompt Library so the header, toolbar, form area, and list fade in with clearer visual hierarchy.
-- Polished transitions for helper text, warnings, and empty states, and unified easing curves across cards, buttons, and helper actions for smoother state changes.
-- Added hover lift and action reveal feedback to prompt cards while preserving `prefers-reduced-motion` fallbacks for accessibility.
-- Updated version references and release notes for `v2.3.6`.
+- Migrated the extension project to Vite + TypeScript, adding `package.json`, `vite.config.ts`, and `manifest.config.ts` so MV3 output is generated through a single build pipeline.
+- Reorganized the source tree into `src/` and `public/`, separating content scripts, popup code, shared formula-settings logic, and static assets into a clearer project structure.
+- Updated the local development workflow to support `npm run dev`, `npm run build`, and `npm run typecheck`, and switched extension loading to the `dist/` directory.
+- Updated version references and release notes for `v3.0.0`.
 
 ## Chrome Web Store (Recommended)
 
 Now live on the Chrome Web Store. Install from the store for automatic updates.
 
 [JumpNav: The most elegant AI chat navigator you’ve ever seen.](https://chromewebstore.google.com/detail/chatgpt-gemini-quick-navi/kkemkfabmgjcjlileggigaaemcheapep)
+
+## Local Development
+
+- Install dependencies: `npm install --cache .npm-cache`
+- Run type checks: `npm run typecheck`
+- Start the dev server: `npm run dev`
+- First load: open `chrome://extensions`, enable Developer Mode, choose “Load unpacked”, and load the repo's `dist/` directory
+- Daily iteration: keep `npm run dev` running and let CRXJS handle incremental updates; if the current site tab does not pick up the latest content script automatically, refresh that page once
+- Production build: `npm run build`
 
 ## Core Value
 

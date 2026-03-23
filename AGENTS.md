@@ -1,26 +1,25 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `manifest.json` defines MV3 metadata, host permissions, and content script order.
-- `content/` holds modular content script code:
-  - `namespace.js` shared config and namespace initialization.
-  - `adapter.js` site adapters and role detection.
-  - `ui.js` floating panel UI and rendering.
-  - `core.js` observers, routing, and message parsing.
-  - `utils.js` shared helpers.
-- `content.js` is the entry point that boots the extension.
-- No tests or build pipeline are present yet.
+- `src/content/` holds the TypeScript content-script source, bundled into `dist/content.js`.
+- `src/popup/` contains the popup TypeScript entry.
+- `src/shared/` contains logic shared between popup and content, such as formula settings.
+- `public/` holds static extension assets copied directly into `dist/`, including `manifest.json`, popup HTML/CSS, icons, and vendor scripts.
+- `dist/` is the build output that should be loaded in Chrome during local development.
 
 ## Build, Test, and Development Commands
-- Load locally in Chrome: `chrome://extensions` → Enable Developer Mode → “Load unpacked” → select this repo.
-- Reload after edits: use the “Reload” button on the extension card and refresh target tabs.
-- There are currently no build or test commands (no npm scripts or bundler).
+- Install dependencies: `npm install --cache .npm-cache`
+- Type-check the project: `npm run typecheck`
+- Build the extension: `npm run build`
+- Watch rebuilds during development: `npm run dev`
+- Load locally in Chrome: `chrome://extensions` → Enable Developer Mode → “Load unpacked” → select the repo's `dist/` directory.
+- Reload after edits: rerun `npm run build` if needed, then use the “Reload” button on the extension card and refresh target tabs.
 
 ## Coding Style & Naming Conventions
-- Use 2-space indentation in JavaScript and JSON.
-- Keep modules small and single-purpose; prefer adding new files under `content/` rather than expanding `content.js`.
+- Use 2-space indentation in TypeScript and JSON.
+- Keep modules small and single-purpose; prefer adding new files under `src/content/` or `src/shared/` rather than expanding a single entry file.
 - Naming: `createX`, `getX`, and `handleX` for functions; `UPPER_SNAKE` for constants.
-- UI styles live inside `content/ui.js` in the shadow DOM stylesheet.
+- UI styles for the content script live in `src/content/ui-style.ts` and are injected into the shadow DOM.
 
 ## Testing Guidelines
 - No automated tests exist yet.

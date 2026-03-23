@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JumpNav</title>
+    <link rel="stylesheet" href="./src/popup/popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <header class="brand">
+        <div class="brand-main">
+          <img class="brand-logo" src="./logo48.png" alt="JumpNav logo" width="36" height="36" />
+          <div class="brand-text">
+            <strong>JumpNav</strong>
+            <span>AI Chat Navigator</span>
+          </div>
+        </div>
+        <span id="version-pill" class="version-pill" aria-label="Version">v3.0.0</span>
+      </header>
+
+      <section class="panel panel-settings" id="formula-settings">
+        <h1>Formula Copy</h1>
+        <p>Click formulas on ChatGPT, Gemini, and Claude to copy for Word or LaTeX editors.</p>
+
+        <label class="toggle-row" for="formula-enabled">
+          <input id="formula-enabled" type="checkbox" />
+          <span>Enable formula click-to-copy</span>
+        </label>
+
+        <div class="field-row">
+          <label for="formula-format">Copy Format</label>
+          <select id="formula-format">
+            <option value="mathml">MathML (Word recommended)</option>
+            <option value="latex">LaTeX</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <label for="formula-engine">MathML Engine</label>
+          <select id="formula-engine">
+            <option value="mathjax">MathJax (better compatibility)</option>
+            <option value="katex">KaTeX (faster)</option>
+            <option value="auto">Auto fallback</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="panel panel-support" id="support-section">
+        <h1>Let's Improve</h1>
+        <p>AI platforms update often. Let us know if something breaks.</p>
+        <div class="button-grid">
+          <button type="button" class="action-btn" data-link="bug">Report a Bug</button>
+          <button type="button" class="action-btn" data-link="feature">Suggest a Feature</button>
+        </div>
+      </section>
+
+      <section class="panel panel-growth">
+        <h1>Love JumpNav?</h1>
+        <p>If JumpNav saves you time, a star or review helps a lot.</p>
+        <div class="button-grid">
+          <button type="button" class="action-btn" data-link="repo">Star on GitHub</button>
+          <button type="button" class="action-btn" data-link="store">Rate on Web Store</button>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./src/popup/index.ts"></script>
+  </body>
+</html>

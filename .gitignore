@@ -3,3 +3,6 @@
 chatgpt-nav-extension.zip
 examplecode/
 docs/
+node_modules/
+dist/
+.npm-cache/
