@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.3.4**
+> Current Version: **v2.3.5**
 
-## Updates in v2.3.4
+## Updates in v2.3.5
 
-- Added an AI-assisted title flow in the Prompt Library so the current site AI can draft a short title from the prompt content and write it back into the form.
-- Added a contextual title helper area that only appears when content exists but the title is still empty, reducing visual noise in other states.
-- Adjusted the add-prompt panel state so the toolbar and count are hidden while editing, and unsaved drafts are restored when returning to the form.
-- Updated version references and release notes for `v2.3.4`.
+- Adjusted the Prompt Library item layout so content and actions no longer compete for the same row when titles or previews are long.
+- Improved wrapping and clamping rules for titles and previews to keep two-line titles and three-line previews readable with long text.
+- Anchored action buttons to the top-right corner and reserved safe spacing for the text content to reduce overlap issues.
+- Updated version references and release notes for `v2.3.5`.
 
 ## Chrome Web Store (Recommended)
 

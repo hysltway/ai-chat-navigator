@@ -603,10 +603,8 @@
       }
 
       .prompt-item {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        align-items: start;
-        gap: 10px;
+        position: relative;
+        display: block;
         padding: 14px;
         border: 1px solid var(--prompt-surface-border);
         border-radius: 14px;
@@ -636,10 +634,12 @@
         text-align: left;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
+        width: 100%;
       }
 
       .prompt-item-head {
         min-width: 0;
+        padding-right: 80px;
       }
 
       .prompt-item-title {
@@ -651,6 +651,11 @@
         letter-spacing: -0.01em;
         color: var(--prompt-accent-strong);
         overflow-wrap: anywhere;
+        word-break: break-all;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
       .prompt-item-preview {
@@ -659,6 +664,7 @@
         line-height: var(--prompt-leading-loose);
         color: var(--prompt-secondary-text);
         overflow-wrap: anywhere;
+        word-break: break-all;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
@@ -677,13 +683,15 @@
       }
 
       .prompt-item-actions {
+        position: absolute;
+        top: 6px;
+        right: 14px;
         display: inline-flex;
         align-items: center;
         justify-content: flex-end;
         gap: 6px;
         flex-wrap: nowrap;
         cursor: default;
-        align-self: start;
       }
 
       .prompt-empty {
