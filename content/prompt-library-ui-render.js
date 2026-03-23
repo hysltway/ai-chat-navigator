@@ -263,6 +263,11 @@
     ui.countText.textContent = text;
   }
 
+  function setCountVisibility(ui, visible) {
+    ui.countText.hidden = !visible;
+    ui.countText.setAttribute('aria-hidden', visible ? 'false' : 'true');
+  }
+
   function setPromptFormVisible(ui, visible) {
     const nextState = visible ? '1' : '0';
     const hasChanged = ui.panel.dataset.formOpen !== nextState;
@@ -283,6 +288,13 @@
     ui.promptWarning.textContent = warningText;
     ui.promptWarning.hidden = !visible;
     ui.promptWarning.setAttribute('aria-hidden', visible ? 'false' : 'true');
+  }
+
+  function setTitleHelperState(ui, options = {}) {
+    const visible = Boolean(options.visible);
+    ui.promptTitleHelper.hidden = !visible;
+    ui.promptTitleHelper.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    ui.promptTitleHelperButton.disabled = !visible || Boolean(options.disabled);
   }
 
   function setPromptFormState(ui, options = {}) {
@@ -365,8 +377,10 @@
     positionPanel,
     renderPrompts,
     setCounts,
+    setCountVisibility,
     setPromptFormVisible,
     setDuplicateWarning,
+    setTitleHelperState,
     setPromptFormState,
     destroy
   });

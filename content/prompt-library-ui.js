@@ -50,6 +50,8 @@
       promptForm: panelRoot.promptForm,
       promptTitleInput: panelRoot.promptTitleInput,
       promptContentInput: panelRoot.promptContentInput,
+      promptTitleHelper: panelRoot.promptTitleHelper,
+      promptTitleHelperButton: panelRoot.promptTitleHelperButton,
       promptSaveButton: panelRoot.promptSaveButton,
       promptCancelButton: panelRoot.promptCancelButton,
       promptWarning: panelRoot.promptWarning,
@@ -159,6 +161,22 @@
     promptContentInput.placeholder = 'Write the full prompt you want to reuse.';
     promptContentField.field.appendChild(promptContentInput);
 
+    const promptTitleHelper = document.createElement('div');
+    promptTitleHelper.className = 'prompt-helper';
+    promptTitleHelper.hidden = true;
+
+    const promptTitleHelperText = document.createElement('span');
+    promptTitleHelperText.className = 'prompt-helper-text';
+    promptTitleHelperText.textContent = 'Title feels like extra work?';
+
+    const promptTitleHelperButton = document.createElement('button');
+    promptTitleHelperButton.type = 'button';
+    promptTitleHelperButton.className = 'prompt-helper-button';
+    promptTitleHelperButton.textContent = 'Ask AI to draft one';
+
+    promptTitleHelper.appendChild(promptTitleHelperText);
+    promptTitleHelper.appendChild(promptTitleHelperButton);
+
     const promptWarning = document.createElement('div');
     promptWarning.className = 'prompt-warning';
     promptWarning.hidden = true;
@@ -176,6 +194,7 @@
     promptFormActions.appendChild(promptSaveButton);
 
     promptForm.appendChild(promptTitleField.field);
+    promptForm.appendChild(promptTitleHelper);
     promptForm.appendChild(promptContentField.field);
     promptForm.appendChild(promptWarning);
     promptForm.appendChild(promptFormActions);
@@ -202,6 +221,8 @@
       promptForm,
       promptTitleInput,
       promptContentInput,
+      promptTitleHelper,
+      promptTitleHelperButton,
       promptSaveButton,
       promptCancelButton,
       promptWarning,

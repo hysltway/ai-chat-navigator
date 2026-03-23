@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.3.3**
+> Current Version: **v2.3.4**
 
-## Updates in v2.3.3
+## Updates in v2.3.4
 
-- Refactored the Prompt Library UI into smaller style, render, and assembly modules to reduce single-file size.
-- Changed the add-prompt flow so it focuses on the form by default and only shows existing prompts when the user actively searches.
-- Polished the prompt panel details, including on-demand warnings, a danger-styled close button, scrollable add-prompt mode, and lower-noise scrollbars.
-- Removed in-panel action toasts and delete confirmation, and updated version references and release notes for `v2.3.3`.
+- Added an AI-assisted title flow in the Prompt Library so the current site AI can draft a short title from the prompt content and write it back into the form.
+- Added a contextual title helper area that only appears when content exists but the title is still empty, reducing visual noise in other states.
+- Adjusted the add-prompt panel state so the toolbar and count are hidden while editing, and unsaved drafts are restored when returning to the form.
+- Updated version references and release notes for `v2.3.4`.
 
 ## Chrome Web Store (Recommended)
 

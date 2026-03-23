@@ -10,6 +10,10 @@
   const PROMPT_LIBRARY_BOOT_FLAG = 'jumpnavPromptLibraryInjected';
   const ROUTE_POLL_MS = 1200;
   const ENVIRONMENT_SYNC_DEBOUNCE_MS = 140;
+  const TITLE_HELPER_COPY = Object.freeze({
+    prompt:
+      'Please write a short, accurate title for the prompt below. The title must use the same language as the prompt. Reply with the title only. Do not include any explanation, quotation marks, numbering, prefixes, suffixes, Markdown, line breaks, or any extra text.'
+  });
 
   const state = {
     started: false,
@@ -32,6 +36,7 @@
     savePending: false,
     busyAction: '',
     busyPromptId: '',
+    titleAssistFlow: null,
     environmentSyncTimer: null,
     environmentObserver: null,
     themeObserver: null,
@@ -154,6 +159,10 @@
         return;
       }
       closePromptForm();
+    });
+
+    state.ui.promptTitleHelperButton.addEventListener('click', () => {
+      handleGeneratePromptTitle();
     });
 
     state.ui.promptTitleInput.addEventListener('input', handlePromptDraftInput);
@@ -316,6 +325,7 @@
     }
 
     const query = getSearchQuery();
+    const draft = getPromptDraft();
     const shouldHidePromptItems = state.promptFormVisible && !query;
     const prompts = shouldHidePromptItems
       ? []
@@ -329,9 +339,14 @@
       busyPromptId: state.busyPromptId
     });
     ns.promptLibraryUi.setCounts(state.ui, buildCountText(prompts.length, state.library.prompts.length));
+    ns.promptLibraryUi.setCountVisibility(state.ui, !state.promptFormVisible);
     ns.promptLibraryUi.setPromptFormVisible(state.ui, state.promptFormVisible);
     ns.promptLibraryUi.setDuplicateWarning(state.ui, state.duplicateWarning);
-    syncPromptFormState();
+    ns.promptLibraryUi.setTitleHelperState(state.ui, {
+      visible: state.promptFormVisible && Boolean(draft.content) && !draft.title,
+      disabled: state.savePending || Boolean(state.busyAction)
+    });
+    syncPromptFormState(draft);
     schedulePosition();
   }
 
@@ -370,9 +385,14 @@
       return;
     }
 
+    const restoredTitleAssistFlow = restoreTitleAssistFlowOnOpen();
     schedulePosition();
     window.setTimeout(() => {
       if (state.open) {
+        if (restoredTitleAssistFlow) {
+          state.ui.promptTitleInput.focus();
+          return;
+        }
         state.ui.searchInput.focus();
       }
     }, 40);
@@ -407,6 +427,13 @@
       return;
     }
 
+    if (restoreTitleAssistFlow()) {
+      window.setTimeout(() => {
+        state.ui.promptTitleInput.focus();
+      }, 50);
+      return;
+    }
+
     state.promptFormVisible = true;
     clearDuplicateReminder();
     resetPromptForm();
@@ -422,6 +449,7 @@
       return;
     }
     state.promptFormVisible = false;
+    clearTitleAssistFlow();
     clearDuplicateReminder();
     render();
   }
@@ -445,8 +473,8 @@
 
   function handlePromptDraftInput() {
     clearDuplicateReminder();
-    syncPromptFormState();
-    schedulePosition();
+    syncTitleAssistFlowDraft();
+    render();
   }
 
   async function handleSavePrompt() {
@@ -483,6 +511,7 @@
 
       state.library = result.library;
       state.promptFormVisible = false;
+      clearTitleAssistFlow();
       clearDuplicateReminder();
       render();
     } catch {
@@ -581,12 +610,11 @@
     }
   }
 
-  function syncPromptFormState() {
+  function syncPromptFormState(draft = getPromptDraft()) {
     if (!state.ui || !state.library || !state.store) {
       return;
     }
 
-    const draft = getPromptDraft();
     const interactionsLocked = state.savePending || Boolean(state.busyAction);
     ns.promptLibraryUi.setPromptFormState(state.ui, {
       saveLabel: state.savePending ? 'Saving...' : draft.confirmDuplicate ? 'Save anyway' : 'Save',
@@ -626,11 +654,13 @@
     return typeof state.filter.query === 'string' ? state.filter.query.trim() : '';
   }
 
-  function clearSearchFilter() {
+  function clearSearchFilter(shouldFocus = true) {
     state.filter.query = '';
     if (state.ui && state.ui.searchInput) {
       state.ui.searchInput.value = '';
-      state.ui.searchInput.focus();
+      if (shouldFocus) {
+        state.ui.searchInput.focus();
+      }
     }
     render();
   }
@@ -759,6 +789,172 @@
       return '';
     }
     return value.replace(/\r\n/g, '\n').trim();
+  }
+
+  function handleGeneratePromptTitle() {
+    if (state.savePending || state.busyAction) {
+      return;
+    }
+
+    const draft = getPromptDraft();
+    if (!draft.content || draft.title) {
+      return;
+    }
+
+    const injectedPrompt = buildPromptTitleRequest(draft.content);
+    const baselineReply = getLatestAssistantReplySnapshot();
+    const result = state.siteApi.insertPromptContent(injectedPrompt, state.siteId);
+    if (!result.ok) {
+      return;
+    }
+
+    state.titleAssistFlow = {
+      active: true,
+      awaitingAiTitle: true,
+      contentDraft: draft.content,
+      titleDraft: '',
+      baselineAssistantCount: baselineReply.assistantCount,
+      baselineAssistantText: baselineReply.text
+    };
+    syncTitleAssistFlowDraft();
+    setOpen(false);
+  }
+
+  function buildPromptTitleRequest(content) {
+    return `${TITLE_HELPER_COPY.prompt}\n\nPrompt:\n【${content}】`;
+  }
+
+  function hasActiveTitleAssistFlow() {
+    return Boolean(state.titleAssistFlow && state.titleAssistFlow.active);
+  }
+
+  function clearTitleAssistFlow() {
+    state.titleAssistFlow = null;
+  }
+
+  function syncTitleAssistFlowDraft() {
+    if (!hasActiveTitleAssistFlow()) {
+      return;
+    }
+
+    const draft = getPromptDraft();
+    state.titleAssistFlow.contentDraft = draft.content;
+    state.titleAssistFlow.titleDraft = draft.title;
+    if (draft.title) {
+      state.titleAssistFlow.awaitingAiTitle = false;
+    }
+  }
+
+  function restoreTitleAssistFlowOnOpen() {
+    if (!hasActiveTitleAssistFlow()) {
+      return false;
+    }
+
+    return restoreTitleAssistFlow();
+  }
+
+  function restoreTitleAssistFlow() {
+    if (!hasActiveTitleAssistFlow()) {
+      return false;
+    }
+
+    const flow = state.titleAssistFlow;
+    const suggestedTitle = flow.awaitingAiTitle ? resolveTitleFromLatestAssistantReply(flow) : '';
+    if (suggestedTitle) {
+      flow.titleDraft = suggestedTitle;
+      flow.awaitingAiTitle = false;
+    }
+
+    state.promptFormVisible = true;
+    state.filter.query = '';
+    if (state.ui && state.ui.searchInput) {
+      state.ui.searchInput.value = '';
+    }
+    clearDuplicateReminder();
+    state.ui.promptTitleInput.value = flow.titleDraft || '';
+    state.ui.promptContentInput.value = flow.contentDraft || '';
+    render();
+    return true;
+  }
+
+  function resolveTitleFromLatestAssistantReply(flow) {
+    const latestReply = getLatestAssistantReplySnapshot();
+    const hasNewAssistantReply =
+      latestReply.assistantCount > flow.baselineAssistantCount || latestReply.text !== flow.baselineAssistantText;
+    if (!hasNewAssistantReply) {
+      return '';
+    }
+
+    return extractTitleCandidate(latestReply.text);
+  }
+
+  function getLatestAssistantReplySnapshot() {
+    const adapterApi = ns.adapters;
+    if (!adapterApi || typeof adapterApi.getAdapter !== 'function') {
+      return { assistantCount: 0, text: '' };
+    }
+
+    const adapter = adapterApi.getAdapter();
+    if (!adapter || typeof adapter.getConversationRoot !== 'function' || typeof adapter.getConversationMessages !== 'function') {
+      return { assistantCount: 0, text: '' };
+    }
+
+    const root = adapter.getConversationRoot();
+    if (!root) {
+      return { assistantCount: 0, text: '' };
+    }
+
+    const sequence = adapter.getConversationMessages(root);
+    let assistantCount = 0;
+    let latestText = '';
+
+    sequence.forEach((entry) => {
+      if (entry.role !== 'assistant') {
+        return;
+      }
+
+      assistantCount += 1;
+      latestText = readAssistantReplyText(entry.node, adapter);
+    });
+
+    return {
+      assistantCount,
+      text: latestText
+    };
+  }
+
+  function readAssistantReplyText(node, adapter) {
+    if (!node) {
+      return '';
+    }
+
+    const utils = ns.utils || {};
+    if (adapter && adapter.id === 'gemini' && typeof utils.getTextWithoutHidden === 'function') {
+      return utils.getTextWithoutHidden(node);
+    }
+
+    const rawText =
+      typeof node.innerText === 'string' && node.innerText
+        ? node.innerText
+        : typeof node.textContent === 'string'
+          ? node.textContent
+          : '';
+    return rawText.replace(/\r\n/g, '\n').trim();
+  }
+
+  function extractTitleCandidate(replyText) {
+    if (typeof replyText !== 'string') {
+      return '';
+    }
+
+    const lines = replyText.replace(/\r\n/g, '\n').split('\n');
+    for (const line of lines) {
+      const candidate = line.trim();
+      if (candidate) {
+        return candidate;
+      }
+    }
+    return '';
   }
 
   ns.promptLibrary = Object.assign({}, ns.promptLibrary, {
