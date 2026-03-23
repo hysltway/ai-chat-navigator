@@ -36,6 +36,8 @@
         letter-spacing: normal;
         font-kerning: normal;
         text-rendering: optimizeLegibility;
+        --prompt-ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+        --prompt-ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
         --prompt-leading-tight: 1.25;
         --prompt-leading-snug: 1.4;
         --prompt-leading-body: 1.6;
@@ -73,7 +75,8 @@
         gap: 6px;
         white-space: nowrap;
         cursor: pointer;
-        transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease;
+        transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease,
+          transform 140ms var(--prompt-ease-out-quart);
         text-align: center;
         -webkit-tap-highlight-color: transparent;
       }
@@ -200,7 +203,9 @@
         opacity: 0;
         transform: translateY(6px) scale(0.992);
         visibility: hidden;
-        transition: opacity 160ms ease, transform 180ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0ms linear 180ms;
+        will-change: transform, opacity;
+        transition: opacity 180ms var(--prompt-ease-out-quart), transform 220ms var(--prompt-ease-out-quint),
+          visibility 0ms linear 220ms;
       }
 
       .prompt-panel[data-form-open="1"] {
@@ -218,6 +223,39 @@
         transform: translateY(0) scale(1);
         visibility: visible;
         transition-delay: 0ms;
+      }
+
+      .prompt-header,
+      .prompt-toolbar,
+      .prompt-section,
+      .prompt-list {
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 180ms var(--prompt-ease-out-quart), transform 220ms var(--prompt-ease-out-quint);
+      }
+
+      .prompt-layer[data-open="1"] .prompt-header,
+      .prompt-layer[data-open="1"] .prompt-toolbar,
+      .prompt-layer[data-open="1"] .prompt-section,
+      .prompt-layer[data-open="1"] .prompt-list {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .prompt-layer[data-open="1"] .prompt-header {
+        transition-delay: 24ms;
+      }
+
+      .prompt-layer[data-open="1"] .prompt-toolbar {
+        transition-delay: 56ms;
+      }
+
+      .prompt-layer[data-open="1"] .prompt-section {
+        transition-delay: 88ms;
+      }
+
+      .prompt-layer[data-open="1"] .prompt-list {
+        transition-delay: 116ms;
       }
 
       .prompt-header {
@@ -322,8 +360,8 @@
         background: transparent;
         color: var(--prompt-secondary-text);
         cursor: pointer;
-        transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease,
-          opacity 140ms ease;
+        transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease,
+          transform 140ms var(--prompt-ease-out-quart), opacity 140ms ease;
         -webkit-tap-highlight-color: transparent;
       }
 
@@ -486,6 +524,11 @@
         gap: 12px;
       }
 
+      .prompt-section[data-open="1"] .prompt-form {
+        animation: prompt-fade-up 220ms var(--prompt-ease-out-quint) both;
+        transform-origin: top;
+      }
+
       .prompt-field {
         display: grid;
         gap: 6px;
@@ -544,11 +587,13 @@
         text-decoration: underline;
         text-decoration-thickness: 0.08em;
         text-underline-offset: 0.16em;
+        transition: color 140ms ease, transform 140ms var(--prompt-ease-out-quart);
         -webkit-tap-highlight-color: transparent;
       }
 
       .prompt-helper-button:hover {
         color: var(--prompt-accent);
+        transform: translateX(1px);
       }
 
       .prompt-form-actions {
@@ -609,7 +654,8 @@
         border: 1px solid var(--prompt-surface-border);
         border-radius: 14px;
         background: var(--prompt-surface);
-        transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+        transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease,
+          transform 180ms var(--prompt-ease-out-quart);
         min-width: 0;
       }
 
@@ -618,6 +664,7 @@
         background: var(--prompt-surface-hover);
         border-color: color-mix(in srgb, var(--prompt-accent) 18%, var(--prompt-surface-border));
         box-shadow: 0 1px 0 color-mix(in srgb, var(--prompt-accent) 10%, transparent);
+        transform: translateY(-1px);
       }
 
       .prompt-item-main {
@@ -634,6 +681,7 @@
         text-align: left;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
+        transition: transform 140ms var(--prompt-ease-out-quart);
         width: 100%;
       }
 
@@ -692,6 +740,15 @@
         gap: 6px;
         flex-wrap: nowrap;
         cursor: default;
+        opacity: 0.82;
+        transform: translateY(2px);
+        transition: opacity 180ms var(--prompt-ease-out-quart), transform 180ms var(--prompt-ease-out-quart);
+      }
+
+      .prompt-item:hover .prompt-item-actions,
+      .prompt-item:focus-within .prompt-item-actions {
+        opacity: 1;
+        transform: translateY(0);
       }
 
       .prompt-empty {
@@ -722,6 +779,24 @@
         }
       }
 
+      @keyframes prompt-fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .prompt-helper:not([hidden]),
+      .prompt-warning:not([hidden]),
+      .prompt-empty {
+        animation: prompt-fade-up 200ms var(--prompt-ease-out-quart) both;
+      }
+
       @media (max-width: 640px) {
         .prompt-panel {
           width: calc(100vw - 16px);
@@ -738,12 +813,21 @@
 
       @media (prefers-reduced-motion: reduce) {
         .prompt-panel,
+        .prompt-header,
+        .prompt-toolbar,
+        .prompt-list,
         .prompt-search-shell,
         .prompt-action-button,
         .prompt-icon-button,
+        .prompt-helper-button,
+        .prompt-helper,
+        .prompt-warning,
         .prompt-item,
         .prompt-item-main,
-        .prompt-section {
+        .prompt-item-actions,
+        .prompt-section,
+        .prompt-form,
+        .prompt-empty {
           transition: none !important;
           animation: none !important;
         }

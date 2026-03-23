@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.3.5**
+> Current Version: **v2.3.6**
 
-## Updates in v2.3.5
+## Updates in v2.3.6
 
-- Adjusted the Prompt Library item layout so content and actions no longer compete for the same row when titles or previews are long.
-- Improved wrapping and clamping rules for titles and previews to keep two-line titles and three-line previews readable with long text.
-- Anchored action buttons to the top-right corner and reserved safe spacing for the text content to reduce overlap issues.
-- Updated version references and release notes for `v2.3.5`.
+- Added a more complete entrance animation sequence to the Prompt Library so the header, toolbar, form area, and list fade in with clearer visual hierarchy.
+- Polished transitions for helper text, warnings, and empty states, and unified easing curves across cards, buttons, and helper actions for smoother state changes.
+- Added hover lift and action reveal feedback to prompt cards while preserving `prefers-reduced-motion` fallbacks for accessibility.
+- Updated version references and release notes for `v2.3.6`.
 
 ## Chrome Web Store (Recommended)
 
