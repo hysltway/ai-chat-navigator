@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v2.3.2**
+> Current Version: **v2.3.3**
 
-## Updates in v2.3.2
+## Updates in v2.3.3
 
-- Auto-hide the navigator when there are no indexed messages, so an empty floating panel no longer distracts from the page.
-- Restore navigator visibility automatically once conversation messages are available again, without requiring a manual refresh.
-- Added an explicit visibility state on the navigation root so rendering logic and styles stay aligned in empty states.
-- Updated version references and release notes for `v2.3.2`.
+- Refactored the Prompt Library UI into smaller style, render, and assembly modules to reduce single-file size.
+- Changed the add-prompt flow so it focuses on the form by default and only shows existing prompts when the user actively searches.
+- Polished the prompt panel details, including on-demand warnings, a danger-styled close button, scrollable add-prompt mode, and lower-noise scrollbars.
+- Removed in-panel action toasts and delete confirmation, and updated version references and release notes for `v2.3.3`.
 
 ## Chrome Web Store (Recommended)
 

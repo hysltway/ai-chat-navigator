@@ -32,9 +32,6 @@
     savePending: false,
     busyAction: '',
     busyPromptId: '',
-    pendingDeleteKind: '',
-    pendingDeleteId: '',
-    pendingDeleteTimer: null,
     environmentSyncTimer: null,
     environmentObserver: null,
     themeObserver: null,
@@ -112,12 +109,10 @@
       if (state.savePending || state.busyAction) {
         return;
       }
-      clearPendingDelete();
       togglePromptForm();
     });
 
     state.ui.searchInput.addEventListener('input', () => {
-      clearPendingDelete();
       state.filter.query = state.ui.searchInput.value || '';
       render();
     });
@@ -158,7 +153,6 @@
       if (state.savePending || state.busyAction) {
         return;
       }
-      clearPendingDelete();
       closePromptForm();
     });
 
@@ -322,11 +316,15 @@
     }
 
     const query = getSearchQuery();
-    const prompts = state.store.filterPrompts(state.library, state.filter).map(buildPromptViewModel);
+    const shouldHidePromptItems = state.promptFormVisible && !query;
+    const prompts = shouldHidePromptItems
+      ? []
+      : state.store.filterPrompts(state.library, state.filter).map(buildPromptViewModel);
 
-    ns.promptLibraryUi.renderPrompts(state.ui, prompts, state.pendingDeleteKind === 'prompt' ? state.pendingDeleteId : '', {
+    ns.promptLibraryUi.renderPrompts(state.ui, prompts, {
       hasQuery: Boolean(query),
       query,
+      hideEmptyState: shouldHidePromptItems,
       busyAction: state.busyAction,
       busyPromptId: state.busyPromptId
     });
@@ -425,7 +423,6 @@
     }
     state.promptFormVisible = false;
     clearDuplicateReminder();
-    clearPendingDelete();
     render();
   }
 
@@ -456,14 +453,12 @@
     if (state.savePending || state.busyAction) {
       return;
     }
-    clearPendingDelete();
 
     const draft = getPromptDraft();
     const title = draft.title;
     const content = draft.content;
 
     if (!title || !content) {
-      ns.promptLibraryUi.showToast(state.ui, 'Title and prompt are required.', 'error');
       syncPromptFormState();
       return;
     }
@@ -490,12 +485,7 @@
       state.promptFormVisible = false;
       clearDuplicateReminder();
       render();
-      ns.promptLibraryUi.showToast(
-        state.ui,
-        draft.hasDuplicateTitle ? 'Prompt saved. A prompt with the same title already exists.' : 'Prompt saved.'
-      );
-    } catch (error) {
-      ns.promptLibraryUi.showToast(state.ui, `Save failed: ${describeOperationError(error, 'Please try again.')}`, 'error');
+    } catch {
     } finally {
       state.savePending = false;
       syncPromptFormState();
@@ -506,30 +496,17 @@
     if (state.savePending || state.busyAction) {
       return;
     }
-    const prompt = findPromptById(promptId);
-    if (!prompt) {
+    if (!findPromptById(promptId)) {
       return;
     }
 
-    if (!isPendingDelete('prompt', promptId)) {
-      armDelete('prompt', promptId, `Click again to delete "${prompt.title}"`);
-      return;
-    }
-
-    clearPendingDelete();
     setBusyPrompt('delete', promptId);
     render();
 
     try {
       state.library = await state.store.deletePrompt(promptId);
       render();
-      ns.promptLibraryUi.showToast(state.ui, 'Prompt deleted.');
-    } catch (error) {
-      ns.promptLibraryUi.showToast(
-        state.ui,
-        `Delete failed: ${describeOperationError(error, 'Please try again.')}`,
-        'error'
-      );
+    } catch {
     } finally {
       clearBusyPrompt();
       render();
@@ -540,7 +517,6 @@
     if (state.savePending || state.busyAction) {
       return;
     }
-    clearPendingDelete();
 
     const prompt = findPromptById(promptId);
     if (!prompt) {
@@ -549,7 +525,6 @@
 
     const result = state.siteApi.insertPromptContent(prompt.content, state.siteId);
     if (!result.ok) {
-      ns.promptLibraryUi.showToast(state.ui, `Insert failed: ${result.reason}`, 'error');
       return;
     }
 
@@ -560,7 +535,6 @@
     if (state.savePending || state.busyAction) {
       return;
     }
-    clearPendingDelete();
 
     const prompt = findPromptById(promptId);
     if (!prompt) {
@@ -573,18 +547,11 @@
     try {
       const copyResult = await writeClipboard(prompt.content);
       if (!copyResult.ok) {
-        ns.promptLibraryUi.showToast(state.ui, `Copy failed: ${copyResult.reason}`, 'error');
         return;
       }
 
       state.library = await state.store.markCopied(promptId);
-      ns.promptLibraryUi.showToast(state.ui, 'Prompt copied.');
-    } catch (error) {
-      ns.promptLibraryUi.showToast(
-        state.ui,
-        `Copy failed: ${describeOperationError(error, 'Please try again.')}`,
-        'error'
-      );
+    } catch {
     } finally {
       clearBusyPrompt();
       render();
@@ -593,10 +560,6 @@
 
   function findPromptById(promptId) {
     return state.library.prompts.find((prompt) => prompt.id === promptId) || null;
-  }
-
-  function isPendingDelete(kind, id) {
-    return Boolean(kind && id && state.pendingDeleteKind === kind && state.pendingDeleteId === id);
   }
 
   function setBusyPrompt(action, promptId) {
@@ -609,38 +572,11 @@
     state.busyPromptId = '';
   }
 
-  function armDelete(kind, id, message) {
-    clearPendingDelete();
-    state.pendingDeleteKind = kind;
-    state.pendingDeleteId = id;
-    render();
-    ns.promptLibraryUi.showToast(state.ui, message || 'Click again to confirm deletion.', 'error');
-    state.pendingDeleteTimer = window.setTimeout(() => {
-      clearPendingDelete(true);
-    }, 2200);
-  }
-
-  function clearPendingDelete(shouldRender) {
-    if (state.pendingDeleteTimer) {
-      window.clearTimeout(state.pendingDeleteTimer);
-      state.pendingDeleteTimer = null;
-    }
-
-    const changed = Boolean(state.pendingDeleteKind || state.pendingDeleteId);
-    state.pendingDeleteKind = '';
-    state.pendingDeleteId = '';
-    if (changed && shouldRender) {
-      render();
-    }
-  }
-
   function resetPanelEphemeralState() {
     const hadVisibleState = state.promptFormVisible;
-    const hadPendingDelete = Boolean(state.pendingDeleteKind || state.pendingDeleteId);
     state.promptFormVisible = false;
     clearDuplicateReminder();
-    clearPendingDelete(false);
-    if (hadVisibleState || hadPendingDelete) {
+    if (hadVisibleState) {
       render();
     }
   }
@@ -696,7 +632,6 @@
       state.ui.searchInput.value = '';
       state.ui.searchInput.focus();
     }
-    clearPendingDelete();
     render();
   }
 
@@ -706,13 +641,6 @@
     }
 
     if (state.savePending || state.busyAction) {
-      event.preventDefault();
-      event.stopPropagation();
-      return true;
-    }
-
-    if (state.pendingDeleteKind || state.pendingDeleteId) {
-      clearPendingDelete(true);
       event.preventDefault();
       event.stopPropagation();
       return true;
@@ -831,13 +759,6 @@
       return '';
     }
     return value.replace(/\r\n/g, '\n').trim();
-  }
-
-  function describeOperationError(error, fallback) {
-    if (error && typeof error.message === 'string' && error.message.trim()) {
-      return error.message.trim();
-    }
-    return fallback;
   }
 
   ns.promptLibrary = Object.assign({}, ns.promptLibrary, {
