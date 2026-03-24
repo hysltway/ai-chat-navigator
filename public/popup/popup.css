@@ -1,30 +1,5 @@
 :root {
   color-scheme: light dark;
-  --bg: #f7f7f8;
-  --card-bg: #ffffff;
-  --card-border: #e5e7eb;
-  --text-main: #0d0d0d;
-  --text-subtle: #6b7280;
-  --pill-bg: #f3f4f6;
-  --btn-bg: #f3f4f6;
-  --btn-bg-hover: #e9ebef;
-  --btn-bg-active: #e3e6eb;
-  --shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #202123;
-    --card-bg: #2a2b32;
-    --card-border: #3b3d47;
-    --text-main: #ececf1;
-    --text-subtle: #b4b4c0;
-    --pill-bg: #343541;
-    --btn-bg: #343541;
-    --btn-bg-hover: #3c3d49;
-    --btn-bg-active: #424454;
-    --shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
-  }
 }
 
 * {
@@ -34,9 +9,9 @@
 body {
   margin: 0;
   width: 360px;
-  font-family: 'Avenir Next', 'SF Pro Text', 'Helvetica Neue', sans-serif;
-  background: var(--bg);
-  color: var(--text-main);
+  font-family: var(--ui-font-family, 'Avenir Next', 'SF Pro Text', 'Helvetica Neue', sans-serif);
+  background: var(--ui-page-bg, #f7f7f8);
+  color: var(--ui-text, #1f1f1f);
 }
 
 .popup-shell {
@@ -74,28 +49,17 @@ body {
 
 .brand-text span {
   font-size: 12px;
-  color: var(--text-subtle);
+  color: var(--ui-muted, #666666);
   line-height: 1.2;
 }
 
 .version-pill {
-  border: 1px solid var(--card-border);
-  background: var(--pill-bg);
-  color: var(--text-subtle);
-  border-radius: 999px;
-  padding: 5px 10px;
-  font-size: 12px;
-  line-height: 1;
   user-select: none;
   pointer-events: none;
 }
 
 .panel {
-  border: 1px solid var(--card-border);
-  background: var(--card-bg);
-  border-radius: 12px;
   padding: 12px;
-  box-shadow: var(--shadow);
 }
 
 .panel h1 {
@@ -106,7 +70,7 @@ body {
 
 .panel p {
   margin: 6px 0 10px;
-  color: var(--text-subtle);
+  color: var(--ui-muted, #666666);
   font-size: 12px;
   line-height: 1.35;
 }
@@ -121,7 +85,7 @@ body {
   gap: 8px;
   margin: 0 0 10px;
   font-size: 12px;
-  color: var(--text-main);
+  color: var(--ui-text, #1f1f1f);
 }
 
 .toggle-row input[type='checkbox'] {
@@ -129,8 +93,6 @@ body {
 }
 
 .field-row {
-  display: grid;
-  gap: 6px;
   margin-bottom: 10px;
 }
 
@@ -138,19 +100,9 @@ body {
   margin-bottom: 0;
 }
 
-.field-row label {
-  font-size: 12px;
-  color: var(--text-subtle);
-}
-
-.field-row select {
-  width: 100%;
+.field-row .ui-input {
   min-height: 32px;
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
   padding: 6px 8px;
-  background: var(--btn-bg);
-  color: var(--text-main);
   font-size: 12px;
 }
 
@@ -161,23 +113,5 @@ body {
 }
 
 .action-btn {
-  border: 1px solid var(--card-border);
-  background: var(--btn-bg);
-  color: var(--text-main);
-  border-radius: 10px;
-  min-height: 34px;
-  padding: 7px 10px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background-color 0.14s ease;
-}
-
-.action-btn:hover,
-.action-btn:focus-visible {
-  background: var(--btn-bg-hover);
-  outline: none;
-}
-
-.action-btn:active {
-  background: var(--btn-bg-active);
+  width: 100%;
 }

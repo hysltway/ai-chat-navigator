@@ -1,12 +1,13 @@
 import { ns } from './namespace';
+import { createEmptyState } from '../shared/ui-kit/dom';
+import { getUiThemePreset, replaceCssVars, UI_KIT_THEME_VAR_KEYS, UI_NAV_THEME_VAR_KEYS } from '../shared/ui-kit/theme';
 import type {
   ColorScheme,
   ConversationMessage,
   PreviewLayout,
   SiteId,
   UiApi,
-  UiHandle,
-  UiThemePreset
+  UiHandle
 } from './types';
 
 const MINIMAL_LABEL = 'Minimal';
@@ -25,26 +26,21 @@ function createStyleElement(): HTMLStyleElement {
 }
 
 function applyThemeVars(root: HTMLElement, colorScheme: ColorScheme): void {
-  if (!root || !root.style || typeof ns.getUiThemePreset !== 'function') {
+  if (!root || !root.style) {
     return;
   }
 
   const site = (root.dataset.site as SiteId | undefined) || getSiteKey();
   const scheme: ColorScheme = colorScheme === 'dark' ? 'dark' : 'light';
-  const preset = ns.getUiThemePreset(site, scheme) as UiThemePreset | null;
-  const navVars = preset && preset.nav && typeof preset.nav === 'object' ? preset.nav : null;
-  if (!navVars) {
-    return;
+  const preset = getUiThemePreset(site, scheme);
+  const navVars = preset.nav && typeof preset.nav === 'object' ? preset.nav : null;
+  const kitVars = preset.kit && typeof preset.kit === 'object' ? preset.kit : null;
+  if (navVars) {
+    replaceCssVars(root, navVars, UI_NAV_THEME_VAR_KEYS);
   }
-
-  const knownKeys = Array.isArray(ns.UI_NAV_THEME_VAR_KEYS) ? ns.UI_NAV_THEME_VAR_KEYS : Object.keys(navVars);
-  knownKeys.forEach((key) => {
-    root.style.removeProperty(key);
-  });
-
-  Object.keys(navVars).forEach((key) => {
-    root.style.setProperty(key, navVars[key]);
-  });
+  if (kitVars) {
+    replaceCssVars(root, kitVars, UI_KIT_THEME_VAR_KEYS);
+  }
 }
 
 function createUI(): UiHandle {
@@ -105,7 +101,7 @@ function ensureMounted(ui: UiHandle): boolean {
 
 function createRootElement(): HTMLDivElement {
   const root = document.createElement('div');
-  root.className = 'nav-root';
+  root.className = 'nav-root ui-root';
   root.dataset.visible = '0';
   root.dataset.collapsed = '0';
   root.dataset.adaptiveMinimal = '0';
@@ -120,7 +116,7 @@ function createPanelElements(): Pick<
   'panel' | 'bodyWrap' | 'body' | 'title' | 'subtitle' | 'toggle' | 'minimalToggle' | 'themeToggle'
 > {
   const panel = document.createElement('div');
-  panel.className = 'panel';
+  panel.className = 'panel ui-panel';
   const headerElements = createPanelHeaderElements();
   const bodyElements = createPanelBodyElements();
   panel.appendChild(headerElements.header);
@@ -158,13 +154,13 @@ function createPanelHeaderElements(): {
   const actions = document.createElement('div');
   actions.className = 'panel-actions';
   const themeToggle = createToggleButton(
-    'panel-toggle panel-toggle-theme',
+    'panel-toggle panel-toggle-theme ui-button ui-icon-button',
     THEME_TOGGLE_ICONS.dark,
     'Switch to Dark mode'
   );
-  const minimalToggle = createToggleButton('panel-toggle panel-toggle-minimal', MINIMAL_LABEL, MINIMAL_LABEL);
+  const minimalToggle = createToggleButton('panel-toggle panel-toggle-minimal ui-button', MINIMAL_LABEL, MINIMAL_LABEL);
   minimalToggle.setAttribute('aria-pressed', 'false');
-  const toggle = createToggleButton('panel-toggle', HIDE_LABEL, HIDE_LABEL);
+  const toggle = createToggleButton('panel-toggle ui-button', HIDE_LABEL, HIDE_LABEL);
   actions.appendChild(themeToggle);
   actions.appendChild(minimalToggle);
   actions.appendChild(toggle);
@@ -184,7 +180,7 @@ function createToggleButton(className: string, text: string, ariaLabel: string):
 
 function createPanelBodyElements(): { bodyWrap: HTMLDivElement; body: HTMLDivElement } {
   const body = document.createElement('div');
-  body.className = 'panel-body';
+  body.className = 'panel-body ui-scrollable';
   const bodyWrap = document.createElement('div');
   bodyWrap.className = 'panel-body-wrap';
   bodyWrap.dataset.scrollable = '0';
@@ -194,9 +190,10 @@ function createPanelBodyElements(): { bodyWrap: HTMLDivElement; body: HTMLDivEle
   scrollHintTop.className = 'scroll-hint scroll-hint-top';
   const scrollHintBottom = document.createElement('div');
   scrollHintBottom.className = 'scroll-hint scroll-hint-bottom';
-  const empty = document.createElement('div');
-  empty.className = 'nav-empty';
-  empty.textContent = 'No prompts found yet.';
+  const empty = createEmptyState('No prompts found yet.', '', {
+    className: 'nav-empty',
+    titleClassName: 'nav-empty-title'
+  });
   body.appendChild(empty);
   bodyWrap.appendChild(body);
   bodyWrap.appendChild(scrollHintTop);
@@ -210,7 +207,7 @@ function createPreviewElements(): { preview: HTMLDivElement; previewInner: HTMLD
   preview.dataset.active = '0';
   preview.dataset.index = '';
   const previewInner = document.createElement('div');
-  previewInner.className = 'nav-preview-inner';
+  previewInner.className = 'nav-preview-inner ui-panel';
   preview.appendChild(previewInner);
   return { preview, previewInner };
 }
@@ -241,12 +238,14 @@ function renderList(
 }
 
 function createEmptyStateItem(minimalMode: boolean): HTMLDivElement {
-  const empty = document.createElement('div');
-  empty.className = 'nav-empty';
   if (!minimalMode) {
-    empty.textContent = 'No prompts found yet.';
-    return empty;
+    return createEmptyState('No prompts found yet.', '', {
+      className: 'nav-empty',
+      titleClassName: 'nav-empty-title'
+    });
   }
+  const empty = document.createElement('div');
+  empty.className = 'nav-empty ui-empty';
   const words = ['No', 'prompts', 'found', 'yet.'];
   words.forEach((word) => {
     const span = document.createElement('span');
@@ -262,7 +261,7 @@ function createMessageItem(
   minimalMode: boolean
 ): HTMLDivElement {
   const item = document.createElement('div');
-  item.className = 'nav-item';
+  item.className = 'nav-item ui-item';
   item.dataset.index = String(index);
   item.tabIndex = 0;
   item.setAttribute('role', 'button');
@@ -276,12 +275,12 @@ function createMessageItem(
     return item;
   }
   const title = document.createElement('div');
-  title.className = 'nav-item-title';
+  title.className = 'nav-item-title ui-item-title';
   title.textContent = message.title;
   item.appendChild(title);
   if (message.preview) {
     const preview = document.createElement('div');
-    preview.className = 'nav-item-preview';
+    preview.className = 'nav-item-preview ui-item-preview';
     preview.textContent = message.preview;
     item.appendChild(preview);
   }
@@ -377,13 +376,13 @@ function syncPreviewContent(ui: UiHandle, message: ConversationMessage, index: s
   }
   ui.previewInner.textContent = '';
   const title = document.createElement('div');
-  title.className = 'nav-item-title';
+  title.className = 'nav-item-title ui-item-title';
   title.textContent = message.title;
   ui.previewInner.appendChild(title);
 
   if (message.preview) {
     const previewText = document.createElement('div');
-    previewText.className = 'nav-item-preview';
+    previewText.className = 'nav-item-preview ui-item-preview';
     previewText.textContent = message.preview;
     ui.previewInner.appendChild(previewText);
   }

@@ -4,6 +4,8 @@ import {
   type FormulaSettingsApi
 } from '../shared/formula-settings';
 import { startDocumentDevReload } from '../shared/dev-reload';
+import { UI_KIT_STYLE_TEXT } from '../shared/ui-kit/styles';
+import { getUiThemePreset, replaceCssVars, UI_KIT_THEME_VAR_KEYS } from '../shared/ui-kit/theme';
 
 const LINKS = {
   repo: 'https://github.com/hysltway/JumpNav',
@@ -20,6 +22,8 @@ interface PopupEnvironment {
   chromeRef: ChromeLike | null;
   formulaSettingsApi: FormulaSettingsApi;
 }
+
+const POPUP_UI_KIT_STYLE_ID = 'jumpnav-popup-ui-kit-style';
 
 function updateEngineFieldState(formatSelect: HTMLSelectElement, engineSelect: HTMLSelectElement): void {
   const isLatexOnly = formatSelect.value === 'latex';
@@ -43,11 +47,57 @@ function createPopupController(environment: Partial<PopupEnvironment> = {}) {
   const env = createEnvironment(environment);
 
   function start(): void {
+    ensureUiKitStyle();
+    syncUiKitTheme();
+    bindThemeTracking();
+
     env.documentRef.addEventListener('DOMContentLoaded', () => {
       syncVersionPill();
       bindLinkButtons();
       void initFormulaSettings();
     });
+  }
+
+  function ensureUiKitStyle(): void {
+    if (env.documentRef.getElementById(POPUP_UI_KIT_STYLE_ID)) {
+      return;
+    }
+
+    const style = env.documentRef.createElement('style');
+    style.id = POPUP_UI_KIT_STYLE_ID;
+    style.textContent = UI_KIT_STYLE_TEXT;
+    (env.documentRef.head || env.documentRef.documentElement).appendChild(style);
+  }
+
+  function syncUiKitTheme(): void {
+    const colorScheme =
+      env.windowRef.matchMedia && env.windowRef.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const preset = getUiThemePreset('generic', colorScheme);
+    const kitVars = preset.kit && typeof preset.kit === 'object' ? preset.kit : null;
+    if (!kitVars || !env.documentRef.documentElement) {
+      return;
+    }
+    replaceCssVars(env.documentRef.documentElement, kitVars, UI_KIT_THEME_VAR_KEYS);
+  }
+
+  function bindThemeTracking(): void {
+    if (!env.windowRef.matchMedia) {
+      return;
+    }
+
+    const media = env.windowRef.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => {
+      syncUiKitTheme();
+    };
+
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', handleChange);
+      return;
+    }
+
+    if (typeof media.addListener === 'function') {
+      media.addListener(handleChange);
+    }
   }
 
   function syncVersionPill(): void {

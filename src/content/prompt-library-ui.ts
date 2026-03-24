@@ -63,7 +63,7 @@
 
   function createEntryRoot() {
     const root = document.createElement('div');
-    root.className = 'prompt-ui prompt-entry';
+    root.className = 'prompt-ui prompt-entry ui-root';
 
     const button = document.createElement('button');
     button.type = 'button';
@@ -88,12 +88,12 @@
   function createPanelRoot() {
     const formSectionId = 'jumpnav-prompt-library-form';
     const layer = document.createElement('div');
-    layer.className = 'prompt-ui prompt-layer';
+    layer.className = 'prompt-ui prompt-layer ui-root';
     layer.dataset.open = '0';
 
     const panel = document.createElement('section');
     panel.id = 'jumpnav-prompt-library-dialog';
-    panel.className = 'prompt-panel';
+    panel.className = 'prompt-panel ui-panel';
     panel.dataset.formOpen = '0';
     panel.setAttribute('role', 'dialog');
     panel.setAttribute('aria-modal', 'false');
@@ -108,9 +108,9 @@
     promptToggleButton.setAttribute('aria-expanded', 'false');
 
     const searchShell = document.createElement('label');
-    searchShell.className = 'prompt-search-shell';
+    searchShell.className = 'prompt-search-shell ui-input-shell';
     const searchIcon = document.createElement('span');
-    searchIcon.className = 'prompt-search-icon';
+    searchIcon.className = 'prompt-search-icon ui-input-icon';
     searchIcon.setAttribute('aria-hidden', 'true');
     searchIcon.appendChild(uiStyle.createSvgIcon('search'));
     const searchInput = document.createElement('input');
@@ -142,18 +142,18 @@
     promptForm.className = 'prompt-form';
     promptForm.setAttribute('aria-busy', 'false');
 
-    const promptTitleField = createField('Title');
+    const promptTitleField = uiStyle.createField('Title');
     const promptTitleInput = document.createElement('input');
-    promptTitleInput.className = 'prompt-input';
+    promptTitleInput.className = 'prompt-input ui-input';
     promptTitleInput.type = 'text';
     promptTitleInput.name = 'title';
     promptTitleInput.placeholder = 'e.g. Weekly summary';
     promptTitleInput.autocomplete = 'off';
     promptTitleField.field.appendChild(promptTitleInput);
 
-    const promptContentField = createField('Prompt');
+    const promptContentField = uiStyle.createField('Prompt');
     const promptContentInput = document.createElement('textarea');
-    promptContentInput.className = 'prompt-textarea';
+    promptContentInput.className = 'prompt-textarea ui-textarea';
     promptContentInput.name = 'content';
     promptContentInput.placeholder = 'Write the full prompt you want to reuse.';
     promptContentField.field.appendChild(promptContentInput);
@@ -198,7 +198,7 @@
     promptFormWrap.inner.appendChild(promptForm);
 
     const list = document.createElement('div');
-    list.className = 'prompt-list';
+    list.className = 'prompt-list ui-scrollable';
     list.setAttribute('role', 'list');
 
     panel.appendChild(header);
@@ -225,16 +225,6 @@
       promptWarning,
       list
     };
-  }
-
-  function createField(labelText) {
-    const field = document.createElement('label');
-    field.className = 'prompt-field';
-    const label = document.createElement('span');
-    label.className = 'prompt-label';
-    label.textContent = labelText;
-    field.appendChild(label);
-    return { field, label };
   }
 
   function createExpandableSection() {

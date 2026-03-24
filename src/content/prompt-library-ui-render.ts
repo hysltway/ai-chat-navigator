@@ -1,4 +1,5 @@
 
+  import { replaceCssVars, UI_KIT_THEME_VAR_KEYS, getUiThemePreset } from '../shared/ui-kit/theme';
   import { ns } from './namespace';
   import type {
     ColorScheme,
@@ -20,18 +21,22 @@
   function applyThemeVars(root: HTMLElement, site: SiteId | string, scheme: ColorScheme) {
     const safeSite = typeof site === 'string' ? site : 'generic';
     const safeScheme = scheme === 'dark' ? 'dark' : 'light';
-    const vars = buildThemeVars(safeSite, safeScheme);
+    const preset = getUiThemePreset(safeSite, safeScheme);
+    const kitVars = preset.kit && typeof preset.kit === 'object' ? preset.kit : null;
     root.dataset.site = safeSite;
     root.dataset.colorScheme = safeScheme;
+    if (kitVars) {
+      replaceCssVars(root, kitVars, UI_KIT_THEME_VAR_KEYS);
+    }
+    const vars = buildThemeVars(safeSite, safeScheme);
     Object.keys(vars).forEach((key) => {
       root.style.setProperty(key, vars[key]);
     });
   }
 
   function buildThemeVars(site: string, scheme: ColorScheme) {
-    const preset = typeof ns.getUiThemePreset === 'function' ? ns.getUiThemePreset(site, scheme) : null;
-    const nav = (preset && preset.nav) || {};
-    const formula = (preset && preset.formula) || {};
+    const preset = getUiThemePreset(site, scheme);
+    const kit = (preset && preset.kit) || {};
     const fontFamilyBySite = {
       chatgpt:
         'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", sans-serif',
@@ -42,46 +47,13 @@
     };
 
     const isDark = scheme === 'dark';
-    const baseSurface = nav['--nav-surface'] || nav['--nav-bg'] || (isDark ? '#181b1f' : '#f9f9f9');
-    const border = nav['--nav-border'] || (isDark ? '#2f343a' : '#efefef');
-    const text = nav['--nav-text'] || (isDark ? '#e7eaee' : '#1f1f1f');
-    const muted = nav['--nav-muted'] || (isDark ? '#a4adb7' : '#666666');
-    const hover = nav['--nav-item-hover-bg'] || formula.hoverBg || (isDark ? '#242a31' : '#efefef');
-    const panelBg = baseSurface;
-    const itemBg = nav['--nav-item-bg'] || nav['--nav-button-bg'] || baseSurface;
-    const activeBg = nav['--nav-item-active-bg'] || formula.activeBg || hover;
-    const activeBorder = nav['--nav-item-active-border'] || border;
-    const activeText =
-      nav['--nav-item-active-text'] ||
-      nav['--nav-item-active-color'] ||
-      nav['--nav-accent-strong'] ||
-      text;
-    const shadow =
-      nav['--nav-shadow'] || (isDark ? '0 20px 48px rgba(3, 8, 17, 0.58)' : '0 18px 42px rgba(23, 21, 16, 0.16)');
-    const focusOutline = formula.outline || activeBorder;
-    const focusRing = formula.ring || (isDark ? 'rgba(211, 217, 224, 0.18)' : 'rgba(31, 31, 31, 0.08)');
-    let entryText = site === 'claude' ? nav['--nav-muted'] || nav['--nav-text'] || text : nav['--nav-text'] || text;
-    const entryHover = site === 'gemini' ? '#F0F1F1' : nav['--nav-hover'] || hover;
+    const text = kit['--ui-text'] || (isDark ? '#e7eaee' : '#1f1f1f');
+    const muted = kit['--ui-muted'] || (isDark ? '#a4adb7' : '#666666');
+    let entryText = site === 'claude' ? muted || text : text;
+    const entryHover = site === 'gemini' ? '#F0F1F1' : kit['--ui-control-hover-bg'] || kit['--ui-surface-hover'] || '#efefef';
     if (!isDark && site === 'gemini') {
       entryText = '#444746';
     }
-
-    const controlBg = nav['--nav-button-bg'] || itemBg;
-    const controlBorder = border;
-    const controlHoverBg = nav['--nav-hover'] || nav['--nav-item-hover-bg'] || hover;
-    const controlHoverBorder = nav['--nav-control-hover-border'] || nav['--nav-item-hover-border'] || activeBorder;
-    const controlHoverText = nav['--nav-control-hover-text'] || text;
-    const controlActiveBg = nav['--nav-control-active-bg'] || activeBg;
-    const controlActiveBorder = nav['--nav-control-active-border'] || activeBorder;
-    const controlActiveText = nav['--nav-control-active-text'] || activeText;
-    const itemBorder = 'transparent';
-    const itemHoverBorder = nav['--nav-item-hover-border'] || activeBorder;
-    const itemShadow = nav['--nav-item-active-shadow'] || (isDark ? 'rgba(10, 12, 15, 0.32)' : 'rgba(0, 0, 0, 0.06)');
-    const scrollbarTrack = nav['--nav-scrollbar-track'] || 'transparent';
-    const scrollbarThumb =
-      nav['--nav-scrollbar-thumb'] || (isDark ? 'rgba(232, 236, 241, 0.34)' : 'rgba(31, 31, 31, 0.16)');
-    const scrollbarThumbHover =
-      nav['--nav-scrollbar-thumb-hover'] || (isDark ? 'rgba(232, 236, 241, 0.48)' : 'rgba(31, 31, 31, 0.24)');
 
     return {
       '--prompt-entry-bg': 'transparent',
@@ -89,43 +61,7 @@
       '--prompt-entry-text': entryText,
       '--prompt-entry-hover': entryHover,
       '--prompt-panel-font-family': fontFamilyBySite[site] || fontFamilyBySite.generic,
-      '--prompt-panel-font-size': '14px',
-      '--prompt-panel-bg': panelBg,
-      '--prompt-panel-border': border,
-      '--prompt-panel-shadow': shadow,
-      '--prompt-divider': border,
-      '--prompt-text': text,
-      '--prompt-muted': muted,
-      '--prompt-accent': activeText,
-      '--prompt-accent-soft': hover,
-      '--prompt-accent-strong': text,
-      '--prompt-control-bg': controlBg,
-      '--prompt-control-border': controlBorder,
-      '--prompt-control-hover-bg': controlHoverBg,
-      '--prompt-control-hover-border': controlHoverBorder,
-      '--prompt-control-hover-text': controlHoverText,
-      '--prompt-control-active-bg': controlActiveBg,
-      '--prompt-control-active-border': controlActiveBorder,
-      '--prompt-control-active-text': controlActiveText,
-      '--prompt-input-bg': controlBg,
-      '--prompt-input-border': controlBorder,
-      '--prompt-surface': itemBg,
-      '--prompt-surface-strong': panelBg,
-      '--prompt-surface-border': itemBorder,
-      '--prompt-surface-hover': hover,
-      '--prompt-surface-hover-border': itemHoverBorder,
-      '--prompt-surface-shadow': itemShadow,
-      '--prompt-primary-bg': activeBg,
-      '--prompt-primary-border': activeBorder,
-      '--prompt-primary-text': activeText,
-      '--prompt-secondary-text': muted,
-      '--prompt-scrollbar-track': scrollbarTrack,
-      '--prompt-scrollbar-thumb': scrollbarThumb,
-      '--prompt-scrollbar-thumb-hover': scrollbarThumbHover,
-      '--prompt-danger': isDark ? '#fda29b' : '#b42318',
-      '--prompt-danger-soft': isDark ? 'rgba(253, 162, 155, 0.12)' : 'rgba(180, 35, 24, 0.08)',
-      '--prompt-focus-outline': focusOutline,
-      '--prompt-focus-ring': focusRing
+      '--prompt-panel-font-size': '14px'
     };
   }
 
@@ -195,22 +131,11 @@
   }
 
   function createEmptyState(hasQuery: boolean, query: string) {
-    const empty = document.createElement('div');
-    empty.className = 'prompt-empty';
-
-    const title = document.createElement('div');
-    title.className = 'prompt-empty-title';
-    title.textContent = hasQuery ? 'No matches found' : 'No prompts yet';
-
-    const text = document.createElement('div');
-    text.className = 'prompt-empty-text';
-    text.textContent = hasQuery
+    const title = hasQuery ? 'No matches found' : 'No prompts yet';
+    const text = hasQuery
       ? `No prompts match "${summarizeQuery(query)}". Try a shorter keyword or a broader phrase.`
       : 'Save a reusable prompt here, then click any item to insert it into the current composer.';
-
-    empty.appendChild(title);
-    empty.appendChild(text);
-    return empty;
+    return uiStyle.createEmptyState(title, text);
   }
 
   function createPromptItem(prompt: PromptViewModel, options: PromptLibraryRenderOptions = {}) {
@@ -222,13 +147,13 @@
     const isDeleting = busyAction === 'delete' && busyPromptId === prompt.id;
 
     const item = document.createElement('article');
-    item.className = 'prompt-item';
+    item.className = 'prompt-item ui-item';
     item.dataset.promptId = prompt.id;
     item.setAttribute('role', 'listitem');
 
     const main = document.createElement('button');
     main.type = 'button';
-    main.className = 'prompt-item-main';
+    main.className = 'prompt-item-main ui-item-main';
     main.dataset.action = 'inject-prompt';
     main.dataset.promptId = prompt.id;
     main.disabled = hasBusyAction;
@@ -238,7 +163,7 @@
     head.className = 'prompt-item-head';
 
     const title = document.createElement('h3');
-    title.className = 'prompt-item-title';
+    title.className = 'prompt-item-title ui-item-title';
     applyHighlightedText(title, prompt.title, query);
 
     const actions = document.createElement('div');
@@ -265,7 +190,7 @@
     head.appendChild(title);
 
     const preview = document.createElement('p');
-    preview.className = 'prompt-item-preview';
+    preview.className = 'prompt-item-preview ui-item-preview';
     applyHighlightedText(preview, prompt.content, query);
 
     main.appendChild(head);
@@ -325,7 +250,7 @@
     fieldDisabled: false
   }) {
     const saveLabel = options.saveLabel || 'Save';
-    const saveLabelNode = ui.promptSaveButton.querySelector('.prompt-action-label');
+    const saveLabelNode = ui.promptSaveButton.querySelector('.ui-button-label');
     if (saveLabelNode) {
       saveLabelNode.textContent = saveLabel;
     }

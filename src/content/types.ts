@@ -69,6 +69,7 @@ export interface CoreConversationIndexerApi {
 
 export interface UiThemePreset {
   nav: Record<string, string>;
+  kit?: Record<string, string>;
   formula?: Record<string, string>;
 }
 

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./popup.css" />
   </head>
   <body>
-    <main class="popup-shell">
+    <main class="popup-shell ui-root">
       <header class="brand">
         <div class="brand-main">
           <img class="brand-logo" src="../logo48.png" alt="JumpNav logo" width="36" height="36" />
@@ -16,10 +16,10 @@
             <span>AI Chat Navigator</span>
           </div>
         </div>
-        <span id="version-pill" class="version-pill" aria-label="Version">v3.1.3</span>
+        <span id="version-pill" class="version-pill ui-pill" aria-label="Version">v3.2.0</span>
       </header>
 
-      <section class="panel panel-settings" id="formula-settings">
+      <section class="panel panel-settings ui-panel" id="formula-settings">
         <h1>Formula Copy</h1>
         <p>Click formulas on ChatGPT, Gemini, and Claude to copy for Word or LaTeX editors.</p>
 
@@ -28,17 +28,17 @@
           <span>Enable formula click-to-copy</span>
         </label>
 
-        <div class="field-row">
-          <label for="formula-format">Copy Format</label>
-          <select id="formula-format">
+        <div class="field-row ui-field">
+          <label class="ui-label" for="formula-format">Copy Format</label>
+          <select id="formula-format" class="ui-input ui-select">
             <option value="mathml">MathML (Word recommended)</option>
             <option value="latex">LaTeX</option>
           </select>
         </div>
 
-        <div class="field-row">
-          <label for="formula-engine">MathML Engine</label>
-          <select id="formula-engine">
+        <div class="field-row ui-field">
+          <label class="ui-label" for="formula-engine">MathML Engine</label>
+          <select id="formula-engine" class="ui-input ui-select">
             <option value="mathjax">MathJax (better compatibility)</option>
             <option value="katex">KaTeX (faster)</option>
             <option value="auto">Auto fallback</option>
@@ -46,21 +46,21 @@
         </div>
       </section>
 
-      <section class="panel panel-support" id="support-section">
+      <section class="panel panel-support ui-panel" id="support-section">
         <h1>Let's Improve</h1>
         <p>AI platforms update often. Let us know if something breaks.</p>
         <div class="button-grid">
-          <button type="button" class="action-btn" data-link="bug">Report a Bug</button>
-          <button type="button" class="action-btn" data-link="feature">Suggest a Feature</button>
+          <button type="button" class="action-btn ui-button" data-link="bug">Report a Bug</button>
+          <button type="button" class="action-btn ui-button" data-link="feature">Suggest a Feature</button>
         </div>
       </section>
 
-      <section class="panel panel-growth">
+      <section class="panel panel-growth ui-panel">
         <h1>Love JumpNav?</h1>
         <p>If JumpNav saves you time, a star or review helps a lot.</p>
         <div class="button-grid">
-          <button type="button" class="action-btn" data-link="repo">Star on GitHub</button>
-          <button type="button" class="action-btn" data-link="store">Rate on Web Store</button>
+          <button type="button" class="action-btn ui-button" data-link="repo">Star on GitHub</button>
+          <button type="button" class="action-btn ui-button" data-link="store">Rate on Web Store</button>
         </div>
       </section>
     </main>

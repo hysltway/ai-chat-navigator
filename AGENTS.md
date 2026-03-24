@@ -12,6 +12,7 @@
 - `src/content/` holds the TypeScript content-script source, bundled into `dist/content.js`.
 - `src/popup/` contains the popup TypeScript entry.
 - `src/shared/` contains logic shared between popup and content, such as formula settings.
+- `src/shared/ui-kit/` contains the plugin-only shared UI theme tokens, primitive styles, and DOM helpers used by navigation, prompt library, and popup.
 - `public/` holds static extension assets copied directly into `dist/`, including `manifest.json`, popup HTML/CSS, icons, and vendor scripts.
 - `dist/` is the build output that should be loaded in Chrome during local development.
 
@@ -27,11 +28,14 @@
 - Use 2-space indentation in TypeScript and JSON.
 - Keep modules small and single-purpose; prefer adding new files under `src/content/` or `src/shared/` rather than expanding a single entry file.
 - Naming: `createX`, `getX`, and `handleX` for functions; `UPPER_SNAKE` for constants.
-- UI styles for the content script live in `src/content/ui-style.ts` and are injected into the shadow DOM.
+- Reuse `src/shared/ui-kit/` for shared plugin UI primitives before adding new local button/input/panel implementations.
+- Shared primitive styles live in `src/shared/ui-kit/styles.ts`; shared theme tokens and variable replacement helpers live in `src/shared/ui-kit/theme.ts`.
+- Content-script layout and feature-specific styles still live in `src/content/*ui-style*.ts` and are injected into the shadow DOM.
+- Popup static structure and CSS live in `public/popup/`; `src/popup/index.ts` is only the popup script entry.
 
 ## Testing Guidelines
 - No automated tests exist yet.
-- Manual smoke checks: verify prompt list rendering, navigation scrolling, and SPA route changes on supported sites.
+- Manual smoke checks: verify prompt list rendering, navigation scrolling, popup settings rendering/theme sync, and SPA route changes on supported sites.
 
 ## Commit & Pull Request Guidelines
 - Commit messages follow Conventional Commits with a  Chinese summary, e.g. `feat: 搭建聊天导航扩展基础` or `fix: 修正导航标题两行截断`.
