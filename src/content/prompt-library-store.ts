@@ -35,12 +35,7 @@ function createPromptLibraryStore(
   const env = createEnvironment(environment);
 
   async function read(): Promise<PromptLibrary> {
-    const raw = await readRaw();
-    const normalized = normalizeLibrary(raw, env.now);
-    if (!raw || !isSerializedEqual(raw, normalized)) {
-      await writeRaw(normalized);
-    }
-    return normalized;
+    return loadLibrary();
   }
 
   async function write(library: PromptLibrary): Promise<PromptLibrary> {
@@ -50,7 +45,7 @@ function createPromptLibraryStore(
   }
 
   async function createPrompt(draft: PromptDraft): Promise<{ library: PromptLibrary; prompt: PromptRecord }> {
-    const library = await read();
+    const library = await loadLibrary(true);
     const prompt = createPromptRecord(draft, env.now);
     library.prompts = sortPrompts([prompt].concat(library.prompts));
     library.updatedAt = env.now();
@@ -59,7 +54,7 @@ function createPromptLibraryStore(
   }
 
   async function deletePrompt(promptId: string): Promise<PromptLibrary> {
-    const library = await read();
+    const library = await loadLibrary(true);
     library.prompts = library.prompts.filter((prompt) => prompt.id !== promptId);
     library.updatedAt = env.now();
     await writeRaw(library);
@@ -67,7 +62,7 @@ function createPromptLibraryStore(
   }
 
   async function markCopied(promptId: string): Promise<PromptLibrary> {
-    const library = await read();
+    const library = await loadLibrary(true);
     const now = env.now();
     let changed = false;
 
@@ -90,6 +85,18 @@ function createPromptLibraryStore(
     library.updatedAt = now;
     await writeRaw(library);
     return library;
+  }
+
+  async function loadLibrary(retryOnEmpty = false): Promise<PromptLibrary> {
+    let raw = await readRaw();
+    if (!raw && retryOnEmpty) {
+      raw = await readRaw();
+    }
+    const normalized = normalizeLibrary(raw, env.now);
+    if (raw && !isSerializedEqual(raw, normalized)) {
+      await writeRaw(normalized);
+    }
+    return normalized;
   }
 
   function filterPrompts(library: PromptLibrary, filter: PromptFilter = {}): PromptRecord[] {

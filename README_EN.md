@@ -9,14 +9,15 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v3.1.1**
+> Current Version: **v3.1.2**
 
-## Updates in v3.1.1
+## Updates in v3.1.2
 
-- Added a dedicated `tsconfig.scripts.json` so the repo's `scripts/*.mjs` build and dev tooling is also covered by TypeScript checks.
-- Extended `npm run typecheck` to validate those Node-side scripts and added `@types/node` so the current script usage has matching Node API typings.
-- Cleaned up `package-lock.json` by removing no-longer-needed legacy dependency entries and aligning the lockfile with the current toolchain.
-- Updated version references and release notes for `v3.1.1`.
+- Added fuller enter/exit motion and hover feedback for the navigation panel, collapsed FAB, list items, and preview layer, while still respecting `prefers-reduced-motion`.
+- Refined collapsed-mode preview cleanup and navigation scrolling so previews are cleared immediately when collapsing, and smooth scrolling is disabled for reduced-motion users.
+- Reworked development-time reload flow so content scripts request a runtime reload through the background script, which then refreshes supported site tabs after restart to reduce stale dev state.
+- Improved Prompt Library storage reads by retrying before write-side operations like create, delete, and copy, reducing the risk of overwriting data after an initial empty read.
+- Updated version references and release notes for `v3.1.2`.
 
 ## Chrome Web Store (Recommended)
 

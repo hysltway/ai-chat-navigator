@@ -365,7 +365,11 @@ const { CONFIG } = ns;
 
   function scrollToMessage(node: Element) {
     state.lastScrollAt = Date.now();
-    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const behavior =
+      typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto'
+        : 'smooth';
+    node.scrollIntoView({ behavior, block: 'center' });
     flashTarget(node);
   }
 
@@ -395,6 +399,11 @@ const { CONFIG } = ns;
       return;
     }
     ensureUiMounted();
+    if (collapsed) {
+      behaviorApi.clearPreviewHideTimer();
+      state.previewIndex = null;
+      ns.ui?.hidePreview?.(state.ui);
+    }
     ns.ui?.setCollapsed(state.ui, Boolean(collapsed));
     if (persist) {
       saveCollapsedMode(Boolean(collapsed));
