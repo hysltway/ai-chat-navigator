@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v3.1.0**
+> Current Version: **v3.1.1**
 
-## Updates in v3.1.0
+## Updates in v3.1.1
 
-- Replaced the CRXJS-based extension wiring with repo-local Node build scripts, using `scripts/build.mjs` to produce the final `dist/` output and write the generated `manifest.json`.
-- Moved manifest and popup static assets fully into `public/`, and added a background entry plus development-time auto-reload support to reduce manual reload steps while iterating.
-- Updated the content and popup entries to share a unified `dev-reload` flow in development, and refreshed the local development guide so `npm run dev` matches the current implementation.
-- Updated version references and release notes for `v3.1.0`.
+- Added a dedicated `tsconfig.scripts.json` so the repo's `scripts/*.mjs` build and dev tooling is also covered by TypeScript checks.
+- Extended `npm run typecheck` to validate those Node-side scripts and added `@types/node` so the current script usage has matching Node API typings.
+- Cleaned up `package-lock.json` by removing no-longer-needed legacy dependency entries and aligning the lockfile with the current toolchain.
+- Updated version references and release notes for `v3.1.1`.
 
 ## Chrome Web Store (Recommended)
 
