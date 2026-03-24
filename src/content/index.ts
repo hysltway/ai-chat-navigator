@@ -1,4 +1,5 @@
 import { ns } from './namespace';
+import { startDocumentDevReload } from '../shared/dev-reload';
 import './utils';
 import './storage';
 import './site';
@@ -37,3 +38,4 @@ function start(): void {
 }
 
 start();
+startDocumentDevReload();

@@ -1,5 +1,13 @@
 # Repository Guidelines
 
+## Collaboration & Reasoning Principles
+- Apply first-principles thinking before proposing solutions or making changes. Start from the original problem, constraints, and desired outcome instead of copying common patterns or following prior paths by inertia.
+- Reject pure empiricism and path dependence. Past implementations, habits, or "usual ways" are not sufficient justification unless they still serve the current goal under current constraints.
+- Do not assume the user fully understands or has fully specified the true goal. Stay cautious about hidden assumptions, missing success criteria, and possible XY-problem situations.
+- If the goal is ambiguous, incomplete, or internally inconsistent, stop and discuss it with the user before proceeding with irreversible or high-effort work.
+- If the goal is clear but the requested path is not optimal, explicitly recommend a shorter, lower-cost, or lower-risk approach instead of silently following the longer route.
+- When challenging a path, focus on improving outcome quality, speed, and cost, not on abstract disagreement.
+
 ## Project Structure & Module Organization
 - `src/content/` holds the TypeScript content-script source, bundled into `dist/content.js`.
 - `src/popup/` contains the popup TypeScript entry.
@@ -36,14 +44,6 @@
 ## Security & Configuration Notes
 - Keep permissions minimal; only add hosts needed for supported chat sites.
 - Avoid external network calls in content scripts unless explicitly required.
-
-## Collaboration & Reasoning Principles
-- Apply first-principles thinking before proposing solutions or making changes. Start from the original problem, constraints, and desired outcome instead of copying common patterns or following prior paths by inertia.
-- Reject pure empiricism and path dependence. Past implementations, habits, or "usual ways" are not sufficient justification unless they still serve the current goal under current constraints.
-- Do not assume the user fully understands or has fully specified the true goal. Stay cautious about hidden assumptions, missing success criteria, and possible XY-problem situations.
-- If the goal is ambiguous, incomplete, or internally inconsistent, stop and discuss it with the user before proceeding with irreversible or high-effort work.
-- If the goal is clear but the requested path is not optimal, explicitly recommend a shorter, lower-cost, or lower-risk approach instead of silently following the longer route.
-- When challenging a path, focus on improving outcome quality, speed, and cost, not on abstract disagreement.
 
 ## 方案规范
 - When proposing modification or refactor plans, do not provide compatibility-first or patch-style options by default. Prefer converging directly to the target state.

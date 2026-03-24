@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v3.0.0**
+> Current Version: **v3.1.0**
 
-## Updates in v3.0.0
+## Updates in v3.1.0
 
-- Migrated the extension project to Vite + TypeScript, adding `package.json`, `vite.config.ts`, and `manifest.config.ts` so MV3 output is generated through a single build pipeline.
-- Reorganized the source tree into `src/` and `public/`, separating content scripts, popup code, shared formula-settings logic, and static assets into a clearer project structure.
-- Updated the local development workflow to support `npm run dev`, `npm run build`, and `npm run typecheck`, and switched extension loading to the `dist/` directory.
-- Updated version references and release notes for `v3.0.0`.
+- Replaced the CRXJS-based extension wiring with repo-local Node build scripts, using `scripts/build.mjs` to produce the final `dist/` output and write the generated `manifest.json`.
+- Moved manifest and popup static assets fully into `public/`, and added a background entry plus development-time auto-reload support to reduce manual reload steps while iterating.
+- Updated the content and popup entries to share a unified `dev-reload` flow in development, and refreshed the local development guide so `npm run dev` matches the current implementation.
+- Updated version references and release notes for `v3.1.0`.
 
 ## Chrome Web Store (Recommended)
 
@@ -30,7 +30,7 @@ Now live on the Chrome Web Store. Install from the store for automatic updates.
 - Run type checks: `npm run typecheck`
 - Start the dev server: `npm run dev`
 - First load: open `chrome://extensions`, enable Developer Mode, choose “Load unpacked”, and load the repo's `dist/` directory
-- Daily iteration: keep `npm run dev` running and let CRXJS handle incremental updates; if the current site tab does not pick up the latest content script automatically, refresh that page once
+- Daily iteration: keep `npm run dev` running; the scripts watch build output and `public/` assets, then trigger development-time extension or page reloads when possible. If the current site tab still does not pick up the latest content script automatically, refresh that page once
 - Production build: `npm run build`
 
 ## Core Value

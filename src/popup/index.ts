@@ -3,6 +3,7 @@ import {
   type ChromeLike,
   type FormulaSettingsApi
 } from '../shared/formula-settings';
+import { startDocumentDevReload } from '../shared/dev-reload';
 
 const LINKS = {
   repo: 'https://github.com/hysltway/JumpNav',
@@ -146,3 +147,4 @@ function createPopupController(environment: Partial<PopupEnvironment> = {}) {
 }
 
 createPopupController().start();
+startDocumentDevReload();
