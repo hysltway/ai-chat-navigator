@@ -47,8 +47,8 @@
     const text = nav['--nav-text'] || (isDark ? '#e7eaee' : '#1f1f1f');
     const muted = nav['--nav-muted'] || (isDark ? '#a4adb7' : '#666666');
     const hover = nav['--nav-item-hover-bg'] || formula.hoverBg || (isDark ? '#242a31' : '#efefef');
-    let panelBg = baseSurface;
-    let itemBg = nav['--nav-item-bg'] || baseSurface;
+    const panelBg = baseSurface;
+    const itemBg = nav['--nav-item-bg'] || nav['--nav-button-bg'] || baseSurface;
     const activeBg = nav['--nav-item-active-bg'] || formula.activeBg || hover;
     const activeBorder = nav['--nav-item-active-border'] || border;
     const activeText =
@@ -62,35 +62,26 @@
     const focusRing = formula.ring || (isDark ? 'rgba(211, 217, 224, 0.18)' : 'rgba(31, 31, 31, 0.08)');
     let entryText = site === 'claude' ? nav['--nav-muted'] || nav['--nav-text'] || text : nav['--nav-text'] || text;
     const entryHover = site === 'gemini' ? '#F0F1F1' : nav['--nav-hover'] || hover;
-    let promptPanelShadow = shadow;
-    let promptPanelBorder = border;
-    let promptInputBg = nav['--nav-button-bg'] || itemBg;
-    let promptInputBorder = border;
-    let promptSurface = itemBg;
-    let promptSurfaceBorder = border;
-    let promptSurfaceHover = hover;
-
     if (!isDark && site === 'gemini') {
       entryText = '#444746';
-      panelBg = '#E9EEF6';
-      itemBg = '#F8FAFD';
-      promptPanelBorder = 'rgba(95, 111, 134, 0.16)';
-      promptPanelShadow = '0 1px 2px rgba(60, 64, 67, 0.16), 0 2px 6px 2px rgba(60, 64, 67, 0.1)';
-      promptInputBg = '#F8FAFD';
-      promptInputBorder = '#D2D9E4';
-      promptSurface = '#F8FAFD';
-      promptSurfaceBorder = 'rgba(95, 111, 134, 0.14)';
-      promptSurfaceHover = '#DDE4EE';
     }
 
-    if (!isDark && site === 'chatgpt') {
-      panelBg = '#FFFFFF';
-    }
-
-    if (!isDark && site === 'claude') {
-      panelBg = '#FFFFFF';
-      itemBg = '#F5F4ED';
-    }
+    const controlBg = nav['--nav-button-bg'] || itemBg;
+    const controlBorder = border;
+    const controlHoverBg = nav['--nav-hover'] || nav['--nav-item-hover-bg'] || hover;
+    const controlHoverBorder = nav['--nav-control-hover-border'] || nav['--nav-item-hover-border'] || activeBorder;
+    const controlHoverText = nav['--nav-control-hover-text'] || text;
+    const controlActiveBg = nav['--nav-control-active-bg'] || activeBg;
+    const controlActiveBorder = nav['--nav-control-active-border'] || activeBorder;
+    const controlActiveText = nav['--nav-control-active-text'] || activeText;
+    const itemBorder = 'transparent';
+    const itemHoverBorder = nav['--nav-item-hover-border'] || activeBorder;
+    const itemShadow = nav['--nav-item-active-shadow'] || (isDark ? 'rgba(10, 12, 15, 0.32)' : 'rgba(0, 0, 0, 0.06)');
+    const scrollbarTrack = nav['--nav-scrollbar-track'] || 'transparent';
+    const scrollbarThumb =
+      nav['--nav-scrollbar-thumb'] || (isDark ? 'rgba(232, 236, 241, 0.34)' : 'rgba(31, 31, 31, 0.16)');
+    const scrollbarThumbHover =
+      nav['--nav-scrollbar-thumb-hover'] || (isDark ? 'rgba(232, 236, 241, 0.48)' : 'rgba(31, 31, 31, 0.24)');
 
     return {
       '--prompt-entry-bg': 'transparent',
@@ -100,23 +91,37 @@
       '--prompt-panel-font-family': fontFamilyBySite[site] || fontFamilyBySite.generic,
       '--prompt-panel-font-size': '14px',
       '--prompt-panel-bg': panelBg,
-      '--prompt-panel-border': promptPanelBorder,
-      '--prompt-panel-shadow': promptPanelShadow,
+      '--prompt-panel-border': border,
+      '--prompt-panel-shadow': shadow,
+      '--prompt-divider': border,
       '--prompt-text': text,
       '--prompt-muted': muted,
       '--prompt-accent': activeText,
       '--prompt-accent-soft': hover,
       '--prompt-accent-strong': text,
-      '--prompt-input-bg': promptInputBg,
-      '--prompt-input-border': promptInputBorder,
-      '--prompt-surface': promptSurface,
+      '--prompt-control-bg': controlBg,
+      '--prompt-control-border': controlBorder,
+      '--prompt-control-hover-bg': controlHoverBg,
+      '--prompt-control-hover-border': controlHoverBorder,
+      '--prompt-control-hover-text': controlHoverText,
+      '--prompt-control-active-bg': controlActiveBg,
+      '--prompt-control-active-border': controlActiveBorder,
+      '--prompt-control-active-text': controlActiveText,
+      '--prompt-input-bg': controlBg,
+      '--prompt-input-border': controlBorder,
+      '--prompt-surface': itemBg,
       '--prompt-surface-strong': panelBg,
-      '--prompt-surface-border': promptSurfaceBorder,
-      '--prompt-surface-hover': promptSurfaceHover,
+      '--prompt-surface-border': itemBorder,
+      '--prompt-surface-hover': hover,
+      '--prompt-surface-hover-border': itemHoverBorder,
+      '--prompt-surface-shadow': itemShadow,
       '--prompt-primary-bg': activeBg,
       '--prompt-primary-border': activeBorder,
       '--prompt-primary-text': activeText,
       '--prompt-secondary-text': muted,
+      '--prompt-scrollbar-track': scrollbarTrack,
+      '--prompt-scrollbar-thumb': scrollbarThumb,
+      '--prompt-scrollbar-thumb-hover': scrollbarThumbHover,
       '--prompt-danger': isDark ? '#fda29b' : '#b42318',
       '--prompt-danger-soft': isDark ? 'rgba(253, 162, 155, 0.12)' : 'rgba(180, 35, 24, 0.08)',
       '--prompt-focus-outline': focusOutline,

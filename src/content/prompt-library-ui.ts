@@ -123,7 +123,6 @@
     searchShell.appendChild(searchInput);
 
     const closeButton = uiStyle.createIconButton('close-panel', 'Close', 'close');
-    closeButton.dataset.tone = 'danger';
 
     header.appendChild(promptToggleButton);
     header.appendChild(searchShell);

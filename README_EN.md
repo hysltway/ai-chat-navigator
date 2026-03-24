@@ -9,15 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v3.1.2**
+> Current Version: **v3.1.3**
 
-## Updates in v3.1.2
+## Updates in v3.1.3
 
-- Added fuller enter/exit motion and hover feedback for the navigation panel, collapsed FAB, list items, and preview layer, while still respecting `prefers-reduced-motion`.
-- Refined collapsed-mode preview cleanup and navigation scrolling so previews are cleared immediately when collapsing, and smooth scrolling is disabled for reduced-motion users.
-- Reworked development-time reload flow so content scripts request a runtime reload through the background script, which then refreshes supported site tabs after restart to reduce stale dev state.
-- Improved Prompt Library storage reads by retrying before write-side operations like create, delete, and copy, reducing the risk of overwriting data after an initial empty read.
-- Updated version references and release notes for `v3.1.2`.
+- Unified Prompt Library surface colors and control states so prompt cards, inputs, search controls, and action buttons follow the main navigation theme variables more consistently across supported sites.
+- Refined prompt card radius, shadow, typography, spacing, empty-state text, and scrollbar styling to improve list readability and keep information density more stable.
+- Removed the stronger danger treatment from the close button and reduced visual noise in the panel header so search, close, and item actions feel more consistent in hierarchy.
+- Updated version references and release notes for `v3.1.3`.
 
 ## Chrome Web Store (Recommended)
 
