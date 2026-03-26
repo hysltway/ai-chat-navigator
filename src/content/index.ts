@@ -19,6 +19,7 @@ import './core-theme';
 import './core-ui-behavior';
 import './core-conversation-indexer';
 import './core-navigation-controller';
+import './sidebar-favorites';
 import './prompt-library';
 import './core';
 
@@ -34,6 +35,7 @@ function startIfAvailable(moduleName: string, methodName = 'start'): void {
 function start(): void {
   startIfAvailable('formulaCopy');
   startIfAvailable('promptLibrary');
+  startIfAvailable('sidebarFavorites');
   startIfAvailable('core');
 }
 

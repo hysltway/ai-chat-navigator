@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v3.2.0**
+> Current Version: **v3.2.1**
 
-## Updates in v3.2.0
+## Updates in v3.2.1
 
-- Extracted a shared UI kit for popup and content-script surfaces, unifying theme variables, base controls, empty states, and style tokens to reduce duplicated UI implementation.
-- Reworked the main navigation and Prompt Library rendering/style wiring to reuse shared theme replacement and DOM helpers, making panel appearance and interaction feedback more consistent across supported sites.
-- Updated the popup structure to rely on injected shared UI kit styles and system color-scheme tracking, reducing the amount of popup-only styling that has to be maintained separately.
-- Updated version references and release notes for `v3.2.0`.
+- Added a favorite button to sidebar conversation items on ChatGPT, Gemini, and Claude, with hover reveal, highlighted active state, and one-click unfavorite to reduce the cost of revisiting important chats.
+- Persisted favorite state in local storage and re-applied it when storage changes, so favorites stay consistent after refreshes and across tabs.
+- Wired the feature into the content-script startup flow and adapted sidebar mount detection, route polling, and DOM resync logic per supported site so the control remains stable in SPA navigation.
+- Updated version references and release notes for `v3.2.1`.
 
 ## Chrome Web Store (Recommended)
 
