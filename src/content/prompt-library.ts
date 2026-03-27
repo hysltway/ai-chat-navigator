@@ -1,5 +1,6 @@
 
   import { ns } from './namespace';
+  import { createPromptEntrySettingsApi } from '../shared/prompt-entry-settings';
   import type {
     Adapter,
     ChromeLikeWithStorageChanges,
@@ -30,6 +31,9 @@
   const createPromptLibrarySiteApi = ns.promptLibrarySite?.createPromptLibrarySiteApi as
     | ((environment?: unknown) => PromptLibrarySiteApi)
     | undefined;
+  const promptEntrySettingsApi = createPromptEntrySettingsApi({
+    storageApi: ns.storage ?? null
+  });
 
   const state: PromptLibraryState = {
     started: false,
@@ -40,6 +44,7 @@
     library: null,
     siteId: 'generic',
     colorScheme: 'light',
+    entryEnabled: true,
     open: false,
     mounted: false,
     url: location.href,
@@ -107,7 +112,9 @@
     bindUiEvents();
     bindGlobalEvents();
 
-    state.library = await getStore().read();
+    const [library, entryEnabled] = await Promise.all([getStore().read(), promptEntrySettingsApi.read()]);
+    state.library = library;
+    state.entryEnabled = entryEnabled;
     state.siteId = getSiteApi().getCurrentSiteId();
     state.colorScheme = getSiteApi().getColorScheme(state.siteId);
     promptLibraryUi.setTheme(getUi(), state.siteId, state.colorScheme);
@@ -349,6 +356,16 @@
     state.siteId = siteApi.getCurrentSiteId();
     state.colorScheme = siteApi.getColorScheme(state.siteId);
     promptLibraryUi.setTheme(ui, state.siteId, state.colorScheme);
+
+    if (!state.entryEnabled) {
+      promptLibraryUi.detachEntry(ui);
+      state.mounted = false;
+
+      if (state.open) {
+        setOpen(false);
+      }
+      return;
+    }
 
     const mounted = promptLibraryUi.mountEntry(ui, siteApi.findMountTarget(state.siteId));
     state.mounted = Boolean(mounted && ui.entryHost.isConnected);
@@ -842,13 +859,20 @@
     }
 
     chromeRef.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName !== 'local' || !changes[store.STORAGE_KEY]) {
+      if (areaName !== 'local') {
         return;
       }
 
-      const nextValue = changes[store.STORAGE_KEY].newValue;
-      state.library = store.normalizeLibrary(nextValue, () => new Date().toISOString());
-      render();
+      if (changes[store.STORAGE_KEY]) {
+        const nextValue = changes[store.STORAGE_KEY].newValue;
+        state.library = store.normalizeLibrary(nextValue, () => new Date().toISOString());
+        render();
+      }
+
+      if (changes[promptEntrySettingsApi.KEY]) {
+        state.entryEnabled = promptEntrySettingsApi.normalize(changes[promptEntrySettingsApi.KEY].newValue);
+        syncEnvironment();
+      }
     });
   }
 

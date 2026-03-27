@@ -3,6 +3,10 @@ import {
   type ChromeLike,
   type FormulaSettingsApi
 } from '../shared/formula-settings';
+import {
+  createPromptEntrySettingsApi,
+  type PromptEntrySettingsApi
+} from '../shared/prompt-entry-settings';
 import { startDocumentDevReload } from '../shared/dev-reload';
 import { UI_KIT_STYLE_TEXT } from '../shared/ui-kit/styles';
 import { getUiThemePreset, replaceCssVars, UI_KIT_THEME_VAR_KEYS } from '../shared/ui-kit/theme';
@@ -21,15 +25,10 @@ interface PopupEnvironment {
   windowRef: Window;
   chromeRef: ChromeLike | null;
   formulaSettingsApi: FormulaSettingsApi;
+  promptEntrySettingsApi: PromptEntrySettingsApi;
 }
 
 const POPUP_UI_KIT_STYLE_ID = 'jumpnav-popup-ui-kit-style';
-
-function updateEngineFieldState(formatSelect: HTMLSelectElement, engineSelect: HTMLSelectElement): void {
-  const isLatexOnly = formatSelect.value === 'latex';
-  engineSelect.disabled = isLatexOnly;
-  engineSelect.title = isLatexOnly ? 'MathML engine is used only when format is MathML.' : '';
-}
 
 function createEnvironment(overrides: Partial<PopupEnvironment> = {}): PopupEnvironment {
   const chromeRef =
@@ -39,7 +38,8 @@ function createEnvironment(overrides: Partial<PopupEnvironment> = {}): PopupEnvi
     documentRef: overrides.documentRef || document,
     windowRef: overrides.windowRef || window,
     chromeRef,
-    formulaSettingsApi: overrides.formulaSettingsApi || createFormulaSettingsApi({ chromeRef })
+    formulaSettingsApi: overrides.formulaSettingsApi || createFormulaSettingsApi({ chromeRef }),
+    promptEntrySettingsApi: overrides.promptEntrySettingsApi || createPromptEntrySettingsApi({ chromeRef })
   };
 }
 
@@ -55,6 +55,7 @@ function createPopupController(environment: Partial<PopupEnvironment> = {}) {
       syncVersionPill();
       bindLinkButtons();
       void initFormulaSettings();
+      void initPromptEntrySettings();
     });
   }
 
@@ -153,41 +154,36 @@ function createPopupController(environment: Partial<PopupEnvironment> = {}) {
 
   async function initFormulaSettings(): Promise<void> {
     const enabledInput = env.documentRef.getElementById('formula-enabled');
-    const formatSelect = env.documentRef.getElementById('formula-format');
-    const engineSelect = env.documentRef.getElementById('formula-engine');
 
-    if (
-      !(enabledInput instanceof HTMLInputElement) ||
-      !(formatSelect instanceof HTMLSelectElement) ||
-      !(engineSelect instanceof HTMLSelectElement)
-    ) {
+    if (!(enabledInput instanceof HTMLInputElement)) {
       return;
     }
 
     const settings = await env.formulaSettingsApi.read();
     enabledInput.checked = settings.enableFormulaCopy;
-    formatSelect.value = settings.formulaFormat;
-    engineSelect.value = settings.formulaEngine;
-    updateEngineFieldState(formatSelect, engineSelect);
 
     const persistSettings = async (): Promise<void> => {
       const nextSettings = env.formulaSettingsApi.normalize({
-        enableFormulaCopy: enabledInput.checked,
-        formulaFormat: formatSelect.value,
-        formulaEngine: engineSelect.value
+        enableFormulaCopy: enabledInput.checked
       });
-      updateEngineFieldState(formatSelect, engineSelect);
       await env.formulaSettingsApi.write(nextSettings);
     };
 
     enabledInput.addEventListener('change', () => {
       void persistSettings();
     });
-    formatSelect.addEventListener('change', () => {
-      void persistSettings();
-    });
-    engineSelect.addEventListener('change', () => {
-      void persistSettings();
+  }
+
+  async function initPromptEntrySettings(): Promise<void> {
+    const enabledInput = env.documentRef.getElementById('prompt-entry-enabled');
+    if (!(enabledInput instanceof HTMLInputElement)) {
+      return;
+    }
+
+    enabledInput.checked = await env.promptEntrySettingsApi.read();
+
+    enabledInput.addEventListener('change', () => {
+      void env.promptEntrySettingsApi.write(enabledInput.checked);
     });
   }
 

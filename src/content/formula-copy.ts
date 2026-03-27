@@ -59,20 +59,12 @@
       formulaFormat: 'mathml',
       formulaEngine: 'mathjax'
     };
-    const supportedFormats = new Set(['mathml', 'latex']);
-    const supportedEngines = new Set(['mathjax', 'katex', 'auto']);
     const normalize = (raw) => {
       const normalized = { ...fallbackDefaults };
       if (!raw || typeof raw !== 'object') {
         return normalized;
       }
       normalized.enableFormulaCopy = raw.enableFormulaCopy !== false;
-      if (supportedFormats.has(raw.formulaFormat)) {
-        normalized.formulaFormat = raw.formulaFormat;
-      }
-      if (supportedEngines.has(raw.formulaEngine)) {
-        normalized.formulaEngine = raw.formulaEngine;
-      }
       return normalized;
     };
     const readRaw = () => {

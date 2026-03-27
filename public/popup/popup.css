@@ -88,6 +88,10 @@ body {
   color: var(--ui-text, #1f1f1f);
 }
 
+.toggle-row:last-child {
+  margin-bottom: 0;
+}
+
 .toggle-row input[type='checkbox'] {
   margin: 0;
 }

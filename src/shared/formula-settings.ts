@@ -56,9 +56,6 @@ export const DEFAULT_FORMULA_SETTINGS: Readonly<FormulaSettings> = Object.freeze
   formulaEngine: 'mathjax'
 });
 
-const SUPPORTED_FORMATS = new Set<FormulaFormat>(['mathml', 'latex']);
-const SUPPORTED_ENGINES = new Set<FormulaEngine>(['mathjax', 'katex', 'auto']);
-
 function createDefaults(): FormulaSettings {
   return { ...DEFAULT_FORMULA_SETTINGS };
 }
@@ -74,14 +71,6 @@ export function normalizeFormulaSettings(raw: unknown): FormulaSettings {
   }
 
   normalized.enableFormulaCopy = raw.enableFormulaCopy !== false;
-
-  if (typeof raw.formulaFormat === 'string' && SUPPORTED_FORMATS.has(raw.formulaFormat as FormulaFormat)) {
-    normalized.formulaFormat = raw.formulaFormat as FormulaFormat;
-  }
-
-  if (typeof raw.formulaEngine === 'string' && SUPPORTED_ENGINES.has(raw.formulaEngine as FormulaEngine)) {
-    normalized.formulaEngine = raw.formulaEngine as FormulaEngine;
-  }
 
   return normalized;
 }

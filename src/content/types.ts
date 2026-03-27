@@ -462,6 +462,7 @@ export interface PromptLibraryState {
   library: PromptLibrary | null;
   siteId: SiteId;
   colorScheme: ColorScheme;
+  entryEnabled: boolean;
   open: boolean;
   mounted: boolean;
   url: string;
