@@ -8,6 +8,7 @@ import {
   type PromptEntrySettingsApi
 } from '../shared/prompt-entry-settings';
 import { startDocumentDevReload } from '../shared/dev-reload';
+import { localizeDocument } from '../shared/i18n';
 import { UI_KIT_STYLE_TEXT } from '../shared/ui-kit/styles';
 import { getUiThemePreset, replaceCssVars, UI_KIT_THEME_VAR_KEYS } from '../shared/ui-kit/theme';
 
@@ -52,6 +53,7 @@ function createPopupController(environment: Partial<PopupEnvironment> = {}) {
     bindThemeTracking();
 
     env.documentRef.addEventListener('DOMContentLoaded', () => {
+      localizeDocument(env.documentRef);
       syncVersionPill();
       bindLinkButtons();
       void Promise.all([initFormulaSettings(), initPromptEntrySettings()]);

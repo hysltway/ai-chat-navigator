@@ -1,0 +1,270 @@
+{
+  "manifest_extension_name": {
+    "message": "JumpNav: el navegador de chats con IA más elegante que has visto."
+  },
+  "manifest_extension_description": {
+    "message": "Navega chats largos de IA en ChatGPT, Gemini y Claude con esquemas, favoritos y prompts reutilizables."
+  },
+  "manifest_action_title": {
+    "message": "JumpNav"
+  },
+  "popup_document_title": {
+    "message": "JumpNav"
+  },
+  "popup_brand_logo_alt": {
+    "message": "Logotipo de JumpNav"
+  },
+  "popup_brand_subtitle": {
+    "message": "Navegador de chats con IA"
+  },
+  "popup_version_aria_label": {
+    "message": "Versión"
+  },
+  "popup_features_title": {
+    "message": "Funciones"
+  },
+  "popup_features_body": {
+    "message": "Elige qué quieres mantener activo mientras chateas."
+  },
+  "popup_formula_copy_title": {
+    "message": "Copia de fórmulas"
+  },
+  "popup_formula_copy_description": {
+    "message": "Copia fórmulas para Word o LaTeX con un solo clic."
+  },
+  "popup_prompt_entry_title": {
+    "message": "Entrada de prompts"
+  },
+  "popup_prompt_entry_description": {
+    "message": "Mantén listo el botón Prompt en los chats compatibles."
+  },
+  "popup_support_title": {
+    "message": "Ayuda a mantenerlo preciso"
+  },
+  "popup_support_body": {
+    "message": "Las interfaces de chat con IA cambian rápido. Reporta cualquier cosa que se vea rara."
+  },
+  "popup_bug_button": {
+    "message": "Reportar un error"
+  },
+  "popup_feature_button": {
+    "message": "Sugerir una función"
+  },
+  "popup_growth_title": {
+    "message": "¿Te gusta JumpNav?"
+  },
+  "popup_growth_body": {
+    "message": "Una estrella o una reseña rápida ayuda a que más gente lo descubra."
+  },
+  "popup_repo_button": {
+    "message": "Dar estrella en GitHub"
+  },
+  "popup_store_button": {
+    "message": "Valorar en la Web Store"
+  },
+  "nav_navigator_title": {
+    "message": "Navegador de $SITE$",
+    "placeholders": {
+      "site": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_prompt_count": {
+    "message": "Prompts: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_minimal": {
+    "message": "Minimal"
+  },
+  "nav_minimal_short": {
+    "message": "Min"
+  },
+  "nav_hide": {
+    "message": "Ocultar"
+  },
+  "nav_hide_short": {
+    "message": "Oc"
+  },
+  "nav_switch_to_dark": {
+    "message": "Cambiar al modo oscuro"
+  },
+  "nav_switch_to_light": {
+    "message": "Cambiar al modo claro"
+  },
+  "nav_empty_title": {
+    "message": "Todavía no se encontraron prompts."
+  },
+  "nav_empty_minimal": {
+    "message": "Sin prompts"
+  },
+  "nav_prompt_item_fallback": {
+    "message": "Prompt $NUMBER$",
+    "placeholders": {
+      "number": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_fab_label": {
+    "message": "Nav"
+  },
+  "nav_adaptive_minimal_active": {
+    "message": "El modo minimal adaptativo está activo"
+  },
+  "prompt_library_entry_button": {
+    "message": "Prompt"
+  },
+  "prompt_library_entry_open": {
+    "message": "Abrir biblioteca de prompts"
+  },
+  "prompt_library_dialog_label": {
+    "message": "Biblioteca de prompts"
+  },
+  "prompt_library_new_prompt": {
+    "message": "Nuevo prompt"
+  },
+  "prompt_library_search_placeholder": {
+    "message": "Buscar prompts"
+  },
+  "prompt_library_search_aria": {
+    "message": "Buscar prompts"
+  },
+  "prompt_library_close": {
+    "message": "Cerrar"
+  },
+  "prompt_library_count_one": {
+    "message": "$COUNT$ prompt",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_count_other": {
+    "message": "$COUNT$ prompts",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_count_filtered": {
+    "message": "$FILTERED$ de $TOTAL$",
+    "placeholders": {
+      "filtered": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "prompt_library_title_label": {
+    "message": "Título"
+  },
+  "prompt_library_title_placeholder": {
+    "message": "p. ej. Resumen semanal"
+  },
+  "prompt_library_content_label": {
+    "message": "Prompt"
+  },
+  "prompt_library_content_placeholder": {
+    "message": "Escribe el prompt completo que quieres reutilizar."
+  },
+  "prompt_library_title_helper_text": {
+    "message": "¿Te da pereza ponerle título?"
+  },
+  "prompt_library_title_helper_button": {
+    "message": "Pide a la IA que sugiera uno"
+  },
+  "prompt_library_cancel": {
+    "message": "Cancelar"
+  },
+  "prompt_library_save": {
+    "message": "Guardar"
+  },
+  "prompt_library_save_busy": {
+    "message": "Guardando..."
+  },
+  "prompt_library_save_anyway": {
+    "message": "Guardar de todos modos"
+  },
+  "prompt_library_empty_search_title": {
+    "message": "No se encontraron coincidencias"
+  },
+  "prompt_library_empty_search_body": {
+    "message": "Ningún prompt coincide con \"$QUERY$\". Prueba con una palabra más corta o una frase más amplia.",
+    "placeholders": {
+      "query": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_empty_default_title": {
+    "message": "Aún no hay prompts"
+  },
+  "prompt_library_empty_default_body": {
+    "message": "Guarda aquí un prompt reutilizable y luego haz clic en cualquier elemento para insertarlo en el editor actual."
+  },
+  "prompt_library_insert_prompt": {
+    "message": "Insertar prompt: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_copy_prompt": {
+    "message": "Copiar prompt"
+  },
+  "prompt_library_copying_prompt": {
+    "message": "Copiando prompt"
+  },
+  "prompt_library_delete_prompt": {
+    "message": "Eliminar prompt"
+  },
+  "prompt_library_deleting_prompt": {
+    "message": "Eliminando prompt"
+  },
+  "prompt_library_close_form": {
+    "message": "Cerrar formulario de prompt"
+  },
+  "prompt_library_duplicate_warning": {
+    "message": "Ya existe un prompt con este título. Haz clic en guardar otra vez para conservar ambos."
+  },
+  "formula_copy_hint_mathml": {
+    "message": "Haz clic para copiar la fórmula como MathML (Mayús+clic para LaTeX)"
+  },
+  "formula_copy_hint_latex": {
+    "message": "Haz clic para copiar la fórmula como LaTeX (Mayús+clic para MathML)"
+  },
+  "formula_copy_toast_mathml": {
+    "message": "Fórmula copiada (MathML)"
+  },
+  "formula_copy_toast_latex": {
+    "message": "Fórmula copiada (LaTeX)"
+  },
+  "formula_copy_toast_error": {
+    "message": "No se pudo copiar la fórmula"
+  },
+  "sidebar_favorites_add": {
+    "message": "Añadir a favoritos"
+  },
+  "sidebar_favorites_remove": {
+    "message": "Quitar de favoritos"
+  },
+  "gemini_quote_reply_button": {
+    "message": "Citar respuesta"
+  },
+  "gemini_quote_reply_card_aria": {
+    "message": "Texto citado"
+  },
+  "gemini_quote_reply_remove": {
+    "message": "Quitar cita"
+  }
+}

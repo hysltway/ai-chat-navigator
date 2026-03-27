@@ -1,5 +1,6 @@
 
   import { ns } from './namespace';
+  import { t, tp } from '../shared/i18n';
   const uiStyle = ns.promptLibraryUiStyle || {};
   const uiRender = ns.promptLibraryUiRender || {};
 
@@ -68,7 +69,7 @@
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'prompt-entry-button';
-    button.setAttribute('aria-label', 'Open prompt library');
+    button.setAttribute('aria-label', t('prompt_library_entry_open'));
 
     const icon = document.createElement('span');
     icon.className = 'prompt-entry-icon';
@@ -77,7 +78,7 @@
 
     const label = document.createElement('span');
     label.className = 'prompt-entry-label';
-    label.textContent = 'Prompt';
+    label.textContent = t('prompt_library_entry_button');
     button.appendChild(icon);
     button.appendChild(label);
 
@@ -97,13 +98,17 @@
     panel.dataset.formOpen = '0';
     panel.setAttribute('role', 'dialog');
     panel.setAttribute('aria-modal', 'false');
-    panel.setAttribute('aria-label', 'Prompt library');
+    panel.setAttribute('aria-label', t('prompt_library_dialog_label'));
     panel.setAttribute('aria-hidden', 'true');
 
     const header = document.createElement('div');
     header.className = 'prompt-header';
 
-    const promptToggleButton = uiStyle.createIconButton('toggle-prompt-form', 'New prompt', 'plus');
+    const promptToggleButton = uiStyle.createIconButton(
+      'toggle-prompt-form',
+      t('prompt_library_new_prompt'),
+      'plus'
+    );
     promptToggleButton.setAttribute('aria-controls', formSectionId);
     promptToggleButton.setAttribute('aria-expanded', 'false');
 
@@ -116,13 +121,13 @@
     const searchInput = document.createElement('input');
     searchInput.className = 'prompt-search-input';
     searchInput.type = 'search';
-    searchInput.placeholder = 'Search prompts';
-    searchInput.setAttribute('aria-label', 'Search prompts');
+    searchInput.placeholder = t('prompt_library_search_placeholder');
+    searchInput.setAttribute('aria-label', t('prompt_library_search_aria'));
     searchInput.autocomplete = 'off';
     searchShell.appendChild(searchIcon);
     searchShell.appendChild(searchInput);
 
-    const closeButton = uiStyle.createIconButton('close-panel', 'Close', 'close');
+    const closeButton = uiStyle.createIconButton('close-panel', t('prompt_library_close'), 'close');
 
     header.appendChild(promptToggleButton);
     header.appendChild(searchShell);
@@ -133,7 +138,7 @@
 
     const countText = document.createElement('div');
     countText.className = 'prompt-count';
-    countText.textContent = '0 prompts';
+    countText.textContent = tp('prompt_library_count', 0);
     toolbar.appendChild(countText);
 
     const promptFormWrap = createExpandableSection();
@@ -142,20 +147,20 @@
     promptForm.className = 'prompt-form';
     promptForm.setAttribute('aria-busy', 'false');
 
-    const promptTitleField = uiStyle.createField('Title');
+    const promptTitleField = uiStyle.createField(t('prompt_library_title_label'));
     const promptTitleInput = document.createElement('input');
     promptTitleInput.className = 'prompt-input ui-input';
     promptTitleInput.type = 'text';
     promptTitleInput.name = 'title';
-    promptTitleInput.placeholder = 'e.g. Weekly summary';
+    promptTitleInput.placeholder = t('prompt_library_title_placeholder');
     promptTitleInput.autocomplete = 'off';
     promptTitleField.field.appendChild(promptTitleInput);
 
-    const promptContentField = uiStyle.createField('Prompt');
+    const promptContentField = uiStyle.createField(t('prompt_library_content_label'));
     const promptContentInput = document.createElement('textarea');
     promptContentInput.className = 'prompt-textarea ui-textarea';
     promptContentInput.name = 'content';
-    promptContentInput.placeholder = 'Write the full prompt you want to reuse.';
+    promptContentInput.placeholder = t('prompt_library_content_placeholder');
     promptContentField.field.appendChild(promptContentInput);
 
     const promptTitleHelper = document.createElement('div');
@@ -164,12 +169,12 @@
 
     const promptTitleHelperText = document.createElement('span');
     promptTitleHelperText.className = 'prompt-helper-text';
-    promptTitleHelperText.textContent = 'Title feels like extra work?';
+    promptTitleHelperText.textContent = t('prompt_library_title_helper_text');
 
     const promptTitleHelperButton = document.createElement('button');
     promptTitleHelperButton.type = 'button';
     promptTitleHelperButton.className = 'prompt-helper-button';
-    promptTitleHelperButton.textContent = 'Ask AI to draft one';
+    promptTitleHelperButton.textContent = t('prompt_library_title_helper_button');
 
     promptTitleHelper.appendChild(promptTitleHelperText);
     promptTitleHelper.appendChild(promptTitleHelperButton);
@@ -183,8 +188,8 @@
 
     const promptFormActions = document.createElement('div');
     promptFormActions.className = 'prompt-form-actions';
-    const promptCancelButton = uiStyle.createActionButton('Cancel', 'cancel-prompt-form');
-    const promptSaveButton = uiStyle.createActionButton('Save', 'save-prompt');
+    const promptCancelButton = uiStyle.createActionButton(t('prompt_library_cancel'), 'cancel-prompt-form');
+    const promptSaveButton = uiStyle.createActionButton(t('prompt_library_save'), 'save-prompt');
     promptSaveButton.type = 'submit';
     promptSaveButton.dataset.tone = 'primary';
     promptFormActions.appendChild(promptCancelButton);

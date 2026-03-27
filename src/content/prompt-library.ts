@@ -1,5 +1,6 @@
 
   import { ns } from './namespace';
+  import { t, tp } from '../shared/i18n';
   import { createPromptEntrySettingsApi } from '../shared/prompt-entry-settings';
   import type {
     Adapter,
@@ -419,7 +420,7 @@
     if (!hasFilter) {
       return formatPromptCount(totalCount);
     }
-    return `${filteredCount} of ${formatPromptCount(totalCount)}`;
+    return t('prompt_library_count_filtered', [String(filteredCount), formatPromptCount(totalCount)]);
   }
 
   function buildPromptViewModel(prompt: PromptRecord): PromptViewModel {
@@ -538,7 +539,7 @@
   }
 
   function formatPromptCount(count: number): string {
-    return `${count} ${count === 1 ? 'prompt' : 'prompts'}`;
+    return tp('prompt_library_count', count);
   }
 
   function handlePromptDraftInput() {
@@ -568,7 +569,7 @@
 
     if (draft.hasDuplicateTitle && !draft.confirmDuplicate) {
       state.duplicateConfirmToken = draft.duplicateToken;
-      state.duplicateWarning = 'A prompt with this title already exists. Click save again to keep both.';
+      state.duplicateWarning = t('prompt_library_duplicate_warning');
       promptLibraryUi.setDuplicateWarning(ui, state.duplicateWarning);
       syncPromptFormState();
       schedulePosition();
@@ -711,7 +712,11 @@
 
     const interactionsLocked = state.savePending || Boolean(state.busyAction);
     promptLibraryUi.setPromptFormState(ui, {
-      saveLabel: state.savePending ? 'Saving...' : draft.confirmDuplicate ? 'Save anyway' : 'Save',
+      saveLabel: state.savePending
+        ? t('prompt_library_save_busy')
+        : draft.confirmDuplicate
+          ? t('prompt_library_save_anyway')
+          : t('prompt_library_save'),
       saveDisabled: interactionsLocked || !draft.canSave,
       saveBusy: state.savePending,
       cancelDisabled: interactionsLocked,

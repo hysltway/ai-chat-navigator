@@ -1,14 +1,15 @@
 
   import { ns } from './namespace';
+  import { t } from '../shared/i18n';
 
   const formulaSettingsApi = getFormulaSettingsApi();
   const SETTINGS_KEY = formulaSettingsApi.KEY;
   const STYLE_ID = 'chatgpt-nav-formula-copy-style';
   const TOAST_ID = 'chatgpt-nav-formula-toast';
   const PROCESSED_FLAG = 'chatgptNavFormulaMarked';
+  const HINT_FLAG = 'chatgptNavFormulaHint';
   const DISPLAY_FLAG_CLASS = 'chatgpt-nav-formula-display';
   const COPYABLE_CLASS = 'chatgpt-nav-formula-copyable';
-  const COPY_HINT_TITLE = 'Click to copy formula for MathML (Shift+Click for LaTeX)';
   const FALLBACK_FORMULA_THEME = {
     presets: {
       generic: {
@@ -234,9 +235,8 @@
         box-shadow: 0 10px 28px var(--chatgpt-nav-formula-toast-shadow);
         backdrop-filter: blur(8px);
         text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        white-space: normal;
+        overflow-wrap: anywhere;
         pointer-events: none;
         opacity: 0;
         transition: opacity 160ms ease, transform 180ms ease;
@@ -265,6 +265,10 @@
     toast.id = TOAST_ID;
     document.body.appendChild(toast);
     return toast;
+  }
+
+  function getCopyHintTitle(): string {
+    return t(settings.formulaFormat === 'latex' ? 'formula_copy_hint_latex' : 'formula_copy_hint_mathml');
   }
 
   function showToast(message, isError) {
@@ -308,10 +312,12 @@
         node.classList.remove(DISPLAY_FLAG_CLASS);
       }
 
-      if (!shouldEnable && node.title === COPY_HINT_TITLE) {
+      if (!shouldEnable && node.dataset[HINT_FLAG] === '1') {
         node.title = '';
-      } else if (shouldEnable && !node.title) {
-        node.title = COPY_HINT_TITLE;
+        delete node.dataset[HINT_FLAG];
+      } else if (shouldEnable) {
+        node.title = getCopyHintTitle();
+        node.dataset[HINT_FLAG] = '1';
       }
     });
   }
@@ -453,11 +459,11 @@
 
     if (copied) {
       const isMathml = payload !== latexCode && targetFormat === 'mathml';
-      showToast(isMathml ? 'Copied formula (MathML)' : 'Copied formula (LaTeX)', false);
+      showToast(t(isMathml ? 'formula_copy_toast_mathml' : 'formula_copy_toast_latex'), false);
       return;
     }
 
-    showToast('Failed to copy formula', true);
+    showToast(t('formula_copy_toast_error'), true);
   }
 
   function attachStorageListener() {

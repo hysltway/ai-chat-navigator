@@ -1,4 +1,5 @@
 import { ns } from './namespace';
+import { t } from '../shared/i18n';
 import type {
   Adapter,
   ConversationEntry,
@@ -71,7 +72,7 @@ function createConversationIndexer(
     adapter: Adapter | null
   ): ConversationMessage {
     const text = getUserMessageText(entry.node, adapter);
-    const title = text || `Prompt ${promptIndex + 1}`;
+    const title = text || t('nav_prompt_item_fallback', [String(promptIndex + 1)]);
     const assistantSummary = getAssistantSummary(sequence, index + 1);
     const preview = assistantSummary.text ? truncate(assistantSummary.text, previewMax) : '';
     return {

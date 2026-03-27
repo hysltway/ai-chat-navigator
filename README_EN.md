@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v3.3.2**
+> Current Version: **v3.4.0**
 
-## Updates in v3.3.2
+## Updates in v3.4.0
 
-- Reworked the popup visual structure with a branded header card, layered gradients, and clearer section hierarchy so the extension entry feels more distinctive in a compact surface.
-- Converted feature toggles into descriptive switch cards and refreshed the support/growth sections with stronger headings, copy, and button feedback so core actions are easier to scan and use.
-- Updated popup initialization to load Formula Copy and Prompt Entry settings in parallel, reducing perceived waiting time when the popup opens and syncing toggle state faster.
-- Updated version references and release notes for `v3.3.2`.
+- Added a shared Chrome i18n foundation with `default_locale`, `_locales` bundles, and reusable message helpers so the manifest, popup, and content scripts all read localized copy from the same source.
+- Localized user-facing copy and aria text across the navigator, Prompt Library, formula copy hints, Gemini quote reply, and sidebar favorites, with language resources for Simplified Chinese, English, German, Spanish, and Japanese.
+- Refined popup layout behavior for multilingual content by allowing longer headings, descriptions, version text, and action buttons to wrap cleanly inside the compact surface.
+- Updated version references and release notes for `v3.4.0`.
 
 ## Chrome Web Store (Recommended)
 
@@ -51,6 +51,7 @@ Now live on the Chrome Web Store. Install from the store for automatic updates.
 - Supports one-click `Hide` / `Fab` reopen, persists collapsed state across refresh, and remembers `Fab` position.
 - Supports light/dark theme switching and auto-sync with site theme changes (with transition animation).
 - Rebuilds automatically on SPA route changes and streaming message updates.
+- Includes a built-in localization system with Simplified Chinese, English, German, Spanish, and Japanese support.
 - Formula click-to-copy supports MathML / LaTeX: default MathML, `Shift+Click` for LaTeX.
 - MathML engine supports MathJax / KaTeX / Auto, configurable and persisted in popup settings.
 - Includes robust formula extraction compatibility for KaTeX, MathJax, `data-math`, `annotation`, and similar structures.

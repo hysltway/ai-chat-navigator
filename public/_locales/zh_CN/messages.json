@@ -1,0 +1,270 @@
+{
+  "manifest_extension_name": {
+    "message": "JumpNav：你见过的最优雅 AI 聊天导航器"
+  },
+  "manifest_extension_description": {
+    "message": "在 ChatGPT、Gemini 和 Claude 中，用大纲、收藏和可复用提示词高效浏览超长 AI 对话。"
+  },
+  "manifest_action_title": {
+    "message": "JumpNav"
+  },
+  "popup_document_title": {
+    "message": "JumpNav"
+  },
+  "popup_brand_logo_alt": {
+    "message": "JumpNav 标志"
+  },
+  "popup_brand_subtitle": {
+    "message": "AI 聊天导航器"
+  },
+  "popup_version_aria_label": {
+    "message": "版本"
+  },
+  "popup_features_title": {
+    "message": "功能"
+  },
+  "popup_features_body": {
+    "message": "选择你在聊天时希望保持启用的功能。"
+  },
+  "popup_formula_copy_title": {
+    "message": "公式复制"
+  },
+  "popup_formula_copy_description": {
+    "message": "一键复制适用于 Word 或 LaTeX 的公式。"
+  },
+  "popup_prompt_entry_title": {
+    "message": "提示词入口"
+  },
+  "popup_prompt_entry_description": {
+    "message": "在支持的聊天页面中始终保留 Prompt 按钮。"
+  },
+  "popup_support_title": {
+    "message": "帮助它保持锋利"
+  },
+  "popup_support_body": {
+    "message": "AI 聊天界面变化很快。遇到任何不对劲的地方都可以反馈。"
+  },
+  "popup_bug_button": {
+    "message": "报告问题"
+  },
+  "popup_feature_button": {
+    "message": "建议功能"
+  },
+  "popup_growth_title": {
+    "message": "喜欢 JumpNav？"
+  },
+  "popup_growth_body": {
+    "message": "点个 Star 或留下评价，能帮助更多人发现它。"
+  },
+  "popup_repo_button": {
+    "message": "GitHub 点赞"
+  },
+  "popup_store_button": {
+    "message": "商店评分"
+  },
+  "nav_navigator_title": {
+    "message": "$SITE$ 导航",
+    "placeholders": {
+      "site": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_prompt_count": {
+    "message": "提示词：$COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_minimal": {
+    "message": "极简"
+  },
+  "nav_minimal_short": {
+    "message": "简"
+  },
+  "nav_hide": {
+    "message": "收起"
+  },
+  "nav_hide_short": {
+    "message": "收"
+  },
+  "nav_switch_to_dark": {
+    "message": "切换到深色模式"
+  },
+  "nav_switch_to_light": {
+    "message": "切换到浅色模式"
+  },
+  "nav_empty_title": {
+    "message": "还没有发现提示词。"
+  },
+  "nav_empty_minimal": {
+    "message": "无提示词"
+  },
+  "nav_prompt_item_fallback": {
+    "message": "提示词 $NUMBER$",
+    "placeholders": {
+      "number": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_fab_label": {
+    "message": "导航"
+  },
+  "nav_adaptive_minimal_active": {
+    "message": "已启用自适应极简模式"
+  },
+  "prompt_library_entry_button": {
+    "message": "提示词"
+  },
+  "prompt_library_entry_open": {
+    "message": "打开提示词库"
+  },
+  "prompt_library_dialog_label": {
+    "message": "提示词库"
+  },
+  "prompt_library_new_prompt": {
+    "message": "新建提示词"
+  },
+  "prompt_library_search_placeholder": {
+    "message": "搜索提示词"
+  },
+  "prompt_library_search_aria": {
+    "message": "搜索提示词"
+  },
+  "prompt_library_close": {
+    "message": "关闭"
+  },
+  "prompt_library_count_one": {
+    "message": "$COUNT$ 条提示词",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_count_other": {
+    "message": "$COUNT$ 条提示词",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_count_filtered": {
+    "message": "$TOTAL$ 中显示 $FILTERED$",
+    "placeholders": {
+      "filtered": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "prompt_library_title_label": {
+    "message": "标题"
+  },
+  "prompt_library_title_placeholder": {
+    "message": "例如：每周总结"
+  },
+  "prompt_library_content_label": {
+    "message": "提示词"
+  },
+  "prompt_library_content_placeholder": {
+    "message": "写下你想复用的完整提示词。"
+  },
+  "prompt_library_title_helper_text": {
+    "message": "懒得起标题？"
+  },
+  "prompt_library_title_helper_button": {
+    "message": "让 AI 帮我起一个"
+  },
+  "prompt_library_cancel": {
+    "message": "取消"
+  },
+  "prompt_library_save": {
+    "message": "保存"
+  },
+  "prompt_library_save_busy": {
+    "message": "保存中..."
+  },
+  "prompt_library_save_anyway": {
+    "message": "仍然保存"
+  },
+  "prompt_library_empty_search_title": {
+    "message": "没有找到匹配项"
+  },
+  "prompt_library_empty_search_body": {
+    "message": "没有提示词匹配“$QUERY$”。试试更短的关键词或更宽泛的表达。",
+    "placeholders": {
+      "query": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_empty_default_title": {
+    "message": "还没有提示词"
+  },
+  "prompt_library_empty_default_body": {
+    "message": "把可复用的提示词保存在这里，然后点击任意一项即可插入到当前输入框。"
+  },
+  "prompt_library_insert_prompt": {
+    "message": "插入提示词：$TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_copy_prompt": {
+    "message": "复制提示词"
+  },
+  "prompt_library_copying_prompt": {
+    "message": "正在复制提示词"
+  },
+  "prompt_library_delete_prompt": {
+    "message": "删除提示词"
+  },
+  "prompt_library_deleting_prompt": {
+    "message": "正在删除提示词"
+  },
+  "prompt_library_close_form": {
+    "message": "关闭提示词表单"
+  },
+  "prompt_library_duplicate_warning": {
+    "message": "已有同名提示词。再次点击保存即可同时保留两条。"
+  },
+  "formula_copy_hint_mathml": {
+    "message": "点击复制公式为 MathML（Shift+点击复制为 LaTeX）"
+  },
+  "formula_copy_hint_latex": {
+    "message": "点击复制公式为 LaTeX（Shift+点击复制为 MathML）"
+  },
+  "formula_copy_toast_mathml": {
+    "message": "已复制公式（MathML）"
+  },
+  "formula_copy_toast_latex": {
+    "message": "已复制公式（LaTeX）"
+  },
+  "formula_copy_toast_error": {
+    "message": "复制公式失败"
+  },
+  "sidebar_favorites_add": {
+    "message": "加入收藏"
+  },
+  "sidebar_favorites_remove": {
+    "message": "取消收藏"
+  },
+  "gemini_quote_reply_button": {
+    "message": "引用回复"
+  },
+  "gemini_quote_reply_card_aria": {
+    "message": "已引用文本"
+  },
+  "gemini_quote_reply_remove": {
+    "message": "移除引用"
+  }
+}

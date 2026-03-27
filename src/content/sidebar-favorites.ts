@@ -1,4 +1,5 @@
 import { ns } from './namespace';
+import { t } from '../shared/i18n';
 
 const BOOT_FLAG = 'jumpnavSidebarFavoritesInjected';
 const STYLE_ID = 'jumpnav-sidebar-favorites-style';
@@ -352,14 +353,15 @@ function mountItem(
 }
 
 function createFavoriteButton(): HTMLButtonElement {
+  const label = t('sidebar_favorites_add');
   const button = document.createElement('button');
   button.type = 'button';
   button.tabIndex = -1;
   button.draggable = false;
   button.setAttribute('data-jumpnav-favorite-button', '1');
   button.setAttribute('aria-pressed', 'false');
-  button.setAttribute('aria-label', '收藏对话');
-  button.title = '收藏对话';
+  button.setAttribute('aria-label', label);
+  button.title = label;
   button.appendChild(createStarIcon());
   button.addEventListener('pointerdown', suppressFavoriteEvent);
   button.addEventListener('click', handleFavoriteClick);
@@ -447,7 +449,7 @@ function attachStorageListener(): void {
 
 function refreshItemState(item: HTMLAnchorElement, button: HTMLButtonElement, key: string): void {
   const active = favorites.has(key);
-  const label = active ? '取消收藏' : '收藏对话';
+  const label = t(active ? 'sidebar_favorites_remove' : 'sidebar_favorites_add');
 
   item.setAttribute('data-jumpnav-favorited', active ? '1' : '0');
   button.dataset.state = active ? 'on' : 'off';

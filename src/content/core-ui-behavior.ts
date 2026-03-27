@@ -1,5 +1,6 @@
 
   import { ns } from './namespace';
+  import { t } from '../shared/i18n';
   import type { CoreBehaviorContext, CoreState, UiApi } from './types';
 
   const uiApi = ns.ui as UiApi;
@@ -262,13 +263,13 @@
   }
 
   function getNavigatorTitle() {
-    if (state.adapter && state.adapter.id === 'gemini') {
-      return 'Gemini Navigator';
-    }
-    if (state.adapter && state.adapter.id === 'claude') {
-      return 'Claude Navigator';
-    }
-    return 'ChatGPT Navigator';
+    const siteName =
+      state.adapter && state.adapter.id === 'gemini'
+        ? 'Gemini'
+        : state.adapter && state.adapter.id === 'claude'
+          ? 'Claude'
+          : 'ChatGPT';
+    return t('nav_navigator_title', [siteName]);
   }
 
   function renderMessages() {

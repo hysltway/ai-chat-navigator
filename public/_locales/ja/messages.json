@@ -1,0 +1,270 @@
+{
+  "manifest_extension_name": {
+    "message": "JumpNav: これまでで最も洗練された AI チャットナビゲーター"
+  },
+  "manifest_extension_description": {
+    "message": "ChatGPT、Gemini、Claude の長い AI チャットを、アウトライン、お気に入り、再利用可能なプロンプトで快適に移動できます。"
+  },
+  "manifest_action_title": {
+    "message": "JumpNav"
+  },
+  "popup_document_title": {
+    "message": "JumpNav"
+  },
+  "popup_brand_logo_alt": {
+    "message": "JumpNav のロゴ"
+  },
+  "popup_brand_subtitle": {
+    "message": "AI チャットナビゲーター"
+  },
+  "popup_version_aria_label": {
+    "message": "バージョン"
+  },
+  "popup_features_title": {
+    "message": "機能"
+  },
+  "popup_features_body": {
+    "message": "チャット中に有効のままにしたい機能を選択します。"
+  },
+  "popup_formula_copy_title": {
+    "message": "数式コピー"
+  },
+  "popup_formula_copy_description": {
+    "message": "Word や LaTeX 用の数式をワンクリックでコピーします。"
+  },
+  "popup_prompt_entry_title": {
+    "message": "プロンプト入口"
+  },
+  "popup_prompt_entry_description": {
+    "message": "対応チャットで Prompt ボタンをすぐ使える状態に保ちます。"
+  },
+  "popup_support_title": {
+    "message": "鋭さを保つために"
+  },
+  "popup_support_body": {
+    "message": "AI チャットの UI はすぐ変わります。違和感があればぜひ報告してください。"
+  },
+  "popup_bug_button": {
+    "message": "不具合を報告"
+  },
+  "popup_feature_button": {
+    "message": "機能を提案"
+  },
+  "popup_growth_title": {
+    "message": "JumpNav を気に入りましたか？"
+  },
+  "popup_growth_body": {
+    "message": "スターやレビューを一つ残すだけで、より多くの人に見つけてもらえます。"
+  },
+  "popup_repo_button": {
+    "message": "GitHub でスター"
+  },
+  "popup_store_button": {
+    "message": "Web Store で評価"
+  },
+  "nav_navigator_title": {
+    "message": "$SITE$ ナビゲーター",
+    "placeholders": {
+      "site": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_prompt_count": {
+    "message": "プロンプト: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_minimal": {
+    "message": "ミニマル"
+  },
+  "nav_minimal_short": {
+    "message": "簡"
+  },
+  "nav_hide": {
+    "message": "閉じる"
+  },
+  "nav_hide_short": {
+    "message": "閉"
+  },
+  "nav_switch_to_dark": {
+    "message": "ダークモードに切り替え"
+  },
+  "nav_switch_to_light": {
+    "message": "ライトモードに切り替え"
+  },
+  "nav_empty_title": {
+    "message": "まだプロンプトが見つかっていません。"
+  },
+  "nav_empty_minimal": {
+    "message": "プロンプトなし"
+  },
+  "nav_prompt_item_fallback": {
+    "message": "プロンプト $NUMBER$",
+    "placeholders": {
+      "number": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_fab_label": {
+    "message": "ナビ"
+  },
+  "nav_adaptive_minimal_active": {
+    "message": "自動ミニマルモードが有効です"
+  },
+  "prompt_library_entry_button": {
+    "message": "プロンプト"
+  },
+  "prompt_library_entry_open": {
+    "message": "プロンプトライブラリを開く"
+  },
+  "prompt_library_dialog_label": {
+    "message": "プロンプトライブラリ"
+  },
+  "prompt_library_new_prompt": {
+    "message": "新しいプロンプト"
+  },
+  "prompt_library_search_placeholder": {
+    "message": "プロンプトを検索"
+  },
+  "prompt_library_search_aria": {
+    "message": "プロンプトを検索"
+  },
+  "prompt_library_close": {
+    "message": "閉じる"
+  },
+  "prompt_library_count_one": {
+    "message": "$COUNT$ 件のプロンプト",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_count_other": {
+    "message": "$COUNT$ 件のプロンプト",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_count_filtered": {
+    "message": "$TOTAL$ 中 $FILTERED$",
+    "placeholders": {
+      "filtered": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "prompt_library_title_label": {
+    "message": "タイトル"
+  },
+  "prompt_library_title_placeholder": {
+    "message": "例: 週間まとめ"
+  },
+  "prompt_library_content_label": {
+    "message": "プロンプト"
+  },
+  "prompt_library_content_placeholder": {
+    "message": "再利用したいプロンプト全文を書いてください。"
+  },
+  "prompt_library_title_helper_text": {
+    "message": "タイトルを付けるのが面倒ですか？"
+  },
+  "prompt_library_title_helper_button": {
+    "message": "AI に下書きを作ってもらう"
+  },
+  "prompt_library_cancel": {
+    "message": "キャンセル"
+  },
+  "prompt_library_save": {
+    "message": "保存"
+  },
+  "prompt_library_save_busy": {
+    "message": "保存中..."
+  },
+  "prompt_library_save_anyway": {
+    "message": "そのまま保存"
+  },
+  "prompt_library_empty_search_title": {
+    "message": "一致するものがありません"
+  },
+  "prompt_library_empty_search_body": {
+    "message": "\"$QUERY$\" に一致するプロンプトはありません。もっと短いキーワードや広い表現を試してください。",
+    "placeholders": {
+      "query": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_empty_default_title": {
+    "message": "まだプロンプトがありません"
+  },
+  "prompt_library_empty_default_body": {
+    "message": "再利用したいプロンプトをここに保存し、任意の項目をクリックすると現在の入力欄に挿入できます。"
+  },
+  "prompt_library_insert_prompt": {
+    "message": "プロンプトを挿入: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_copy_prompt": {
+    "message": "プロンプトをコピー"
+  },
+  "prompt_library_copying_prompt": {
+    "message": "プロンプトをコピー中"
+  },
+  "prompt_library_delete_prompt": {
+    "message": "プロンプトを削除"
+  },
+  "prompt_library_deleting_prompt": {
+    "message": "プロンプトを削除中"
+  },
+  "prompt_library_close_form": {
+    "message": "プロンプトフォームを閉じる"
+  },
+  "prompt_library_duplicate_warning": {
+    "message": "同じタイトルのプロンプトが既にあります。もう一度保存を押すと両方残せます。"
+  },
+  "formula_copy_hint_mathml": {
+    "message": "クリックで数式を MathML としてコピー（Shift+クリックで LaTeX）"
+  },
+  "formula_copy_hint_latex": {
+    "message": "クリックで数式を LaTeX としてコピー（Shift+クリックで MathML）"
+  },
+  "formula_copy_toast_mathml": {
+    "message": "数式をコピーしました（MathML）"
+  },
+  "formula_copy_toast_latex": {
+    "message": "数式をコピーしました（LaTeX）"
+  },
+  "formula_copy_toast_error": {
+    "message": "数式をコピーできませんでした"
+  },
+  "sidebar_favorites_add": {
+    "message": "お気に入りに追加"
+  },
+  "sidebar_favorites_remove": {
+    "message": "お気に入りから削除"
+  },
+  "gemini_quote_reply_button": {
+    "message": "返信を引用"
+  },
+  "gemini_quote_reply_card_aria": {
+    "message": "引用済みテキスト"
+  },
+  "gemini_quote_reply_remove": {
+    "message": "引用を削除"
+  }
+}

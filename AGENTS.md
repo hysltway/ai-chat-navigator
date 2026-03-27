@@ -28,6 +28,7 @@
 - Use 2-space indentation in TypeScript and JSON.
 - Keep modules small and single-purpose; prefer adding new files under `src/content/` or `src/shared/` rather than expanding a single entry file.
 - Naming: `createX`, `getX`, and `handleX` for functions; `UPPER_SNAKE` for constants.
+- New user-facing features must consider internationalization up front, including visible labels, button text, helper copy, placeholders, status text, aria text, and other user-facing strings.
 - Reuse `src/shared/ui-kit/` for shared plugin UI primitives before adding new local button/input/panel implementations.
 - Shared primitive styles live in `src/shared/ui-kit/styles.ts`; shared theme tokens and variable replacement helpers live in `src/shared/ui-kit/theme.ts`.
 - Content-script layout and feature-specific styles still live in `src/content/*ui-style*.ts` and are injected into the shadow DOM.

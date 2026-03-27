@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JumpNav</title>
+    <title data-i18n="popup_document_title">JumpNav</title>
     <link rel="stylesheet" href="./popup.css" />
   </head>
   <body>
@@ -11,29 +11,43 @@
       <header class="brand ui-panel">
         <div class="brand-main">
           <div class="brand-logo-shell">
-            <img class="brand-logo" src="../logo48.png" alt="JumpNav logo" width="36" height="36" />
+            <img
+              class="brand-logo"
+              src="../logo48.png"
+              alt="JumpNav logo"
+              data-i18n-alt="popup_brand_logo_alt"
+              width="36"
+              height="36"
+            />
           </div>
           <div class="brand-text">
             <strong>JumpNav</strong>
-            <span>AI Chat Navigator</span>
+            <span data-i18n="popup_brand_subtitle">AI Chat Navigator</span>
           </div>
         </div>
-        <span id="version-pill" class="version-pill ui-pill" aria-label="Version">v3.3.2</span>
+        <span
+          id="version-pill"
+          class="version-pill ui-pill"
+          aria-label="Version"
+          data-i18n-aria-label="popup_version_aria_label"
+        >v3.4.0</span>
       </header>
 
       <section class="panel panel-settings ui-panel" id="feature-settings">
         <div class="section-head">
           <div class="section-copy">
-            <h1>Features</h1>
-            <p>Choose what stays active while you chat.</p>
+            <h1 data-i18n="popup_features_title">Features</h1>
+            <p data-i18n="popup_features_body">Choose what stays active while you chat.</p>
           </div>
         </div>
 
         <div class="feature-list">
           <label class="feature-toggle" for="formula-enabled">
             <span class="feature-copy">
-              <span class="feature-title">Formula Copy</span>
-              <span class="feature-description">Copy formulas for Word or LaTeX in one click.</span>
+              <span class="feature-title" data-i18n="popup_formula_copy_title">Formula Copy</span>
+              <span class="feature-description" data-i18n="popup_formula_copy_description"
+                >Copy formulas for Word or LaTeX in one click.</span
+              >
             </span>
             <span class="feature-control">
               <input id="formula-enabled" class="feature-toggle-input" type="checkbox" />
@@ -43,8 +57,10 @@
 
           <label class="feature-toggle" for="prompt-entry-enabled">
             <span class="feature-copy">
-              <span class="feature-title">Prompt Entry</span>
-              <span class="feature-description">Keep the Prompt button ready in supported chats.</span>
+              <span class="feature-title" data-i18n="popup_prompt_entry_title">Prompt Entry</span>
+              <span class="feature-description" data-i18n="popup_prompt_entry_description"
+                >Keep the Prompt button ready in supported chats.</span
+              >
             </span>
             <span class="feature-control">
               <input
@@ -61,26 +77,39 @@
       <section class="panel panel-support ui-panel" id="support-section">
         <div class="section-head">
           <div class="section-copy">
-            <h1>Help Keep It Sharp</h1>
-            <p>AI chat interfaces change quickly. Report anything that feels off.</p>
+            <h1 data-i18n="popup_support_title">Help Keep It Sharp</h1>
+            <p data-i18n="popup_support_body">AI chat interfaces change quickly. Report anything that feels off.</p>
           </div>
         </div>
         <div class="button-grid">
-          <button type="button" class="action-btn ui-button" data-link="bug">Report a Bug</button>
-          <button type="button" class="action-btn ui-button" data-link="feature">Suggest a Feature</button>
+          <button type="button" class="action-btn ui-button" data-link="bug" data-i18n="popup_bug_button"
+            >Report a Bug</button
+          >
+          <button
+            type="button"
+            class="action-btn ui-button"
+            data-link="feature"
+            data-i18n="popup_feature_button"
+          >
+            Suggest a Feature
+          </button>
         </div>
       </section>
 
       <section class="panel panel-growth ui-panel">
         <div class="section-head">
           <div class="section-copy">
-            <h1>Enjoying JumpNav?</h1>
-            <p>A quick star or review helps more people find it.</p>
+            <h1 data-i18n="popup_growth_title">Enjoying JumpNav?</h1>
+            <p data-i18n="popup_growth_body">A quick star or review helps more people find it.</p>
           </div>
         </div>
         <div class="button-grid">
-          <button type="button" class="action-btn ui-button" data-link="repo">Star on GitHub</button>
-          <button type="button" class="action-btn ui-button" data-link="store">Rate on Web Store</button>
+          <button type="button" class="action-btn ui-button" data-link="repo" data-i18n="popup_repo_button"
+            >Star on GitHub</button
+          >
+          <button type="button" class="action-btn ui-button" data-link="store" data-i18n="popup_store_button"
+            >Rate on Web Store</button
+          >
         </div>
       </section>
     </main>

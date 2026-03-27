@@ -1,4 +1,5 @@
 
+  import { t } from '../shared/i18n';
   import { replaceCssVars, UI_KIT_THEME_VAR_KEYS, getUiThemePreset } from '../shared/ui-kit/theme';
   import { ns } from './namespace';
   import type {
@@ -131,10 +132,10 @@
   }
 
   function createEmptyState(hasQuery: boolean, query: string) {
-    const title = hasQuery ? 'No matches found' : 'No prompts yet';
+    const title = t(hasQuery ? 'prompt_library_empty_search_title' : 'prompt_library_empty_default_title');
     const text = hasQuery
-      ? `No prompts match "${summarizeQuery(query)}". Try a shorter keyword or a broader phrase.`
-      : 'Save a reusable prompt here, then click any item to insert it into the current composer.';
+      ? t('prompt_library_empty_search_body', [summarizeQuery(query)])
+      : t('prompt_library_empty_default_body');
     return uiStyle.createEmptyState(title, text);
   }
 
@@ -157,7 +158,7 @@
     main.dataset.action = 'inject-prompt';
     main.dataset.promptId = prompt.id;
     main.disabled = hasBusyAction;
-    main.setAttribute('aria-label', `Insert prompt: ${prompt.title}`);
+    main.setAttribute('aria-label', t('prompt_library_insert_prompt', [prompt.title]));
 
     const head = document.createElement('div');
     head.className = 'prompt-item-head';
@@ -169,20 +170,26 @@
     const actions = document.createElement('div');
     actions.className = 'prompt-item-actions';
 
-    const copyButton = uiStyle.createIconButton('copy-prompt', 'Copy prompt', 'copy');
+    const copyButton = uiStyle.createIconButton('copy-prompt', t('prompt_library_copy_prompt'), 'copy');
     copyButton.dataset.promptId = prompt.id;
     copyButton.dataset.busy = isCopying ? '1' : '0';
     copyButton.disabled = hasBusyAction;
-    copyButton.setAttribute('aria-label', isCopying ? 'Copying prompt' : 'Copy prompt');
-    copyButton.title = isCopying ? 'Copying prompt' : 'Copy prompt';
+    copyButton.setAttribute(
+      'aria-label',
+      t(isCopying ? 'prompt_library_copying_prompt' : 'prompt_library_copy_prompt')
+    );
+    copyButton.title = t(isCopying ? 'prompt_library_copying_prompt' : 'prompt_library_copy_prompt');
 
-    const deleteButton = uiStyle.createIconButton('delete-prompt', 'Delete prompt', 'trash');
+    const deleteButton = uiStyle.createIconButton('delete-prompt', t('prompt_library_delete_prompt'), 'trash');
     deleteButton.dataset.promptId = prompt.id;
     deleteButton.dataset.tone = 'danger';
     deleteButton.dataset.busy = isDeleting ? '1' : '0';
     deleteButton.disabled = hasBusyAction;
-    deleteButton.setAttribute('aria-label', isDeleting ? 'Deleting prompt' : 'Delete prompt');
-    deleteButton.title = isDeleting ? 'Deleting prompt' : 'Delete prompt';
+    deleteButton.setAttribute(
+      'aria-label',
+      t(isDeleting ? 'prompt_library_deleting_prompt' : 'prompt_library_delete_prompt')
+    );
+    deleteButton.title = t(isDeleting ? 'prompt_library_deleting_prompt' : 'prompt_library_delete_prompt');
 
     actions.appendChild(copyButton);
     actions.appendChild(deleteButton);
@@ -217,8 +224,9 @@
     ui.panel.dataset.formOpen = nextState;
     ui.promptToggleButton.dataset.active = visible ? '1' : '0';
     ui.promptToggleButton.setAttribute('aria-expanded', visible ? 'true' : 'false');
-    ui.promptToggleButton.setAttribute('aria-label', visible ? 'Close prompt form' : 'New prompt');
-    ui.promptToggleButton.title = visible ? 'Close prompt form' : 'New prompt';
+    const toggleLabel = t(visible ? 'prompt_library_close_form' : 'prompt_library_new_prompt');
+    ui.promptToggleButton.setAttribute('aria-label', toggleLabel);
+    ui.promptToggleButton.title = toggleLabel;
     if (hasChanged && !visible) {
       ui.panel.scrollTop = 0;
     }
@@ -240,7 +248,7 @@
   }
 
   function setPromptFormState(ui: PromptLibraryUiHandle, options: PromptFormState = {
-    saveLabel: 'Save',
+    saveLabel: t('prompt_library_save'),
     saveDisabled: false,
     saveBusy: false,
     cancelDisabled: false,
@@ -249,7 +257,7 @@
     searchDisabled: false,
     fieldDisabled: false
   }) {
-    const saveLabel = options.saveLabel || 'Save';
+    const saveLabel = options.saveLabel || t('prompt_library_save');
     const saveLabelNode = ui.promptSaveButton.querySelector('.ui-button-label');
     if (saveLabelNode) {
       saveLabelNode.textContent = saveLabel;
@@ -317,7 +325,7 @@
   function summarizeQuery(query) {
     const normalized = typeof query === 'string' ? query.trim() : '';
     if (!normalized) {
-      return 'this search';
+      return '';
     }
     return normalized.length > 32 ? `${normalized.slice(0, 29)}...` : normalized;
   }

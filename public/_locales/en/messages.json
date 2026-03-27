@@ -1,0 +1,270 @@
+{
+  "manifest_extension_name": {
+    "message": "JumpNav: The most elegant AI chat navigator you've ever seen."
+  },
+  "manifest_extension_description": {
+    "message": "Navigate long AI chats in ChatGPT, Gemini, and Claude with outlines, favorites, and reusable prompts."
+  },
+  "manifest_action_title": {
+    "message": "JumpNav"
+  },
+  "popup_document_title": {
+    "message": "JumpNav"
+  },
+  "popup_brand_logo_alt": {
+    "message": "JumpNav logo"
+  },
+  "popup_brand_subtitle": {
+    "message": "AI Chat Navigator"
+  },
+  "popup_version_aria_label": {
+    "message": "Version"
+  },
+  "popup_features_title": {
+    "message": "Features"
+  },
+  "popup_features_body": {
+    "message": "Choose what stays active while you chat."
+  },
+  "popup_formula_copy_title": {
+    "message": "Formula Copy"
+  },
+  "popup_formula_copy_description": {
+    "message": "Copy formulas for Word or LaTeX in one click."
+  },
+  "popup_prompt_entry_title": {
+    "message": "Prompt Entry"
+  },
+  "popup_prompt_entry_description": {
+    "message": "Keep the Prompt button ready in supported chats."
+  },
+  "popup_support_title": {
+    "message": "Help Keep It Sharp"
+  },
+  "popup_support_body": {
+    "message": "AI chat interfaces change quickly. Report anything that feels off."
+  },
+  "popup_bug_button": {
+    "message": "Report a Bug"
+  },
+  "popup_feature_button": {
+    "message": "Suggest a Feature"
+  },
+  "popup_growth_title": {
+    "message": "Enjoying JumpNav?"
+  },
+  "popup_growth_body": {
+    "message": "A quick star or review helps more people find it."
+  },
+  "popup_repo_button": {
+    "message": "Star on GitHub"
+  },
+  "popup_store_button": {
+    "message": "Rate on Web Store"
+  },
+  "nav_navigator_title": {
+    "message": "$SITE$ Navigator",
+    "placeholders": {
+      "site": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_prompt_count": {
+    "message": "Prompts: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_minimal": {
+    "message": "Minimal"
+  },
+  "nav_minimal_short": {
+    "message": "M"
+  },
+  "nav_hide": {
+    "message": "Hide"
+  },
+  "nav_hide_short": {
+    "message": "H"
+  },
+  "nav_switch_to_dark": {
+    "message": "Switch to Dark mode"
+  },
+  "nav_switch_to_light": {
+    "message": "Switch to Light mode"
+  },
+  "nav_empty_title": {
+    "message": "No prompts found yet."
+  },
+  "nav_empty_minimal": {
+    "message": "No prompts"
+  },
+  "nav_prompt_item_fallback": {
+    "message": "Prompt $NUMBER$",
+    "placeholders": {
+      "number": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_fab_label": {
+    "message": "Nav"
+  },
+  "nav_adaptive_minimal_active": {
+    "message": "Adaptive minimal mode is active"
+  },
+  "prompt_library_entry_button": {
+    "message": "Prompt"
+  },
+  "prompt_library_entry_open": {
+    "message": "Open prompt library"
+  },
+  "prompt_library_dialog_label": {
+    "message": "Prompt library"
+  },
+  "prompt_library_new_prompt": {
+    "message": "New prompt"
+  },
+  "prompt_library_search_placeholder": {
+    "message": "Search prompts"
+  },
+  "prompt_library_search_aria": {
+    "message": "Search prompts"
+  },
+  "prompt_library_close": {
+    "message": "Close"
+  },
+  "prompt_library_count_one": {
+    "message": "$COUNT$ prompt",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_count_other": {
+    "message": "$COUNT$ prompts",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_count_filtered": {
+    "message": "$FILTERED$ of $TOTAL$",
+    "placeholders": {
+      "filtered": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "prompt_library_title_label": {
+    "message": "Title"
+  },
+  "prompt_library_title_placeholder": {
+    "message": "e.g. Weekly summary"
+  },
+  "prompt_library_content_label": {
+    "message": "Prompt"
+  },
+  "prompt_library_content_placeholder": {
+    "message": "Write the full prompt you want to reuse."
+  },
+  "prompt_library_title_helper_text": {
+    "message": "Title feels like extra work?"
+  },
+  "prompt_library_title_helper_button": {
+    "message": "Ask AI to draft one"
+  },
+  "prompt_library_cancel": {
+    "message": "Cancel"
+  },
+  "prompt_library_save": {
+    "message": "Save"
+  },
+  "prompt_library_save_busy": {
+    "message": "Saving..."
+  },
+  "prompt_library_save_anyway": {
+    "message": "Save anyway"
+  },
+  "prompt_library_empty_search_title": {
+    "message": "No matches found"
+  },
+  "prompt_library_empty_search_body": {
+    "message": "No prompts match \"$QUERY$\". Try a shorter keyword or a broader phrase.",
+    "placeholders": {
+      "query": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_empty_default_title": {
+    "message": "No prompts yet"
+  },
+  "prompt_library_empty_default_body": {
+    "message": "Save a reusable prompt here, then click any item to insert it into the current composer."
+  },
+  "prompt_library_insert_prompt": {
+    "message": "Insert prompt: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_copy_prompt": {
+    "message": "Copy prompt"
+  },
+  "prompt_library_copying_prompt": {
+    "message": "Copying prompt"
+  },
+  "prompt_library_delete_prompt": {
+    "message": "Delete prompt"
+  },
+  "prompt_library_deleting_prompt": {
+    "message": "Deleting prompt"
+  },
+  "prompt_library_close_form": {
+    "message": "Close prompt form"
+  },
+  "prompt_library_duplicate_warning": {
+    "message": "A prompt with this title already exists. Click save again to keep both."
+  },
+  "formula_copy_hint_mathml": {
+    "message": "Click to copy formula as MathML (Shift+Click for LaTeX)"
+  },
+  "formula_copy_hint_latex": {
+    "message": "Click to copy formula as LaTeX (Shift+Click for MathML)"
+  },
+  "formula_copy_toast_mathml": {
+    "message": "Copied formula (MathML)"
+  },
+  "formula_copy_toast_latex": {
+    "message": "Copied formula (LaTeX)"
+  },
+  "formula_copy_toast_error": {
+    "message": "Failed to copy formula"
+  },
+  "sidebar_favorites_add": {
+    "message": "Add to favorites"
+  },
+  "sidebar_favorites_remove": {
+    "message": "Remove from favorites"
+  },
+  "gemini_quote_reply_button": {
+    "message": "Quote reply"
+  },
+  "gemini_quote_reply_card_aria": {
+    "message": "Quoted text"
+  },
+  "gemini_quote_reply_remove": {
+    "message": "Remove quote"
+  }
+}

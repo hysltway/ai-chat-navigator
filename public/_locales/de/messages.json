@@ -1,0 +1,270 @@
+{
+  "manifest_extension_name": {
+    "message": "JumpNav: der eleganteste KI-Chat-Navigator, den du je gesehen hast."
+  },
+  "manifest_extension_description": {
+    "message": "Navigiere lange KI-Chats in ChatGPT, Gemini und Claude mit Gliederungen, Favoriten und wiederverwendbaren Prompts."
+  },
+  "manifest_action_title": {
+    "message": "JumpNav"
+  },
+  "popup_document_title": {
+    "message": "JumpNav"
+  },
+  "popup_brand_logo_alt": {
+    "message": "JumpNav-Logo"
+  },
+  "popup_brand_subtitle": {
+    "message": "KI-Chat-Navigator"
+  },
+  "popup_version_aria_label": {
+    "message": "Version"
+  },
+  "popup_features_title": {
+    "message": "Funktionen"
+  },
+  "popup_features_body": {
+    "message": "Wähle aus, was während des Chattens aktiv bleiben soll."
+  },
+  "popup_formula_copy_title": {
+    "message": "Formel kopieren"
+  },
+  "popup_formula_copy_description": {
+    "message": "Kopiere Formeln für Word oder LaTeX mit einem Klick."
+  },
+  "popup_prompt_entry_title": {
+    "message": "Prompt-Einstieg"
+  },
+  "popup_prompt_entry_description": {
+    "message": "Halte die Prompt-Schaltfläche in unterstützten Chats bereit."
+  },
+  "popup_support_title": {
+    "message": "Hilf, es präzise zu halten"
+  },
+  "popup_support_body": {
+    "message": "KI-Chat-Oberflächen ändern sich schnell. Melde alles, was sich merkwürdig anfühlt."
+  },
+  "popup_bug_button": {
+    "message": "Fehler melden"
+  },
+  "popup_feature_button": {
+    "message": "Funktion vorschlagen"
+  },
+  "popup_growth_title": {
+    "message": "Gefällt dir JumpNav?"
+  },
+  "popup_growth_body": {
+    "message": "Ein schneller Stern oder eine Bewertung hilft, damit mehr Menschen es entdecken."
+  },
+  "popup_repo_button": {
+    "message": "Auf GitHub einen Stern geben"
+  },
+  "popup_store_button": {
+    "message": "Im Web Store bewerten"
+  },
+  "nav_navigator_title": {
+    "message": "$SITE$ Navigator",
+    "placeholders": {
+      "site": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_prompt_count": {
+    "message": "Prompts: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_minimal": {
+    "message": "Minimal"
+  },
+  "nav_minimal_short": {
+    "message": "Min"
+  },
+  "nav_hide": {
+    "message": "Ausblenden"
+  },
+  "nav_hide_short": {
+    "message": "Zu"
+  },
+  "nav_switch_to_dark": {
+    "message": "Zum dunklen Modus wechseln"
+  },
+  "nav_switch_to_light": {
+    "message": "Zum hellen Modus wechseln"
+  },
+  "nav_empty_title": {
+    "message": "Noch keine Prompts gefunden."
+  },
+  "nav_empty_minimal": {
+    "message": "Keine Prompts"
+  },
+  "nav_prompt_item_fallback": {
+    "message": "Prompt $NUMBER$",
+    "placeholders": {
+      "number": {
+        "content": "$1"
+      }
+    }
+  },
+  "nav_fab_label": {
+    "message": "Nav"
+  },
+  "nav_adaptive_minimal_active": {
+    "message": "Der adaptive Minimalmodus ist aktiv"
+  },
+  "prompt_library_entry_button": {
+    "message": "Prompt"
+  },
+  "prompt_library_entry_open": {
+    "message": "Prompt-Bibliothek öffnen"
+  },
+  "prompt_library_dialog_label": {
+    "message": "Prompt-Bibliothek"
+  },
+  "prompt_library_new_prompt": {
+    "message": "Neuer Prompt"
+  },
+  "prompt_library_search_placeholder": {
+    "message": "Prompts durchsuchen"
+  },
+  "prompt_library_search_aria": {
+    "message": "Prompts durchsuchen"
+  },
+  "prompt_library_close": {
+    "message": "Schließen"
+  },
+  "prompt_library_count_one": {
+    "message": "$COUNT$ Prompt",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_count_other": {
+    "message": "$COUNT$ Prompts",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_count_filtered": {
+    "message": "$FILTERED$ von $TOTAL$",
+    "placeholders": {
+      "filtered": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "prompt_library_title_label": {
+    "message": "Titel"
+  },
+  "prompt_library_title_placeholder": {
+    "message": "z. B. Wochenzusammenfassung"
+  },
+  "prompt_library_content_label": {
+    "message": "Prompt"
+  },
+  "prompt_library_content_placeholder": {
+    "message": "Schreibe den vollständigen Prompt, den du wiederverwenden möchtest."
+  },
+  "prompt_library_title_helper_text": {
+    "message": "Fühlt sich der Titel nach Zusatzarbeit an?"
+  },
+  "prompt_library_title_helper_button": {
+    "message": "KI einen Entwurf erstellen lassen"
+  },
+  "prompt_library_cancel": {
+    "message": "Abbrechen"
+  },
+  "prompt_library_save": {
+    "message": "Speichern"
+  },
+  "prompt_library_save_busy": {
+    "message": "Wird gespeichert..."
+  },
+  "prompt_library_save_anyway": {
+    "message": "Trotzdem speichern"
+  },
+  "prompt_library_empty_search_title": {
+    "message": "Keine Treffer gefunden"
+  },
+  "prompt_library_empty_search_body": {
+    "message": "Kein Prompt passt zu \"$QUERY$\". Versuche ein kürzeres Stichwort oder eine allgemeinere Formulierung.",
+    "placeholders": {
+      "query": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_empty_default_title": {
+    "message": "Noch keine Prompts"
+  },
+  "prompt_library_empty_default_body": {
+    "message": "Speichere hier einen wiederverwendbaren Prompt und klicke dann auf einen Eintrag, um ihn in den aktuellen Editor einzufügen."
+  },
+  "prompt_library_insert_prompt": {
+    "message": "Prompt einfügen: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "prompt_library_copy_prompt": {
+    "message": "Prompt kopieren"
+  },
+  "prompt_library_copying_prompt": {
+    "message": "Prompt wird kopiert"
+  },
+  "prompt_library_delete_prompt": {
+    "message": "Prompt löschen"
+  },
+  "prompt_library_deleting_prompt": {
+    "message": "Prompt wird gelöscht"
+  },
+  "prompt_library_close_form": {
+    "message": "Prompt-Formular schließen"
+  },
+  "prompt_library_duplicate_warning": {
+    "message": "Ein Prompt mit diesem Titel existiert bereits. Klicke erneut auf Speichern, um beide zu behalten."
+  },
+  "formula_copy_hint_mathml": {
+    "message": "Klicken, um die Formel als MathML zu kopieren (Umschalt+Klick für LaTeX)"
+  },
+  "formula_copy_hint_latex": {
+    "message": "Klicken, um die Formel als LaTeX zu kopieren (Umschalt+Klick für MathML)"
+  },
+  "formula_copy_toast_mathml": {
+    "message": "Formel kopiert (MathML)"
+  },
+  "formula_copy_toast_latex": {
+    "message": "Formel kopiert (LaTeX)"
+  },
+  "formula_copy_toast_error": {
+    "message": "Formel konnte nicht kopiert werden"
+  },
+  "sidebar_favorites_add": {
+    "message": "Zu Favoriten hinzufügen"
+  },
+  "sidebar_favorites_remove": {
+    "message": "Aus Favoriten entfernen"
+  },
+  "gemini_quote_reply_button": {
+    "message": "Antwort zitieren"
+  },
+  "gemini_quote_reply_card_aria": {
+    "message": "Zitierter Text"
+  },
+  "gemini_quote_reply_remove": {
+    "message": "Zitat entfernen"
+  }
+}

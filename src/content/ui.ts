@@ -1,4 +1,5 @@
 import { ns } from './namespace';
+import { t } from '../shared/i18n';
 import { createEmptyState } from '../shared/ui-kit/dom';
 import { getUiThemePreset, replaceCssVars, UI_KIT_THEME_VAR_KEYS, UI_NAV_THEME_VAR_KEYS } from '../shared/ui-kit/theme';
 import type {
@@ -10,14 +11,30 @@ import type {
   UiHandle
 } from './types';
 
-const MINIMAL_LABEL = 'Minimal';
-const MINIMAL_LABEL_SHORT = 'M';
-const HIDE_LABEL = 'Hide';
-const HIDE_LABEL_SHORT = 'H';
 const THEME_TOGGLE_ICONS: Record<ColorScheme, string> = {
   dark: '🌙',
   light: '☀'
 };
+
+function getMinimalLabel(short = false): string {
+  return t(short ? 'nav_minimal_short' : 'nav_minimal');
+}
+
+function getHideLabel(short = false): string {
+  return t(short ? 'nav_hide_short' : 'nav_hide');
+}
+
+function getPromptCountLabel(count: number): string {
+  return t('nav_prompt_count', [String(count)]);
+}
+
+function getPromptFallbackLabel(index: number): string {
+  return t('nav_prompt_item_fallback', [String(index + 1)]);
+}
+
+function getThemeToggleLabel(nextScheme: ColorScheme): string {
+  return t(nextScheme === 'dark' ? 'nav_switch_to_dark' : 'nav_switch_to_light');
+}
 
 function createStyleElement(): HTMLStyleElement {
   const style = document.createElement('style');
@@ -146,9 +163,9 @@ function createPanelHeaderElements(): {
   const titleWrap = document.createElement('div');
   titleWrap.className = 'panel-title';
   const title = document.createElement('strong');
-  title.textContent = 'ChatGPT Navigator';
+  title.textContent = t('nav_navigator_title', ['ChatGPT']);
   const subtitle = document.createElement('span');
-  subtitle.textContent = 'Prompts: 0';
+  subtitle.textContent = getPromptCountLabel(0);
   titleWrap.appendChild(title);
   titleWrap.appendChild(subtitle);
   const actions = document.createElement('div');
@@ -156,11 +173,13 @@ function createPanelHeaderElements(): {
   const themeToggle = createToggleButton(
     'panel-toggle panel-toggle-theme ui-button ui-icon-button',
     THEME_TOGGLE_ICONS.dark,
-    'Switch to Dark mode'
+    getThemeToggleLabel('dark')
   );
-  const minimalToggle = createToggleButton('panel-toggle panel-toggle-minimal ui-button', MINIMAL_LABEL, MINIMAL_LABEL);
+  const minimalLabel = getMinimalLabel();
+  const minimalToggle = createToggleButton('panel-toggle panel-toggle-minimal ui-button', minimalLabel, minimalLabel);
   minimalToggle.setAttribute('aria-pressed', 'false');
-  const toggle = createToggleButton('panel-toggle ui-button', HIDE_LABEL, HIDE_LABEL);
+  const hideLabel = getHideLabel();
+  const toggle = createToggleButton('panel-toggle ui-button', hideLabel, hideLabel);
   actions.appendChild(themeToggle);
   actions.appendChild(minimalToggle);
   actions.appendChild(toggle);
@@ -190,7 +209,7 @@ function createPanelBodyElements(): { bodyWrap: HTMLDivElement; body: HTMLDivEle
   scrollHintTop.className = 'scroll-hint scroll-hint-top';
   const scrollHintBottom = document.createElement('div');
   scrollHintBottom.className = 'scroll-hint scroll-hint-bottom';
-  const empty = createEmptyState('No prompts found yet.', '', {
+  const empty = createEmptyState(t('nav_empty_title'), '', {
     className: 'nav-empty',
     titleClassName: 'nav-empty-title'
   });
@@ -216,7 +235,7 @@ function createFabButton(): HTMLButtonElement {
   const fab = document.createElement('button');
   fab.type = 'button';
   fab.className = 'fab';
-  fab.textContent = 'Nav';
+  fab.textContent = t('nav_fab_label');
   return fab;
 }
 
@@ -227,7 +246,7 @@ function renderList(
 ): void {
   const minimalMode = Boolean(options.minimalMode);
   ui.body.textContent = '';
-  ui.subtitle.textContent = `Prompts: ${messages.length}`;
+  ui.subtitle.textContent = getPromptCountLabel(messages.length);
   if (!messages.length) {
     ui.body.appendChild(createEmptyStateItem(minimalMode));
     return;
@@ -239,15 +258,17 @@ function renderList(
 
 function createEmptyStateItem(minimalMode: boolean): HTMLDivElement {
   if (!minimalMode) {
-    return createEmptyState('No prompts found yet.', '', {
+    return createEmptyState(t('nav_empty_title'), '', {
       className: 'nav-empty',
       titleClassName: 'nav-empty-title'
     });
   }
   const empty = document.createElement('div');
   empty.className = 'nav-empty ui-empty';
-  const words = ['No', 'prompts', 'found', 'yet.'];
-  words.forEach((word) => {
+  const minimalText = t('nav_empty_minimal');
+  const words = minimalText.trim().split(/\s+/).filter(Boolean);
+  const units = words.length ? words : [minimalText];
+  units.forEach((word) => {
     const span = document.createElement('span');
     span.textContent = word;
     empty.appendChild(span);
@@ -265,8 +286,9 @@ function createMessageItem(
   item.dataset.index = String(index);
   item.tabIndex = 0;
   item.setAttribute('role', 'button');
-  item.setAttribute('aria-label', minimalMode ? `Prompt ${index + 1}` : message.title || `Prompt ${index + 1}`);
-  item.title = minimalMode ? `Prompt ${index + 1}` : message.text;
+  const fallbackLabel = getPromptFallbackLabel(index);
+  item.setAttribute('aria-label', minimalMode ? fallbackLabel : message.title || fallbackLabel);
+  item.title = minimalMode ? fallbackLabel : message.text;
   if (minimalMode) {
     const minimal = document.createElement('div');
     minimal.className = 'nav-item-minimal';
@@ -302,17 +324,17 @@ function setMinimalMode(ui: UiHandle, enabled: boolean): void {
   ui.root.dataset.minimal = enabled ? '1' : '0';
   ui.minimalToggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
   ui.minimalToggle.classList.toggle('is-active', enabled);
-  ui.minimalToggle.textContent = enabled ? MINIMAL_LABEL_SHORT : MINIMAL_LABEL;
-  ui.toggle.textContent = enabled ? HIDE_LABEL_SHORT : HIDE_LABEL;
-  ui.minimalToggle.setAttribute('aria-label', MINIMAL_LABEL);
-  ui.toggle.setAttribute('aria-label', HIDE_LABEL);
+  ui.minimalToggle.textContent = enabled ? getMinimalLabel(true) : getMinimalLabel();
+  ui.toggle.textContent = enabled ? getHideLabel(true) : getHideLabel();
+  ui.minimalToggle.setAttribute('aria-label', getMinimalLabel());
+  ui.toggle.setAttribute('aria-label', getHideLabel());
   setThemeToggle(ui, (ui.root.dataset.colorScheme as ColorScheme) || 'light');
 }
 
 function setAdaptiveMinimal(ui: UiHandle, enabled: boolean): void {
   ui.root.dataset.adaptiveMinimal = enabled ? '1' : '0';
   if (enabled) {
-    ui.minimalToggle.title = 'Adaptive minimal mode is active';
+    ui.minimalToggle.title = t('nav_adaptive_minimal_active');
   } else {
     ui.minimalToggle.removeAttribute('title');
   }
@@ -324,12 +346,12 @@ function setThemeToggle(ui: UiHandle, colorScheme: ColorScheme): void {
   }
   const normalized: ColorScheme = colorScheme === 'dark' ? 'dark' : 'light';
   const nextScheme: ColorScheme = normalized === 'dark' ? 'light' : 'dark';
-  const nextModeLabel = nextScheme === 'dark' ? 'Dark' : 'Light';
+  const nextLabel = getThemeToggleLabel(nextScheme);
   const nextIcon = THEME_TOGGLE_ICONS[nextScheme];
   ui.themeToggle.dataset.nextScheme = nextScheme;
   ui.themeToggle.textContent = nextIcon;
-  ui.themeToggle.setAttribute('aria-label', `Switch to ${nextModeLabel} mode`);
-  ui.themeToggle.title = `Switch to ${nextModeLabel} mode`;
+  ui.themeToggle.setAttribute('aria-label', nextLabel);
+  ui.themeToggle.title = nextLabel;
 }
 
 function setColorScheme(ui: UiHandle, colorScheme: ColorScheme): void {

@@ -1,4 +1,5 @@
 import { ns } from './namespace';
+import { t } from '../shared/i18n';
 
 const STYLE_ID = 'chatgpt-nav-gemini-quote-reply-style';
 const BUTTON_CLASS = 'chatgpt-nav-gemini-quote-reply-button';
@@ -324,11 +325,21 @@ function ensureButton(): HTMLButtonElement {
     return quoteButton;
   }
 
+  const label = t('gemini_quote_reply_button');
   const button = document.createElement('button');
   button.type = 'button';
   button.className = `${BUTTON_CLASS} ${BUTTON_HIDDEN_CLASS}`;
-  button.setAttribute('aria-label', 'Quote reply');
-  button.innerHTML = `${getQuoteIconSvg()}<span>Quote reply</span>`;
+  button.setAttribute('aria-label', label);
+
+  const icon = document.createElement('span');
+  icon.setAttribute('aria-hidden', 'true');
+  icon.innerHTML = getQuoteIconSvg();
+
+  const text = document.createElement('span');
+  text.textContent = label;
+
+  button.appendChild(icon);
+  button.appendChild(text);
   button.addEventListener('mousedown', (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -351,7 +362,7 @@ function ensureComposerUi(): ComposerQuoteUi {
   const card = document.createElement('div');
   card.className = CARD_CLASS;
   card.setAttribute('role', 'note');
-  card.setAttribute('aria-label', 'Quoted text');
+  card.setAttribute('aria-label', t('gemini_quote_reply_card_aria'));
 
   const icon = document.createElement('span');
   icon.className = CARD_ICON_CLASS;
@@ -367,7 +378,7 @@ function ensureComposerUi(): ComposerQuoteUi {
   const removeButton = document.createElement('button');
   removeButton.type = 'button';
   removeButton.className = CARD_REMOVE_CLASS;
-  removeButton.setAttribute('aria-label', 'Remove quote');
+  removeButton.setAttribute('aria-label', t('gemini_quote_reply_remove'));
   removeButton.innerHTML = getCloseIconSvg();
   removeButton.addEventListener('click', (event) => {
     event.preventDefault();
