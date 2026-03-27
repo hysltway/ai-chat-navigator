@@ -23,6 +23,7 @@ import './sidebar-favorites';
 import './prompt-library';
 import './gemini-quote-reply';
 import './core';
+import './growth-prompt';
 
 function startIfAvailable(moduleName: string, methodName = 'start'): void {
   const targetModule = ns[moduleName];
@@ -39,6 +40,7 @@ function start(): void {
   startIfAvailable('geminiQuoteReply');
   startIfAvailable('sidebarFavorites');
   startIfAvailable('core');
+  startIfAvailable('growthPrompt');
 }
 
 start();

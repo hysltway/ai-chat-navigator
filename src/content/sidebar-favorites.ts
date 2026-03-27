@@ -1,4 +1,5 @@
 import { ns } from './namespace';
+import { trackGrowth } from '../shared/growth';
 import { t } from '../shared/i18n';
 
 const BOOT_FLAG = 'jumpnavSidebarFavoritesInjected';
@@ -405,13 +406,17 @@ function handleFavoriteClick(event: MouseEvent): void {
     return;
   }
 
-  if (favorites.has(key)) {
+  const adding = !favorites.has(key);
+  if (!adding) {
     favorites.delete(key);
   } else {
     favorites.add(key);
   }
 
   refreshItemState(item, button, key);
+  if (adding) {
+    void trackGrowth('favorite_add');
+  }
   void persistFavorites();
 }
 

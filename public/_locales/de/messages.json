@@ -62,6 +62,62 @@
   "popup_store_button": {
     "message": "Im Web Store bewerten"
   },
+  "growth_modal_kicker": {
+    "message": "Ein echter JumpNav-Meilenstein"
+  },
+  "growth_modal_title": {
+    "message": "JumpNav ist schon Teil deines Workflows."
+  },
+  "growth_modal_body": {
+    "message": "Wenn JumpNav deine Chats wirklich flüssiger macht und deinen Workflow leichter trägt, würden uns eine Web-Store-Bewertung oder ein GitHub-Star sehr freuen."
+  },
+  "growth_modal_usage_days_one": {
+    "message": "$COUNT$ Tag genutzt",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_usage_days_other": {
+    "message": "$COUNT$ Tage genutzt",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_total_uses_one": {
+    "message": "$COUNT$ Nutzung insgesamt",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_total_uses_other": {
+    "message": "$COUNT$ Nutzungen insgesamt",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_store_button": {
+    "message": "Im Web Store bewerten"
+  },
+  "growth_modal_repo_button": {
+    "message": "Auf GitHub mit Star markieren"
+  },
+  "growth_modal_hide_button": {
+    "message": "Nicht mehr anzeigen"
+  },
+  "growth_modal_later_button": {
+    "message": "Vielleicht später"
+  },
+  "growth_modal_close": {
+    "message": "Diese Erinnerung schließen"
+  },
   "nav_navigator_title": {
     "message": "$SITE$ Navigator",
     "placeholders": {

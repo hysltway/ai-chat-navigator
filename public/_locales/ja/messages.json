@@ -62,6 +62,62 @@
   "popup_store_button": {
     "message": "Web Store で評価"
   },
+  "growth_modal_kicker": {
+    "message": "JumpNav の節目"
+  },
+  "growth_modal_title": {
+    "message": "JumpNav はもう、あなたの定番ワークフローです。"
+  },
+  "growth_modal_body": {
+    "message": "JumpNav が日々のチャットを少しでもスムーズにし、作業の流れを支えられているなら、Web Store のレビューや GitHub の Star で応援してもらえるとうれしいです。"
+  },
+  "growth_modal_usage_days_one": {
+    "message": "$COUNT$ 日利用",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_usage_days_other": {
+    "message": "$COUNT$ 日利用",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_total_uses_one": {
+    "message": "累計 $COUNT$ 回利用",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_total_uses_other": {
+    "message": "累計 $COUNT$ 回利用",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_store_button": {
+    "message": "Web Store で評価"
+  },
+  "growth_modal_repo_button": {
+    "message": "GitHub で Star"
+  },
+  "growth_modal_hide_button": {
+    "message": "今後は表示しない"
+  },
+  "growth_modal_later_button": {
+    "message": "あとで"
+  },
+  "growth_modal_close": {
+    "message": "この案内を閉じる"
+  },
   "nav_navigator_title": {
     "message": "$SITE$ ナビゲーター",
     "placeholders": {

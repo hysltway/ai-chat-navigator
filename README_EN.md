@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v3.4.0**
+> Current Version: **v3.5.0**
 
-## Updates in v3.4.0
+## Updates in v3.5.0
 
-- Added a shared Chrome i18n foundation with `default_locale`, `_locales` bundles, and reusable message helpers so the manifest, popup, and content scripts all read localized copy from the same source.
-- Localized user-facing copy and aria text across the navigator, Prompt Library, formula copy hints, Gemini quote reply, and sidebar favorites, with language resources for Simplified Chinese, English, German, Spanish, and Japanese.
-- Refined popup layout behavior for multilingual content by allowing longer headings, descriptions, version text, and action buttons to wrap cleanly inside the compact surface.
-- Updated version references and release notes for `v3.4.0`.
+- Added a shared growth-tracking flow that records key engagement events such as navigator jumps, Prompt Library opens, favorites, and popup opens, while also accumulating usage days across sessions.
+- Added a threshold-based in-page growth prompt that asks active users for a Chrome Web Store review or a GitHub star after enough real usage, with dismiss and do-not-show-again paths.
+- Connected the growth prompt to the shared link and localization system, and refined its show timing and visual stage so the reminder waits for a stable page and feels more intentional on screen.
+- Updated version references and release notes for `v3.5.0`.
 
 ## Chrome Web Store (Recommended)
 
@@ -52,6 +52,7 @@ Now live on the Chrome Web Store. Install from the store for automatic updates.
 - Supports light/dark theme switching and auto-sync with site theme changes (with transition animation).
 - Rebuilds automatically on SPA route changes and streaming message updates.
 - Includes a built-in localization system with Simplified Chinese, English, German, Spanish, and Japanese support.
+- Includes a usage milestone prompt that evaluates accumulated usage days and key actions, then invites qualified users to leave a store review or star the GitHub repo.
 - Formula click-to-copy supports MathML / LaTeX: default MathML, `Shift+Click` for LaTeX.
 - MathML engine supports MathJax / KaTeX / Auto, configurable and persisted in popup settings.
 - Includes robust formula extraction compatibility for KaTeX, MathJax, `data-math`, `annotation`, and similar structures.

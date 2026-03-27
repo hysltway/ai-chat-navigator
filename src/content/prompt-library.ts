@@ -1,6 +1,7 @@
 
   import { ns } from './namespace';
   import { t, tp } from '../shared/i18n';
+  import { trackGrowth } from '../shared/growth';
   import { createPromptEntrySettingsApi } from '../shared/prompt-entry-settings';
   import type {
     Adapter,
@@ -433,6 +434,7 @@
 
   function setOpen(open: boolean) {
     const ui = getUi();
+    const wasOpen = state.open;
 
     if (open) {
       syncEnvironment();
@@ -446,6 +448,9 @@
 
     state.open = Boolean(open);
     promptLibraryUi.setOpen(ui, state.open);
+    if (!wasOpen && state.open) {
+      void trackGrowth('prompt_panel_open');
+    }
 
     if (!state.open) {
       resetPanelEphemeralState();

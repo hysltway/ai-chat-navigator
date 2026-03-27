@@ -8,13 +8,13 @@ import {
   type PromptEntrySettingsApi
 } from '../shared/prompt-entry-settings';
 import { startDocumentDevReload } from '../shared/dev-reload';
+import { GROWTH_LINKS, trackGrowth } from '../shared/growth';
 import { localizeDocument } from '../shared/i18n';
 import { UI_KIT_STYLE_TEXT } from '../shared/ui-kit/styles';
 import { getUiThemePreset, replaceCssVars, UI_KIT_THEME_VAR_KEYS } from '../shared/ui-kit/theme';
 
 const LINKS = {
-  repo: 'https://github.com/hysltway/JumpNav',
-  store: 'https://chromewebstore.google.com/detail/jumpnav-the-most-elegant/kkemkfabmgjcjlileggigaaemcheapep',
+  ...GROWTH_LINKS,
   bug: 'https://github.com/hysltway/JumpNav/issues/new?labels=bug&title=%5BBug%5D%20',
   feature: 'https://github.com/hysltway/JumpNav/issues/new?labels=enhancement&title=%5BFeature%5D%20'
 } as const;
@@ -54,6 +54,7 @@ function createPopupController(environment: Partial<PopupEnvironment> = {}) {
 
     env.documentRef.addEventListener('DOMContentLoaded', () => {
       localizeDocument(env.documentRef);
+      void trackGrowth('popup_open');
       syncVersionPill();
       bindLinkButtons();
       void Promise.all([initFormulaSettings(), initPromptEntrySettings()]);

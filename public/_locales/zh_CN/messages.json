@@ -62,6 +62,62 @@
   "popup_store_button": {
     "message": "商店评分"
   },
+  "growth_modal_kicker": {
+    "message": "一个真正的 JumpNav 里程碑"
+  },
+  "growth_modal_title": {
+    "message": "JumpNav 已经进入你的日常工作流"
+  },
+  "growth_modal_body": {
+    "message": "如果 JumpNav 真的让你的聊天更顺手、思路更连贯，真心希望你愿意去商店留个好评，或者到 GitHub 点个 Star。"
+  },
+  "growth_modal_usage_days_one": {
+    "message": "已使用 $COUNT$ 天",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_usage_days_other": {
+    "message": "已使用 $COUNT$ 天",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_total_uses_one": {
+    "message": "累计使用 $COUNT$ 次",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_total_uses_other": {
+    "message": "累计使用 $COUNT$ 次",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_store_button": {
+    "message": "去商店评分"
+  },
+  "growth_modal_repo_button": {
+    "message": "GitHub 点 Star"
+  },
+  "growth_modal_hide_button": {
+    "message": "不再显示"
+  },
+  "growth_modal_later_button": {
+    "message": "稍后再说"
+  },
+  "growth_modal_close": {
+    "message": "关闭此提醒"
+  },
   "nav_navigator_title": {
     "message": "$SITE$ 导航",
     "placeholders": {

@@ -1,4 +1,5 @@
 import { ns } from './namespace';
+import { trackGrowth } from '../shared/growth';
 import type {
   CoreNavigationConfig,
   CoreNavigationControllerApi,
@@ -117,6 +118,7 @@ function activateNavItem(item: HTMLElement): void {
   state.suppressEnsureVisibleUntil = Date.now() + MANUAL_NAV_SCROLL_LOCK_MS;
   callbacks.setActiveIndex(index, true);
   callbacks.snapNavListToEdge(index);
+  void trackGrowth('nav_jump');
   callbacks.scrollToMessage(message.node);
 }
 

@@ -62,6 +62,62 @@
   "popup_store_button": {
     "message": "Rate on Web Store"
   },
+  "growth_modal_kicker": {
+    "message": "A real JumpNav milestone"
+  },
+  "growth_modal_title": {
+    "message": "JumpNav is already part of your workflow."
+  },
+  "growth_modal_body": {
+    "message": "If JumpNav has genuinely made your chats smoother and your workflow easier, a quick Web Store review or GitHub star would mean a lot."
+  },
+  "growth_modal_usage_days_one": {
+    "message": "$COUNT$ day used",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_usage_days_other": {
+    "message": "$COUNT$ days used",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_total_uses_one": {
+    "message": "$COUNT$ total use",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_total_uses_other": {
+    "message": "$COUNT$ total uses",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "growth_modal_store_button": {
+    "message": "Rate on Web Store"
+  },
+  "growth_modal_repo_button": {
+    "message": "Star on GitHub"
+  },
+  "growth_modal_hide_button": {
+    "message": "Don't show again"
+  },
+  "growth_modal_later_button": {
+    "message": "Maybe later"
+  },
+  "growth_modal_close": {
+    "message": "Close this reminder"
+  },
   "nav_navigator_title": {
     "message": "$SITE$ Navigator",
     "placeholders": {
