@@ -87,6 +87,10 @@ ${UI_KIT_STYLE_TEXT}
         font-weight: 400;
       }
 
+      .prompt-ui[data-site="gemini"] .prompt-entry-button:hover {
+        background: var(--prompt-entry-hover);
+      }
+
       .prompt-ui[data-site="gemini"] .prompt-entry-icon {
         width: 20px;
         height: 20px;

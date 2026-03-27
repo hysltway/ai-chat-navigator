@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v3.2.1**
+> Current Version: **v3.2.2**
 
-## Updates in v3.2.1
+## Updates in v3.2.2
 
-- Added a favorite button to sidebar conversation items on ChatGPT, Gemini, and Claude, with hover reveal, highlighted active state, and one-click unfavorite to reduce the cost of revisiting important chats.
-- Persisted favorite state in local storage and re-applied it when storage changes, so favorites stay consistent after refreshes and across tabs.
-- Wired the feature into the content-script startup flow and adapted sidebar mount detection, route polling, and DOM resync logic per supported site so the control remains stable in SPA navigation.
-- Updated version references and release notes for `v3.2.1`.
+- Added a Gemini quote-reply button that appears for valid text selections, converts the selected content into quote blocks, and inserts it directly into the composer.
+- Wired the quote-reply feature into the content-script startup flow and adapted Gemini conversation-area detection, editor targeting, scroll positioning, and selection refresh behavior so the control only appears in relevant contexts.
+- Fixed the hover background state for Gemini Prompt Library entry buttons and refreshed the manifest/store copy so the public description now covers navigation, favorites, and reusable prompts more accurately.
+- Updated version references and release notes for `v3.2.2`.
 
 ## Chrome Web Store (Recommended)
 

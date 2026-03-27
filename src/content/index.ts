@@ -21,6 +21,7 @@ import './core-conversation-indexer';
 import './core-navigation-controller';
 import './sidebar-favorites';
 import './prompt-library';
+import './gemini-quote-reply';
 import './core';
 
 function startIfAvailable(moduleName: string, methodName = 'start'): void {
@@ -35,6 +36,7 @@ function startIfAvailable(moduleName: string, methodName = 'start'): void {
 function start(): void {
   startIfAvailable('formulaCopy');
   startIfAvailable('promptLibrary');
+  startIfAvailable('geminiQuoteReply');
   startIfAvailable('sidebarFavorites');
   startIfAvailable('core');
 }

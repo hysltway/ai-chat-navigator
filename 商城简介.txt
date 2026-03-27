@@ -1,20 +1,22 @@
 JumpNav turns long AI chats into a clean, clickable outline.
 JumpNav 可将超长 AI 对话快速整理为清晰可点的目录。
 
-Find any prompt fast and jump back to key answers instantly.
-快速找回任意提问，一键回到关键回答。
+Jump back to any prompt, favorite important chats, and reuse saved prompts without losing context.
+快速找回任意提问，收藏重要会话，并复用常用提示词，不再丢失上下文。
 
 Key Features / 核心功能
-- Floating right-side navigator with prompt titles and reply previews.
-  右侧悬浮导航，自动生成提问标题与回复预览。
+- Floating right-side navigator with prompt titles, reply previews, active tracking, and one-click jump.
+  右侧悬浮导航，自动生成提问标题与回复预览，跟踪当前位置并一键跳转。
 - Click or keyboard jump (Enter/Space) to exact context.
   支持点击与键盘跳转（Enter/Space），精准定位上下文。
 - Full mode + Minimal mode + adaptive overlap handling.
   正常模式 + 简约模式 + 自适应避免遮挡正文。
-- Active position tracking and auto-highlight.
-  自动跟踪阅读位置并高亮当前条目。
 - Hide/restore with draggable Fab button; position and collapsed state are remembered after refresh.
   支持隐藏/恢复与 Fab 拖动；按钮位置和隐藏状态刷新后自动记忆。
+- Built-in Prompt Library to save, search, copy, and reuse frequently used prompts.
+  内置 Prompt Library，可保存、搜索、复制并复用常用提示词。
+- Favorite important sidebar chats on ChatGPT, Gemini, and Claude for faster revisit.
+  支持在 ChatGPT、Gemini、Claude 侧边栏收藏重要会话，回访更快。
 - Formula click-to-copy: MathML/LaTeX (Shift+Click for LaTeX), with MathJax/KaTeX/Auto settings.
   公式点击复制：支持 MathML/LaTeX（Shift+Click 复制 LaTeX），并可配置 MathJax/KaTeX/Auto 引擎。
 
