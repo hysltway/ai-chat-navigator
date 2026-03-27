@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v3.2.2**
+> Current Version: **v3.3.0**
 
-## Updates in v3.2.2
+## Updates in v3.3.0
 
-- Added a Gemini quote-reply button that appears for valid text selections, converts the selected content into quote blocks, and inserts it directly into the composer.
-- Wired the quote-reply feature into the content-script startup flow and adapted Gemini conversation-area detection, editor targeting, scroll positioning, and selection refresh behavior so the control only appears in relevant contexts.
-- Fixed the hover background state for Gemini Prompt Library entry buttons and refreshed the manifest/store copy so the public description now covers navigation, favorites, and reusable prompts more accurately.
-- Updated version references and release notes for `v3.2.2`.
+- Reworked Gemini quote reply from immediate composer insertion into a pre-send quote card flow, so selected text is mounted above the editor first and can be reviewed before sending.
+- Added send-button click and Enter-submit interception with replay logic that materializes the quote block together with the current draft, then restores the original draft if submission does not go through.
+- Improved single-line quote card alignment and resize-driven layout syncing so the icon, preview text, and remove action stay visually stable as the composer changes size.
+- Updated version references and release notes for `v3.3.0`.
 
 ## Chrome Web Store (Recommended)
 
