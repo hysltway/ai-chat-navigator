@@ -9,14 +9,14 @@ It turns long conversations into clickable outlines with prompt and reply previe
 
 **Language:** [简体中文](README.md) | **English**
 
-> Current Version: **v3.3.1**
+> Current Version: **v3.3.2**
 
-## Updates in v3.3.1
+## Updates in v3.3.2
 
-- Simplified the popup settings surface into core feature toggles by removing the Formula Copy format and engine dropdowns and keeping only the master enable switch.
-- Added a Prompt Library entry-button visibility toggle, wired it into content-script state and storage change syncing, and made the entry mount react immediately when the setting changes.
-- Extracted a shared Prompt Entry settings storage module and tightened popup copy/layout details so the feature settings panel stays cleaner and more consistent.
-- Updated version references and release notes for `v3.3.1`.
+- Reworked the popup visual structure with a branded header card, layered gradients, and clearer section hierarchy so the extension entry feels more distinctive in a compact surface.
+- Converted feature toggles into descriptive switch cards and refreshed the support/growth sections with stronger headings, copy, and button feedback so core actions are easier to scan and use.
+- Updated popup initialization to load Formula Copy and Prompt Entry settings in parallel, reducing perceived waiting time when the popup opens and syncing toggle state faster.
+- Updated version references and release notes for `v3.3.2`.
 
 ## Chrome Web Store (Recommended)
 

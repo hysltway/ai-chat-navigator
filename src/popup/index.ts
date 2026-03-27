@@ -54,8 +54,7 @@ function createPopupController(environment: Partial<PopupEnvironment> = {}) {
     env.documentRef.addEventListener('DOMContentLoaded', () => {
       syncVersionPill();
       bindLinkButtons();
-      void initFormulaSettings();
-      void initPromptEntrySettings();
+      void Promise.all([initFormulaSettings(), initPromptEntrySettings()]);
     });
   }
 
